@@ -9,6 +9,10 @@ public class ProjectInstaller : MonoInstaller
             .FromComponentInHierarchy()
             .AsSingle();       
         Container
+            .Bind<AdManager>()
+            .FromComponentInHierarchy()
+            .AsSingle();       
+        Container
             .Bind<TileEditor>()
             .FromComponentInHierarchy()
             .AsSingle();

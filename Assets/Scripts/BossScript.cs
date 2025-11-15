@@ -133,6 +133,7 @@ public class BossScript : WalkEnemy
             {
                 m_healthBar.ShowBar(transform);
                 m_showHealth = false;
+                m_UI.Boss();
             }
 
             m_healthBar.SetHealthSprite(m_damageable.GetHealthPercentage());

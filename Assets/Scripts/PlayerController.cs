@@ -70,6 +70,8 @@ public class PlayerController : MonoBehaviour
     bool m_blocking = false;
 
     float m_dashCooldownTime = 1.5f;
+    float m_dashTimer;
+    float m_dashTime = 0.35f;
     int m_jumpsCount = 2;
     int m_currentJumps = 0;
     int m_currentDir = 1;
@@ -118,7 +120,18 @@ public class PlayerController : MonoBehaviour
                 if (m_jumping)
                     m_falling = true;
                 m_rb.gravityScale = m_gravityScale;
-                m_dash = m_canDash = false;
+                    m_dash = m_canDash = false;
+            }
+            else if (m_dash)
+            {
+                m_dashTimer += Time.deltaTime;
+                if (m_dashTimer >= m_dashTime)
+                {
+                    m_dash = m_canDash = false;
+                    m_canMove = true;
+                    m_anim.SetBool(m_HashCanMove, true); 
+                    m_rb.gravityScale = m_gravityScale;
+                }
             }
             // when jump button is up - start falling
             if (m_jump && !m_input.Jump)
@@ -141,19 +154,22 @@ public class PlayerController : MonoBehaviour
             // dash
             if (m_input.Dash && m_canDash && m_canMove && !m_isHit)
             {
+                m_dashTimer = 0f;
                 m_canMove = false;
+                m_anim.SetBool(m_HashCanMove, false);
                 m_anim.SetTrigger(m_HashDash);
                 m_UI.SetDashSprite(0f);
                 //remove garvity
                 m_rb.gravityScale = 0f;
                 m_dash = true;
                 // moves horizontly with dash power
-                m_rb.velocity = new Vector2(m_rb.velocity.x, 0f);
+                m_rb.velocity = new Vector2(m_currentDir * m_runSpeed, 0f);
                 m_rb.AddForce(Vector2.right * m_currentDir * m_dashPower, ForceMode2D.Impulse);
             }
             if (m_input.Dodge && m_canMove && !m_isHit)
             {
                 m_canMove = false;
+                m_anim.SetBool(m_HashCanMove, false);
                 m_anim.SetTrigger(m_HashDodge);
                 m_rb.velocity = new Vector2(-m_currentDir * m_dashPower, 0f);
             }
@@ -192,6 +208,7 @@ public class PlayerController : MonoBehaviour
                 if (m_canMove)
                 {
                     m_canMove = false;
+                    m_anim.SetBool(m_HashCanMove, false);
                     m_attack = true;
                     m_rb.velocity = Vector2.zero;
                     m_rb.gravityScale = 0;
@@ -203,6 +220,7 @@ public class PlayerController : MonoBehaviour
             if (m_input.HeavyAttack && m_canMove && !m_isHit && !m_jumping && !m_falling)
             {
                 m_canMove = false;
+                m_anim.SetBool(m_HashCanMove, false);
                 m_attack = true;
                 m_rb.velocity = Vector2.zero;
             }
@@ -213,7 +231,6 @@ public class PlayerController : MonoBehaviour
                 m_pet = true;
             }
 
-            m_anim.SetBool(m_HashCanMove, m_canMove);
             m_anim.SetBool(m_HashHeavyAttack, m_input.HeavyAttack);
             m_anim.SetFloat(m_HashAnimationTime, Mathf.Repeat(m_anim.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
             m_anim.SetFloat(m_HashHorizontal, Mathf.Abs(m_rb.velocity.x));
@@ -254,7 +271,6 @@ public class PlayerController : MonoBehaviour
 
         if (!m_dead)
         {
-            //
             if (m_pet)
             {
                 Vector2 dir = m_catZone.TargetLocation - transform.position;
@@ -389,11 +405,13 @@ public class PlayerController : MonoBehaviour
     {
         m_rb.velocity = Vector2.zero;
         m_canMove = false;
+        m_anim.SetBool(m_HashCanMove, false);
         m_damagable.Invinsible = true;
         yield return new WaitForSeconds(m_blockDuration);
         m_damagable.Invinsible = false;
         m_blocking = false;
         m_canMove = true;
+        m_anim.SetBool(m_HashCanMove, true);
         m_canBlock = false;
     }
     /// <summary>
@@ -406,13 +424,13 @@ public class PlayerController : MonoBehaviour
         {
             m_rb.velocity = Vector2.zero;
             m_dead = !m_dead;
-            m_input.EnableRestart();
             m_UI.Die(true);
         }
         else if (damage < 0)
         {
             m_blocking = false;
             m_anim.SetTrigger(m_HashHit);
+            m_anim.SetBool(m_HashCanMove, false);
             m_isHit = true;
             m_rb.velocity = Vector2.zero;
             // m_rb.velocity += Vector2.left * m_currentDir;
@@ -478,15 +496,17 @@ public class PlayerController : MonoBehaviour
         m_dashCooldownTime -= 0.5f;
     }
 
-    public void Restart()
+    public void Restart(bool reborn = true)
     {
-        m_enemyBar.HideBar();
+        if (reborn)
+        {
+            m_enemyBar.HideBar();
+            transform.SetPositionAndRotation(m_rebornCheckpoint, Quaternion.identity);
+            m_currentDir = 1;
+        }
         m_damagable.Reborn(true);
         m_dead = !m_dead;
-        transform.SetPositionAndRotation(m_rebornCheckpoint, Quaternion.identity);
-        m_currentDir = 1;
         m_col.enabled = true;
         m_rb.gravityScale = m_gravityScale;
-
     }
 }

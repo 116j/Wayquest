@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public enum BrickBehaviour
@@ -14,8 +13,6 @@ public class DestroyableBrick : MonoBehaviour
 {
     [SerializeField]
     RuntimeAnimatorController[] m_anims;
-    [SerializeField]
-    Vector3[] m_offsets;
 
     BrickBehaviour m_behaviour;
 
@@ -24,6 +21,7 @@ public class DestroyableBrick : MonoBehaviour
 
     float m_timer;
     float m_destroyTime = 0.3f;
+    Vector3 m_offset = new Vector3(0, -0.501f);
     bool m_destroyed = false;
 
     readonly int m_HashDestroyed = Animator.StringToHash("Destroyed");
@@ -38,7 +36,7 @@ public class DestroyableBrick : MonoBehaviour
         m_behaviour = b;
         m_group = group;
         m_anim.runtimeAnimatorController = m_anims[tileNum];
-        transform.position += m_offsets[tileNum];
+        transform.position += m_offset;
 
         m_group?.Add(this);
     }

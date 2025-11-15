@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -38,18 +40,15 @@ public class UIController : MonoBehaviour
     [Header("Win")]
     [SerializeField]
     GameObject m_winLayout;
-    [SerializeField]
-    TextMeshProUGUI m_winTextKB;
-    [SerializeField]
-    TextMeshProUGUI m_winTextG;
 
     [Header("Die")]
     [SerializeField]
     GameObject m_dieLayout;
     [SerializeField]
-    TextMeshProUGUI m_dieTextKB;
+    RectTransform m_dielButtonslayout;
     [SerializeField]
-    TextMeshProUGUI m_dieTextG;
+    GameObject m_continueButton;
+
 
     List<Image> m_hearts;
     int m_currentHeart;
@@ -61,17 +60,24 @@ public class UIController : MonoBehaviour
     int m_money = 0;
     int m_currentMoney = 0;
 
+    bool m_boss = false;
+
     public int CurrentLanguage { get; set; }
     [Inject]
     PlayerInput m_input;
     [Inject]
     ShopLayout m_shop;
 
-    // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         m_hearts = m_healthLayout.GetComponentsInChildren<Image>().ToList();
         m_currentHeart = m_hearts.Count - 1;
+    }
+
+    // Start is called before the first frame update
+    IEnumerator Start()
+    {
+        yield return LocalizationSettings.InitializationOperation;
 
         for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; ++i)
         {
@@ -115,7 +121,8 @@ public class UIController : MonoBehaviour
             },
             m_money,
             duration
-        ).SetEase(Ease.OutQuad);
+        ).SetEase(Ease.OutQuad)
+        .SetUpdate(true);
 
     }
 
@@ -172,19 +179,22 @@ public class UIController : MonoBehaviour
 
     public void Win()
     {
-        m_input.EndGame();
         m_input.LockInput(true);
         m_winLayout.SetActive(true);
-        m_winTextG.gameObject.SetActive(m_input.GetCurrentDeviceType() == "Gamepad");
-        m_winTextKB.gameObject.SetActive(!m_winTextG.isActiveAndEnabled);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void Die(bool active)
     {
         m_dieLayout.SetActive(active);
-        m_dieTextG.gameObject.SetActive(m_input.GetCurrentDeviceType() == "Gamepad");
-        m_dieTextKB.gameObject.SetActive(!m_dieTextG.isActiveAndEnabled);
+        Cursor.visible = active;
+        m_input.LockInput(active);
+        Cursor.lockState = active?CursorLockMode.None: CursorLockMode.Locked;
+        m_continueButton.SetActive(!m_boss);
+        m_dielButtonslayout.sizeDelta = m_boss?new Vector2(m_dielButtonslayout.sizeDelta.x, 90): new Vector2(m_dielButtonslayout.sizeDelta.x, 170);
     }
+
 
     private void OnApplicationPause(bool pause)
     {
@@ -194,5 +204,10 @@ public class UIController : MonoBehaviour
     private void OnApplicationFocus(bool focus)
     {
         AudioListener.pause = !focus;
+    }
+
+    internal void Boss()
+    {
+        m_boss = true;
     }
 }

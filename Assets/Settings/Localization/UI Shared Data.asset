@@ -196,19 +196,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6109798238175232
-    m_Key: dieRestartKB
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6109848213307392
-    m_Key: dieRestartG
+    m_Key: dieRestart
     m_Metadata:
       m_Items: []
   - m_Id: 6110216678719488
-    m_Key: mainMenuKB
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6110272475545600
-    m_Key: mainMenuG
+    m_Key: mainMenu
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
@@ -241,6 +233,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 13442591293095936
     m_Key: block
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25319826467766272
+    m_Key: new lvl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28586607626076160
+    m_Key: get money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30082722653454336
+    m_Key: dieAd
     m_Metadata:
       m_Items: []
   m_Metadata:

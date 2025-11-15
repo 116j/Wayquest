@@ -202,20 +202,12 @@ MonoBehaviour:
       PARA ABRIR LA TIENDA'
     m_Metadata:
       m_Items: []
-  - m_Id: 6109848213307392
-    m_Localized: presione SELECT para REINICIAR
-    m_Metadata:
-      m_Items: []
   - m_Id: 6109798238175232
-    m_Localized: PRESIONE R PARA REINICIAR
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6110272475545600
-    m_Localized: "haga clic en SELECCIONAR para ir al MEN\xDA PRINCIPAL"
+    m_Localized: REINICIAR
     m_Metadata:
       m_Items: []
   - m_Id: 6110216678719488
-    m_Localized: "PRESIONE M PARA IR AL MEN\xDA PRINCIPAL"
+    m_Localized: "MEN\xDA PRINCIPAL"
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
@@ -258,6 +250,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 13442591293095936
     m_Localized: BLOQUE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25319826467766272
+    m_Localized: NUEVO NIVEL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28586607626076160
+    m_Localized: MONEDAS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30082722653454336
+    m_Localized: CONTINUAR
     m_Metadata:
       m_Items: []
   references:

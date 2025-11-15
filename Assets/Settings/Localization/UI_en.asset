@@ -206,20 +206,12 @@ MonoBehaviour:
       TO OPEN THE SHOP'
     m_Metadata:
       m_Items: []
-  - m_Id: 6109848213307392
-    m_Localized: press SELECT to RESTART
-    m_Metadata:
-      m_Items: []
   - m_Id: 6109798238175232
-    m_Localized: PRESS R TO RESTART
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6110272475545600
-    m_Localized: press SELECT to go to the MAIN MENU
+    m_Localized: RESTART
     m_Metadata:
       m_Items: []
   - m_Id: 6110216678719488
-    m_Localized: PRESS M TO GO TO THE MAIN MENU
+    m_Localized: MAIN MENU
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
@@ -262,6 +254,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 13442591293095936
     m_Localized: BLOCK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25319826467766272
+    m_Localized: NEW LEVEL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28586607626076160
+    m_Localized: COINS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30082722653454336
+    m_Localized: CONTINUE
     m_Metadata:
       m_Items: []
   references:

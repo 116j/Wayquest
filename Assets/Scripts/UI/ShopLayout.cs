@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -22,13 +21,6 @@ public class ShopLayout : MonoBehaviour
     bool[] m_clicked = new bool[5];
     int[] m_itemsCount = { 3, 2, 2, 2, 1 };
     int[] m_prices = { 1000, 1500, 2000, 2000, 2500 };
-    string[] m_startText = {
-        "Hello, Stranger! Welcome to my shop! What would you like to purchase?",
-        "Olá, Estranho! Bem-vindo à minha loja! O que você gostaria de comprar?",
-        "Привет, Путник! Добро пожаловать в мой магазин! Что бы ты хотел приобрести?",
-        "¡Hola, Forastero! Bienvenido a mi tienda! ¿Qué le gustaría comprar?",
-        "Merhaba Yabancı! Benim dükkana hoşgeldiniz! Ne satın almak istersiniz?"
-    };
     string[][] m_dialogueTexts =
     {
         new string[]{
@@ -101,7 +93,7 @@ public class ShopLayout : MonoBehaviour
     {
         "Hello, Stranger! Welcome to my shop! What would you like to purchase?",
         "Olá, Estranho! Bem-vindo à minha loja! O que você gostaria de comprar?",
-        "Привет, Незнакомец! Добро пожаловать в мой магазин! Что бы ты хотел приобрести?",
+        "Привет, Путник! Добро пожаловать в мой магазин! Что бы ты хотел приобрести?",
         "¡Hola, Forastero! Bienvenido a mi tienda! ¿Qué le gustaría comprar?",
         "Merhaba Yabancı! Benim dükkana hoşgeldiniz! Ne satın almak istersiniz?"
     };
@@ -171,7 +163,7 @@ public class ShopLayout : MonoBehaviour
         {
             m_buySound.Play();
             m_UI.AddMoney(-m_prices[index]);
-            m_dialogueText.text = m_startText[m_UI.CurrentLanguage];
+            m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
             func();
             m_clicked[index] = false;
             m_itemsCount[index]--;

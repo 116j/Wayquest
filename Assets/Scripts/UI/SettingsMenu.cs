@@ -34,8 +34,6 @@ public class SettingsMenu : MonoBehaviour
 
     [Header("Display")]
     [SerializeField]
-    TextMeshProUGUI m_resolutionText;
-    [SerializeField]
     TextMeshProUGUI m_languageText;
     [SerializeField]
     Toggle m_fullScreenToggle;
@@ -59,13 +57,6 @@ public class SettingsMenu : MonoBehaviour
     Slider[] m_roomStrategySliders;
     [SerializeField]
     LevelValues m_values;
-
-
-    KeyValuePair<int, int>[] m_resolutiions = {
-        new(640,480), new(800,600), new(1280,800),
-       new(1280,720), new(1440,900),new(1920,1200),
-        new(1920,1080),new(2560,1440)
-    };
 
     int m_currentLanguageInd = 0;
     int m_currentResolutionInd;
@@ -116,21 +107,9 @@ public class SettingsMenu : MonoBehaviour
     PlayerInput m_input;
     [Inject]
     UIController m_UI;
-    [Inject]
-    LevelBuilder m_lvlBuilder;
 
     void Start()
     {
-        for (int i = 0; i < m_resolutiions.Length; i++)
-        {
-            if (Screen.currentResolution.width == m_resolutiions[i].Key &&
-                Screen.currentResolution.height == m_resolutiions[i].Value)
-            {
-                m_currentResolutionInd = i;
-                m_currentResolution = m_resolutiions[i];
-                m_resolutionText.text = $"{m_currentResolution.Key} x {m_currentResolution.Value}";
-            }
-        }
         m_fullScreenToggle.isOn = m_fullScreen = Screen.fullScreen;
         m_currentLanguageInd = m_UI.CurrentLanguage;
         m_languageText.text = LocalizationSettings.AvailableLocales.Locales[m_currentLanguageInd].name.ToUpper();
@@ -139,7 +118,7 @@ public class SettingsMenu : MonoBehaviour
     public void Display()
     {
         m_header.text = m_layoutNames[0][m_UI.CurrentLanguage];
-        m_layout.sizeDelta = new Vector2(m_layout.sizeDelta.x, 260);
+        m_layout.sizeDelta = new Vector2(m_layout.sizeDelta.x, 220);
         SetDisplayValues();
     }
 
@@ -147,26 +126,6 @@ public class SettingsMenu : MonoBehaviour
     {
         m_fullScreenToggle.isOn = m_fullScreen = Screen.fullScreen;
         m_languageText.text = LocalizationSettings.AvailableLocales.Locales[m_UI.CurrentLanguage].name.ToUpper();
-        m_currentResolutionInd = m_resolutiions.IndexOf(m_currentResolution);
-        m_resolutionText.text = $"{m_currentResolution.Key} x {m_currentResolution.Value}";
-    }
-
-    public void SetResolutionUp()
-    {
-        if (m_currentResolutionInd < m_resolutiions.Length - 1)
-        {
-            m_currentResolutionInd++;
-            m_resolutionText.text = $"{m_resolutiions[m_currentResolutionInd].Key} x {m_resolutiions[m_currentResolutionInd].Value}";
-        }
-    }
-
-    public void SetResolutionDown()
-    {
-        if (m_currentResolutionInd > 0)
-        {
-            m_currentResolutionInd--;
-            m_resolutionText.text = $"{m_resolutiions[m_currentResolutionInd].Key} x {m_resolutiions[m_currentResolutionInd].Value}";
-        }
     }
 
     public void FullScreen(bool full)
@@ -194,7 +153,6 @@ public class SettingsMenu : MonoBehaviour
     {
         m_UI.CurrentLanguage = m_currentLanguageInd;
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[m_currentLanguageInd];
-        m_currentResolution = m_resolutiions[m_currentResolutionInd];
         Screen.SetResolution(m_currentResolution.Key, m_currentResolution.Key, m_fullScreen);
     }
 
@@ -273,7 +231,7 @@ public class SettingsMenu : MonoBehaviour
     public void LvlBuilder()
     {
         m_header.text = m_layoutNames[3][m_UI.CurrentLanguage];
-        m_layout.sizeDelta = new Vector2(m_layout.sizeDelta.x, 450);
+        m_layout.sizeDelta = new Vector2(m_layout.sizeDelta.x, 490);
         SetSliders();
     }
 

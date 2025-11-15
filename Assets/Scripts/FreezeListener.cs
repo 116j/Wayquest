@@ -5,7 +5,7 @@ using UnityEngine;
 public class FreezeListener : MonoBehaviour
 {
     [SerializeField]
-    int m_time = 1;
+    float m_time = 1;
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player")&&collision.TryGetComponent<Damagable>(out var damagable)

@@ -14,7 +14,6 @@ public class PlayerInput : MonoBehaviour
     bool m_dodge;
     bool m_block;
     bool m_pet;
-    bool m_restart;
     bool m_shop;
     bool m_pause;
 
@@ -91,13 +90,10 @@ public class PlayerInput : MonoBehaviour
 
     bool m_inputLocked = true;
     bool m_gameStarted = false;
-    bool m_gameEnded = false;
     bool m_shopOpened = false;
 
     UnityEngine.InputSystem.PlayerInput m_input;
 
-    [Inject]
-    LevelBuilder m_lvlBuilder;
     [Inject]
     UIController m_UI;
     [Inject]
@@ -128,16 +124,6 @@ public class PlayerInput : MonoBehaviour
         m_gameStarted = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    public void EndGame()
-    {
-        m_gameEnded = true;
-    }
-
-    public void EnableRestart()
-    {
-        m_restart = !m_restart;
     }
 
     public void OnPause()
@@ -206,21 +192,5 @@ public class PlayerInput : MonoBehaviour
             LockInput(m_shopOpened);
             m_UI.OpenShop();
         }
-    }
-
-    void OnRestart()
-    {
-        if (m_restart)
-        {
-            m_lvlBuilder.Restart();
-            m_UI.Die(false);
-            m_restart = false;
-        }
-    }
-
-    void OnMenu()
-    {
-        if(m_gameEnded)
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

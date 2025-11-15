@@ -24,7 +24,6 @@ public class GridStrategy : FillStrategy
 
     public override Room FillRoom(Room prevRoom, FillStrategy transitionStrategy)
     {
-        prevRoom.GetNextTransition().Clear(m_editor);
         Room transition = new Room(prevRoom.GetEndPosition(), prevRoom.GetEndPosition());
 
         int width = Random.Range(m_minRoomSize, m_maxRoomSize);
@@ -48,6 +47,8 @@ public class GridStrategy : FillStrategy
                 return null;
             }
         }
+        prevRoom.GetNextTransition().Clear(m_editor);
+
         // create bounds for player's fall
         room.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 

@@ -230,7 +230,8 @@ public class LevelBuilder : MonoBehaviour
             m_usedTransitionStrategies.Add(m_strategies[0]);
             m_rooms.Add(m_strategies[0].FillFinalRoom(m_rooms.Last()));
         }
-        else while (true)
+        else
+            while (true)
             {
                 FillStrategy rs = m_strategies[GetStrategy()];
                 if ((m_usedRoomStrategies.Last() is GridStrategy

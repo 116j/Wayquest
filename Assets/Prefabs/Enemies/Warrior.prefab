@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnOffset: 0.214
-  m_costCoeff: 1.2
+  m_costCoeff: 1
   m_walkSpeed: 1.5
   m_canRun: 1
   m_runSpeed: 3

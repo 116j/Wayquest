@@ -79,7 +79,7 @@ public class WalkEnemy : MonoBehaviour
         m_values = GetComponent<SpawnValues>();
 
         m_startPos = transform.position;
-        m_cost = Mathf.CeilToInt(m_shop.AllPrices * m_costCoeff / (m_lvlBuilder.GetMaxRoomsCount() * m_lvlBuilder.GetEnemySpawnChance()));
+        m_cost = Mathf.CeilToInt(Mathf.Min(m_shop.AllPrices * m_costCoeff / (m_lvlBuilder.GetMaxRoomsCount() * m_lvlBuilder.GetEnemySpawnChance()),1000f));
     }
 
     protected virtual void Update()
