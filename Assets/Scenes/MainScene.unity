@@ -1146,7 +1146,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -24.98224}
+  m_AnchoredPosition: {x: 50, y: -18.162241}
   m_SizeDelta: {x: 123, y: 33.190002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &52174938
@@ -1914,7 +1914,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeRoomsCount
+        m_MethodName: ChangeChunksCount
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3890,7 +3890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -93.9919}
+  m_AnchoredPosition: {x: 50, y: -77.5319}
   m_SizeDelta: {x: 123, y: 33.190002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &174158667
@@ -3959,7 +3959,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -10}
-  m_SizeDelta: {x: 280, y: 220}
+  m_SizeDelta: {x: 280, y: 490}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &181640963
 MonoBehaviour:
@@ -5298,7 +5298,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 44.1
+  m_Spacing: 50.7
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -5669,7 +5669,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -59.48707}
+  m_AnchoredPosition: {x: 50, y: -47.84707}
   m_SizeDelta: {x: 123, y: 33.190002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &282387723
@@ -6818,7 +6818,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -6927,7 +6927,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 51.120003, y: -42}
+  m_AnchoredPosition: {x: 51.120003, y: -7.5}
   m_SizeDelta: {x: 80, y: 34.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &340042130
@@ -7542,7 +7542,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ROOMS COUNT
+  m_text: "N\xDAMERO DE CHUNKS"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -9973,25 +9973,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0415\u0441\u0442\u044C \u043F\u044F\u0442\u044C \u0432\u0438\u0434\u043E\u0432
-    \u043A\u043E\u043C\u043D\u0430\u0442:\n\n\u2022 \u0411\u0430\u0437\u043E\u0432\u0430\u044F
-    \u043A\u043E\u043C\u043D\u0430\u0442\u0430 - \u043A\u043E\u043C\u043D\u0430\u0442\u0430
-    \u0441 \u0432\u0440\u0430\u0433\u0430\u043C\u0438 \u0438 \u043B\u043E\u0432\u0443\u0448\u043A\u0430\u043C\u0438.\n\n\u2022
-    \u041A\u043E\u043C\u043D\u0430\u0442\u0430 \u0441 \u043F\u043E\u0442\u043E\u043B\u043A\u043E\u043C
-    - \u043A\u043E\u043C\u043D\u0430\u0442\u0430 \u0441 \u043F\u043E\u0442\u043E\u043B\u043A\u043E\u043C
-    \u0438 \u043B\u043E\u0432\u0443\u0448\u043A\u0430\u043C\u0438 \u043D\u0430 \u043D\u0435\u043C.\n\n\u2022
-    \u041A\u043E\u043C\u043D\u0430\u0442\u0430 \u0441\u0435\u0442\u0447\u0430\u0442\u044B\u0445
-    \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C - \u043A\u043E\u043C\u043D\u0430\u0442\u0430
-    \u0441 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430\u043C\u0438, \u043F\u043E
-    \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u0438\u0433\u0440\u043E\u043A \u043F\u0440\u044B\u0433\u0430\u0435\u0442.\n\n\u2022
-    \u041A\u043E\u043C\u043D\u0430\u0442\u0430 \u0441 \u0434\u0432\u0438\u0436\u0443\u0449\u0438\u043C\u0438\u0441\u044F
-    \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430\u043C\u0438 - \u043A\u043E\u043C\u043D\u0430\u0442\u0430
-    \u0441 \u0434\u0432\u0438\u0436\u0443\u0449\u0438\u043C\u0438\u0441\u044F \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430\u043C\u0438,
-    \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u043E\u0434\u044A\u0435\u0437\u0436\u0430\u044E\u0442
-    \u0434\u0440\u0443\u0433 \u043A \u0434\u0440\u0443\u0433\u0443.\n\n\u2022 \u0420\u0430\u0437\u0440\u0443\u0448\u0430\u0435\u043C\u0430\u044F
-    \u043A\u043E\u043C\u043D\u0430\u0442\u0430 - \u043A\u043E\u043C\u043D\u0430\u0442\u0430
-    \u0441 \u0440\u0430\u0437\u0440\u0443\u0448\u0430\u044E\u0449\u0438\u043C\u0441\u044F
-    \u043F\u043E\u043B\u043E\u043C.\n"
+  m_text: "Hay cinco tipos de chunks:\r\n\r\n\u2022 Chunk b\xE1sico \u2013 un chunk
+    con enemigos y trampas.\r\n\r\n\u2022 Chunk con techo \u2013 un chunk con techo
+    y trampas en el techo.\r\n\r\n\u2022 Chunk de plataformas en rejilla \u2013 un
+    chunk con plataformas por las que el jugador salta.\r\n\r\n\u2022 Chunk de plataformas
+    m\xF3viles \u2013 un chunk con plataformas m\xF3viles que se acercan entre s\xED.\r\n\r\n\u2022
+    Chunk destructible \u2013 un chunk con suelo que se colapsa."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -10040,7 +10027,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -12726,7 +12713,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.9999927, y: 16.759989, z: -10}
+  m_LocalPosition: {x: 1.999994, y: 16.759989, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13112,7 +13099,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeBaseRoomWeight
+        m_MethodName: ChangeBaseChunkWeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13769,7 +13756,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeCeilRoomWeight
+        m_MethodName: ChangeCeilChunkWeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14272,16 +14259,16 @@ MonoBehaviour:
   m_fullScreenToggle: {fileID: 841145847}
   m_gamepadContent: {fileID: 1053201568}
   m_keyboardContent: {fileID: 71630361}
-  m_roomsCountFill: {fileID: 2049738087}
-  m_roomsCountSlider: {fileID: 79823441}
-  m_roomsCountText: {fileID: 560926133}
-  m_roomStrategyWeightTexts:
+  m_chunksCountFill: {fileID: 2049738087}
+  m_chunksCountSlider: {fileID: 79823441}
+  m_chunksCountText: {fileID: 560926133}
+  m_chunkStrategyWeightTexts:
   - {fileID: 1821275404}
   - {fileID: 1627262111}
   - {fileID: 926673798}
   - {fileID: 2055974020}
   - {fileID: 1738421885}
-  m_roomStrategySliders:
+  m_chunkStrategySliders:
   - {fileID: 530030050}
   - {fileID: 544862347}
   - {fileID: 1855183153}
@@ -14520,7 +14507,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 140, y: -383.7596}
+  m_AnchoredPosition: {x: 140, y: -411.6896}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &578606261
@@ -14538,7 +14525,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: -91
     m_Right: 0
-    m_Top: 84
+    m_Top: 15
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 22.12
@@ -16446,7 +16433,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 261.1, y: -10}
-  m_SizeDelta: {x: 200, y: 380}
+  m_SizeDelta: {x: 200, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &679785421
 MonoBehaviour:
@@ -18625,7 +18612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &793235886
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18667,7 +18654,7 @@ MonoBehaviour:
     m_Top: 44
     m_Bottom: 12
   m_ChildAlignment: 1
-  m_Spacing: 36
+  m_Spacing: 45.31
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -19161,7 +19148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 140, y: -254.65932}
+  m_AnchoredPosition: {x: 140, y: -273.27933}
   m_SizeDelta: {x: 100, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &817497976
@@ -19179,10 +19166,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: -22
+    m_Top: -24
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 9.55
+  m_Spacing: 4.73
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -22980,7 +22967,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeMovingPlatformRoomWeight
+        m_MethodName: ChangeMovingPlatformChunkWeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -24460,8 +24447,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.0000033091783, y: -139.06989}
-  m_SizeDelta: {x: 181.203, y: 15.1747}
+  m_AnchoredPosition: {x: -0.000001569586, y: -132.06989}
+  m_SizeDelta: {x: 193.8332, y: 15.1747}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1035222835
 MonoBehaviour:
@@ -25268,7 +25255,6 @@ MonoBehaviour:
   m_resumeButton: {fileID: 811203744}
   m_displayButton: {fileID: 511072676}
   m_maimMenuTitle: {fileID: 1768418988}
-  m_mixer: {fileID: 24100000, guid: fec4151c0eb2b5444af142439c06bfcf, type: 2}
 --- !u!95 &1057542489
 Animator:
   serializedVersion: 7
@@ -29915,7 +29901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 83.75105, y: -44.1}
+  m_AnchoredPosition: {x: 83.75105, y: -50.7}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1276110705
@@ -35020,7 +35006,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -128.49672}
+  m_AnchoredPosition: {x: 50, y: -107.21673}
   m_SizeDelta: {x: 123, y: 33.190002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1493135649
@@ -35165,7 +35151,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeDestroyableRoomWeight
+        m_MethodName: ChangeDestroyableChunkWeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35289,7 +35275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -51, y: -42}
+  m_AnchoredPosition: {x: -51, y: -7.5}
   m_SizeDelta: {x: 80, y: 34.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1495815104
@@ -35769,7 +35755,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -36968,7 +36954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 140, y: -119.37452}
+  m_AnchoredPosition: {x: 140, y: -128.68452}
   m_SizeDelta: {x: 108.091, y: 9.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1574381599
@@ -37044,7 +37030,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.0000011900834, y: -185.46638}
+  m_AnchoredPosition: {x: 0.0000011900834, y: -189.06639}
   m_SizeDelta: {x: 198.4308, y: 100.8165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1578467724
@@ -37107,20 +37093,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u0438\u0434 \u043A\u043E\u043C\u043D\u0430\u0442\u044B
-    \u0438\u043C\u0435\u0435\u0442 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435
-    0.00\u20131.00 (\u0443 \u0431\u0430\u0437\u043E\u0432\u043E\u0439 \u043C\u0438\u043D\u0438\u043C\u0443\u043C
-    0.3). \u0414\u043B\u044F \u043A\u0430\u0436\u0434\u043E\u0439 \u043D\u043E\u0432\u043E\u0439
-    \u043A\u043E\u043C\u043D\u0430\u0442\u044B \u0438\u0433\u0440\u0430 \u0431\u0435\u0440\u0451\u0442
-    \u0441\u0443\u043C\u043C\u0443 \u0432\u0441\u0435\u0445 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0439
-    \u0438 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044E
-    \u043F\u0440\u043E\u043F\u043E\u0440\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E
-    \u0435\u0433\u043E \u0434\u043E\u043B\u0435.\r\n\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440,
-    \u0435\u0441\u043B\u0438 \u0431\u0430\u0437\u043E\u0432\u0430\u044F = 0.8, \u0441
-    \u043F\u043E\u0442\u043E\u043B\u043A\u043E\u043C = 0.4, \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435
-    \u043F\u043E 0.2, \u0442\u043E \u0448\u0430\u043D\u0441\u044B:\r\n44% \u2013
-    \u0431\u0430\u0437\u043E\u0432\u0430\u044F, 22% \u2013 \u0441 \u043F\u043E\u0442\u043E\u043B\u043A\u043E\u043C,
-    \u043F\u043E 11% \u2013 \u0434\u0440\u0443\u0433\u0438\u0435."
+  m_text: "Her bir chunk t\xFCr\xFCn\xFCn 0.00 ile 1.00 aras\u0131nda bir a\u011F\u0131rl\u0131k
+    de\u011Feri vard\u0131r (temel chunk i\xE7in minimum 0.3't\xFCr). Her yeni chunk
+    i\xE7in oyun, t\xFCm a\u011F\u0131rl\u0131k de\u011Ferlerinin toplam\u0131n\u0131
+    al\u0131r ve bir chunk t\xFCr\xFCn\xFC, onun pay\u0131yla orant\u0131l\u0131
+    olarak se\xE7er.\r\n\r\n\xD6rne\u011Fin, Temel = 0.8, Tavanl\u0131 = 0.4 ve di\u011Ferleri
+    = 0.2 ise, olas\u0131l\u0131klar \u015F\xF6yledir:\r\n%44 \u2013 Temel, %22 \u2013
+    Tavanl\u0131, %11'er \u2013 di\u011Ferleri."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -37169,7 +37148,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -37571,7 +37550,7 @@ GameObject:
   - component: {fileID: 1602646993}
   - component: {fileID: 1602646994}
   m_Layer: 5
-  m_Name: RoomsCount
+  m_Name: ChunksCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38438,7 +38417,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ROOMS COUNT
+  m_text: "N\xDAMERO DE CHUNKS"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -38487,7 +38466,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -41409,7 +41388,7 @@ Transform:
   m_GameObject: {fileID: 1733449831}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000072717667, y: -13.936699, z: 0}
+  m_LocalPosition: {x: 0.0000059604645, y: -13.936699, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -42070,7 +42049,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 83.75105, y: -88.2}
+  m_AnchoredPosition: {x: 83.75105, y: -101.4}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1751932478
@@ -42088,10 +42067,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 133
+    m_Top: 126
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 0
+  m_Spacing: 10.6
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -42284,7 +42263,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: 9.522586}
+  m_AnchoredPosition: {x: 50, y: 11.522586}
   m_SizeDelta: {x: 123, y: 33.190002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1764655933
@@ -43124,7 +43103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.0000011900834, y: -23.110445}
+  m_AnchoredPosition: {x: 0.0000011900834, y: -29.610445}
   m_SizeDelta: {x: 198.4308, y: 22.7761}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1794500945
@@ -43187,10 +43166,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0417\u0430\u0434\u0430\u0451\u0442, \u0441\u043A\u043E\u043B\u044C\u043A\u043E
-    \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0445 \xAB\u043A\u043E\u043C\u043D\u0430\u0442\xBB
-    (\u0444\u0440\u0430\u0433\u043C\u0435\u043D\u0442\u043E\u0432) \u043F\u043E\u0434\u0440\u044F\u0434
-    \u0431\u0443\u0434\u0435\u0442 \u0432 \u0443\u0440\u043E\u0432\u043D\u0435."
+  m_text: "Establece cu\xE1ntos \"chunks\" (segmentos) individuales aparecer\xE1n
+    consecutivamente en el nivel.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -43239,7 +43216,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -44241,8 +44218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0427\u0410\u0421\u0422\u041E\u0422\u0410 \u0413\u0415\u041D\u0415\u0420\u0410\u0426\u0418\u0418
-    \u041A\u041E\u041C\u041D\u0410\u0422"
+  m_text: "FRECUENCIA DE GENERACI\xD3N DE CHUNKS"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -44291,7 +44267,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -44307,7 +44283,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 33.04036, y: -25.302996, z: 49.7551, w: 10.464857}
+  m_margin: {x: 36.31491, y: -25.302996, z: 40.39938, w: 10.464857}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -44565,7 +44541,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 565314503}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ChangeGridRoomWeight
+        m_MethodName: ChangeGridChunkWeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -47912,7 +47888,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: THE FREQUENCY OF ROOM GENERATION
+  m_text: "FRECUENCIA DE GENERACI\xD3N DE CHUNKS"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
   m_sharedMaterial: {fileID: 6662931225858403769, guid: 21da4eced8bf19d43a8c847c3d2f0adf, type: 2}
@@ -48260,7 +48236,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 0
+  m_Spacing: 6.5
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -50895,6 +50871,102 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].value
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].value
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[0].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[0].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[0].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[0].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[0].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_trapsCountPerChunk.m_Curve.Array.data[1].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[0].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 991568554170551248, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
+      propertyPath: m_enemiesCountPerChunk.m_Curve.Array.data[1].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
     - target: {fileID: 3535936475004516182, guid: 23c90a25cb0f48643952a37605a99df9, type: 3}
       propertyPath: m_Name
       value: LevelBuilder

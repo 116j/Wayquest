@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -17,16 +17,17 @@ public class Trap : MonoBehaviour, IMetrics
     [SerializeField]
     AnimationCurve[] m_spawnChances;
     [SerializeField]
+    //Серия ловушек или одиночная
     bool m_series;
 
     protected Animator m_anim;
     [Inject]
     protected LevelBuilder m_lvlBuilder;
-
+    //Номер ловушки
     int m_trapNumber;
+    //Выбран ли номер ловушки
     bool m_numberSet = false;
 
-    // Start is called before the first frame update
     protected virtual void Awake()
     {
         m_anim = GetComponent<Animator>();
@@ -41,9 +42,9 @@ public class Trap : MonoBehaviour, IMetrics
     }
 
     /// <summary>
-    /// Set animatioms for trap override controller
+    /// Задает анимации для переопределнного контроллера анимации ловушек
     /// </summary>
-    /// <param name="animNum"></param>
+    /// <param name="animNum">номер ловувшки</param>
     void SetAnimations(int animNum)
     {
         AnimatorOverrideController aoc = new(m_anim.runtimeAnimatorController);
@@ -55,7 +56,7 @@ public class Trap : MonoBehaviour, IMetrics
         m_anim.runtimeAnimatorController = aoc;
     }
     /// <summary>
-    /// Get random trap variant based on their spawn chances
+    /// Задает рандомный номер ловушки в зависимости от их шанса появления
     /// </summary>
     public void SetTrapNum()
     {
@@ -88,7 +89,10 @@ public class Trap : MonoBehaviour, IMetrics
         }
 
     }
-
+    /// <summary>
+    /// Ставит определенной номер ловушки
+    /// </summary>
+    /// <param name="num"></param>
     public void SetTrap(int num)
     {
         m_trapNumber = num;

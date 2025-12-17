@@ -119,27 +119,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20624187768832
-    m_Localized: ODA SAYISI
+    m_Localized: CHUNK SAYISI
     m_Metadata:
       m_Items: []
   - m_Id: 20650360225792
-    m_Localized: "ODA OLU\u015ETURMA SIKLI\u011EI"
+    m_Localized: "CHUNK OLU\u015ETURMA SIKLI\u011EI"
     m_Metadata:
       m_Items: []
   - m_Id: 20704886177792
-    m_Localized: Temel oda
+    m_Localized: Temel chunk
     m_Metadata:
       m_Items: []
   - m_Id: 20736116965376
-    m_Localized: "Tavan odas\u0131"
+    m_Localized: "Tavanl\u0131 chunk"
     m_Metadata:
       m_Items: []
   - m_Id: 20750046248960
-    m_Localized: "Izgara platformlar\u0131 odas\u0131"
+    m_Localized: Izgara platform chunk
     m_Metadata:
       m_Items: []
   - m_Id: 20774792642560
-    m_Localized: "Hareketli platformlar odas\u0131"
+    m_Localized: Hareketli platform chunk
     m_Metadata:
       m_Items: []
   - m_Id: 22886800867328
@@ -207,7 +207,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
-    m_Localized: "Y\u0131k\u0131labilir oda"
+    m_Localized: "Y\u0131k\u0131labilir chunk"
     m_Metadata:
       m_Items: []
   - m_Id: 12711559031865344
@@ -215,7 +215,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057984500514816
-    m_Localized: "ODA \xC7E\u015E\u0130TLER\u0130"
+    m_Localized: "CHUNK T\xDCRLER\u0130"
     m_Metadata:
       m_Items: []
   - m_Id: 13057887209439232
@@ -223,26 +223,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057949494853632
-    m_Localized: "Arka arkaya ka\xE7 ayr\u0131 \xABoda\xBB n\u0131n (par\xE7an\u0131n)
-      seviyede olaca\u011F\u0131n\u0131 belirler."
+    m_Localized: "Seviyede ard\u0131\u015F\u0131k olarak ka\xE7 adet \"chunk\" (b\xF6l\xFCm)
+      yer alaca\u011F\u0131n\u0131 belirler.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13058096987553792
-    m_Localized: "Be\u015F tip oda vard\u0131r:\n\n\u2022 Temel oda, d\xFC\u015Fmanlar\u0131
-      ve tuzaklar\u0131 olan bir odad\u0131r.\n\n\u2022 Tavan odas\u0131, tavan\u0131
-      ve \xFCzerinde tuzaklar\u0131 olan bir odad\u0131r.\n\n\u2022 Izgara platformlar\u0131
-      odas\u0131, oyuncunun atlad\u0131\u011F\u0131 platformlara sahip bir odad\u0131r.\n\n\u2022
-      Hareketli platformlar odas\u0131, birbirine yakla\u015Fan hareketli platformlara
-      sahip bir odad\u0131r.\n\n\u2022 Y\u0131k\u0131labilir oda, \xE7\xF6kmekte
-      olan bir zemine sahip bir odad\u0131r."
+    m_Localized: "Be\u015F t\xFCr chunk vard\u0131r:\r\n\r\n\u2022 Temel chunk \u2013
+      d\xFC\u015Fmanlar ve tuzaklar i\xE7eren bir chunk.\r\n\r\n\u2022 Tavanl\u0131
+      chunk \u2013 tavan ve \xFCzerinde tuzaklar bulunan bir chunk.\r\n\r\n\u2022
+      Izgara platform chunk \u2013 oyuncunun \xFCzerinden atlad\u0131\u011F\u0131
+      platformlar i\xE7eren bir chunk.\r\n\r\n\u2022 Hareketli platform chunk \u2013
+      birbirine yakla\u015Fan hareketli platformlar i\xE7eren bir chunk.\r\n\r\n\u2022
+      Y\u0131k\u0131labilir chunk \u2013 \xE7\xF6ken bir zemine sahip bir chunk."
     m_Metadata:
       m_Items: []
   - m_Id: 13058139958198272
-    m_Localized: "Her oda tipinin de\u011Feri 0.00\u20131.00'd\u0131r (temel minimum
-      0.3't\xFCr). Her yeni oda i\xE7in oyun, t\xFCm de\u011Ferlerin toplam\u0131n\u0131
-      al\u0131r ve pay\u0131yla orant\u0131l\u0131 olarak bir strateji se\xE7er.\n\xD6rne\u011Fin,
-      taban \\ u003d 0.8, tavanl\u0131 \\ u003d 0.4, gerisi 0.2 ise, oranlar:\n%
-      44'\xFC temel,% 22'si tavanl\u0131, her biri% 11'i farkl\u0131."
+    m_Localized: "Her bir chunk t\xFCr\xFCn\xFCn 0.00 ile 1.00 aras\u0131nda bir
+      a\u011F\u0131rl\u0131k de\u011Feri vard\u0131r (temel chunk i\xE7in minimum
+      0.3't\xFCr). Her yeni chunk i\xE7in oyun, t\xFCm a\u011F\u0131rl\u0131k de\u011Ferlerinin
+      toplam\u0131n\u0131 al\u0131r ve bir chunk t\xFCr\xFCn\xFC, onun pay\u0131yla
+      orant\u0131l\u0131 olarak se\xE7er.\r\n\r\n\xD6rne\u011Fin, Temel = 0.8, Tavanl\u0131
+      = 0.4 ve di\u011Ferleri = 0.2 ise, olas\u0131l\u0131klar \u015F\xF6yledir:\r\n%44
+      \u2013 Temel, %22 \u2013 Tavanl\u0131, %11'er \u2013 di\u011Ferleri."
     m_Metadata:
       m_Items: []
   - m_Id: 13442591293095936

@@ -119,27 +119,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20624187768832
-    m_Localized: ROOMS COUNT
+    m_Localized: NUMBER OF CHUNKS
     m_Metadata:
       m_Items: []
   - m_Id: 20650360225792
-    m_Localized: THE FREQUENCY OF ROOM GENERATION
+    m_Localized: CHUNK GENERATION FREQUENCY
     m_Metadata:
       m_Items: []
   - m_Id: 20704886177792
-    m_Localized: Base room
+    m_Localized: Base chunk
     m_Metadata:
       m_Items: []
   - m_Id: 20736116965376
-    m_Localized: Ceiling room
+    m_Localized: Ceiling chunk
     m_Metadata:
       m_Items: []
   - m_Id: 20750046248960
-    m_Localized: Grid platforms room
+    m_Localized: Grid platforms chunk
     m_Metadata:
       m_Items: []
   - m_Id: 20774792642560
-    m_Localized: Moving platforms room
+    m_Localized: Moving platforms chunk
     m_Metadata:
       m_Items: []
   - m_Id: 22886800867328
@@ -215,7 +215,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
-    m_Localized: Destroyable room
+    m_Localized: Destroyable chunk
     m_Metadata:
       m_Items: []
   - m_Id: 12711559031865344
@@ -227,29 +227,29 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057984500514816
-    m_Localized: ROOM TYPES
+    m_Localized: TYPES OF CHUNKS
     m_Metadata:
       m_Items: []
   - m_Id: 13057949494853632
-    m_Localized: Sets how many separate "rooms" (fragments) there will be in a row
-      in a level.
+    m_Localized: "Sets how many individual \"chunks\" (segments) will appear consecutively
+      in the level.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13058096987553792
-    m_Localized: "There are five types of rooms:\n\n\u2022 The base room is a room
-      with enemies and traps.\n\n\u2022 The ceiling room is a room with a ceiling
-      and traps on it.\n\n\u2022 The grid platforms room is a room with platforms
-      on which the player jumps.\n\n\u2022 The moving platforms room is a room with
-      moving platforms that approach each other.\n\n\u2022 The destroyable room is
-      a room with a collapsing floor."
+    m_Localized: "There are five types of chunks:\r\n\r\n\u2022 Basic chunk \u2013
+      a chunk with enemies and traps.\r\n\r\n\u2022 Ceiling chunk \u2013 a chunk
+      with a ceiling and traps on it.\r\n\r\n\u2022 Grid platforms chunk \u2013 a
+      chunk with platforms that the player jumps across.\r\n\r\n\u2022 Moving platforms
+      chunk \u2013 a chunk with moving platforms that approach each other.\r\n\r\n\u2022
+      Destructible chunk \u2013 a chunk with a collapsing floor."
     m_Metadata:
       m_Items: []
   - m_Id: 13058139958198272
-    m_Localized: "Each type of room has a value of 0.00\u20131.00 (the base has a
-      minimum of 0.3). For each new room, the game takes the sum of all the values
-      and chooses a strategy in proportion to its share.\nFor example, if base =
-      0.8, with ceiling = 0.4, and the rest are 0.2, then the chances\nare 44% for
-      base, 22% for ceiling, and 11% for others."
+    m_Localized: "Each chunk type has a weight value between 0.00 and 1.00 (the basic
+      chunk has a minimum of 0.3). For each new chunk, the game takes the sum of
+      all weight values and selects a chunk type proportionally to its share.\r\n\r\nFor
+      example, if Basic = 0.8, Ceiling = 0.4, and others = 0.2 each, then the probabilities
+      are:\r\n44% \u2013 Basic, 22% \u2013 Ceiling, 11% each \u2013 others.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13442591293095936

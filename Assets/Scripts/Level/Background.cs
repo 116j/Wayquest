@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Background : MonoBehaviour
 {
@@ -7,6 +7,10 @@ public class Background : MonoBehaviour
     [SerializeField]
     int[] m_calmThemeBG;
 
+    /// <summary>
+    /// Рандомно выбирает задний фон в зависимости от темы уровня
+    /// </summary>
+    /// <param name="thrmrNum">номер темы уровня</param>
     public void SetTheme(int thrmrNum)
     {
         switch (thrmrNum)

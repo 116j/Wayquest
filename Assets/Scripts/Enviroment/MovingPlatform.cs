@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
@@ -9,12 +9,15 @@ public class MovingPlatform : MonoBehaviour
     float m_waitTime = 0.5f;
 
     List<Vector3> m_checkpoints = new List<Vector3>();
+    //Список сигналов останововк на точках (true - остановиться)
     List<bool> m_stops = new List<bool>();
     int m_currentCheckpoint;
     float m_waitTimer;
 
     bool m_waiting = false;
+    //Началось ли движение
     bool m_start = true;
+    //Начать движение только при соприкосновении с игроком
     bool m_moveWnenStand = false;
 
     private void Start()
@@ -23,10 +26,9 @@ public class MovingPlatform : MonoBehaviour
         m_stops.Add(true);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // wait before move
+        //ожидание перед дальнейшим движением
         if (m_waiting)
         {
             m_waitTimer += Time.deltaTime;
@@ -38,16 +40,17 @@ public class MovingPlatform : MonoBehaviour
         }
         else if (m_start)
         {
+            //движется к следующей точке по кругу 
             transform.position = Vector3.MoveTowards(transform.position, m_checkpoints[m_currentCheckpoint], m_speed * Time.deltaTime);
 
             if (Vector3.Distance(m_checkpoints[m_currentCheckpoint], transform.position) < 0.02f)
             {
-                m_waiting = true & m_stops[m_currentCheckpoint];
+                m_waiting = m_stops[m_currentCheckpoint];
                 m_currentCheckpoint = (m_currentCheckpoint + 1) % m_checkpoints.Count;
             }
         }
     }
-
+    //При соприкосновении с игрком начинает движение (если m_moveWnenStand)
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -81,7 +84,9 @@ public class MovingPlatform : MonoBehaviour
     }
 
     public float GetSpeed() => m_speed;
-
+    /// <summary>
+    /// Платформа начнет двигаться, когда на нее наступит игрок
+    /// </summary>
     public void DisableAutoMovement()
     {
         m_moveWnenStand = true;
@@ -99,7 +104,10 @@ public class MovingPlatform : MonoBehaviour
         m_checkpoints.Add(pos);
         m_stops.Add(stop);
     }
-
+    /// <summary>
+    /// Возвращает платформу на начальную позицию
+    /// </summary>
+    /// <param name="enemy">нужно ли ждать убийства врага</param>
     public void Restart(bool enemy = false)
     {
         if (m_moveWnenStand || enemy)

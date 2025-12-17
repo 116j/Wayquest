@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class CeilStrategy : FillStrategy
 {
-    protected new int m_maxRoomWidth = 40;
-    protected new int m_minRoomWidth = 15;
+    protected new int m_maxChunkWidth = 40;
+    protected new int m_minChunkWidth = 15;
 
     protected new int m_minElevationHeight = 2;
     protected new int m_maxElevationHeight = 20;
@@ -14,68 +14,71 @@ public class CeilStrategy : FillStrategy
     }
 
     /// <summary>
-    /// Creates elevations and lowlands for the room, adds ceil and places traps on it, adds landscape and draws tiles
+    /// Создает возвышенности и низменности для чанка, добавляет потолок и размещает на нем ловушки, затем добавляет ландшавт и отрисовывает тайлы
     /// </summary>
-    /// <param name="prevRoom"></param>
-    /// <param name="transitionStrategy"></param>
+    /// <param name="prevChunk">предыдущий чанк</param>
+    /// <param name="transitionStrategy">стратегия построения перехода на следующий чанк</param>
     /// <returns></returns>
-    public override Room FillRoom(Room prevRoom, FillStrategy transitionStrategy)
+    public override Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        prevRoom.GetNextTransition().DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(prevRoom.GetNextTransition(), groundTiles, int.MaxValue, false));
+        //рисует тайлы перехода от предыдущего чанка к этому
+        prevChunk.GetNextTransition().DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(prevChunk.GetNextTransition(), groundTiles, int.MaxValue, false));
 
-        Vector3Int start = prevRoom.GetNextTransition().GetEndPosition();
-        Vector3Int end = new Vector3Int(start.x + Random.Range(m_minRoomWidth, m_maxRoomWidth), start.y);
-        //width of start straight section
+        Vector3Int start = prevChunk.GetNextTransition().GetEndPosition();
+        Vector3Int end = new Vector3Int(start.x + Random.Range(m_minChunkWidth, m_maxChunkWidth), start.y);
+        //ширина начального прямого участка
         int startWidth = Random.Range(m_minStraightSection, end.x - start.x);
-        Room room = new Room(end, startWidth, prevRoom.GetNextTransition());
-        // no slopes
+        Chunk chunk = new Chunk(end, startWidth, prevChunk.GetNextTransition());
+        //без холмлмов
         m_slopeChance = 1f;
         int height = Random.Range(m_minElevationHeight, m_maxElevationHeight) * (Random.value > 0.5f ? -1 : 1);
         SetRightOffset(height);
-        CreateElevations(room, start + startWidth * Vector3Int.right, startWidth, height, false);
-        room.AddTransition(transitionStrategy.FillTransition(room));
-        MakeCeil(room);
-        return room;
+        CreateElevationsAndLowlands(chunk, start + startWidth * Vector3Int.right, startWidth, height, false);
+        chunk.AddTransition(transitionStrategy.FillTransition(chunk));
+        MakeCeil(chunk);
+        return chunk;
     }
 
     /// <summary>
-    /// 
+    /// Создает потолок
     /// </summary>
-    /// <param name="room"></param>
-    void MakeCeil(Room room)
+    /// <param name="chunk"></param>
+    void MakeCeil(Chunk chunk)
     {
         List<(GameObject, Vector3)> coins = new List<(GameObject, Vector3)>();
         Trap trap = m_levelTheme.m_ceilTraps[Random.Range(0, m_levelTheme.m_ceilTraps.Length)];
         m_container.Inject(trap);
         trap.SetTrapNum();
+        //отступ потолка над полом
         int offset = Mathf.CeilToInt(trap.GetHeight());
 
-        var ground = room.GetGround();
-        //width for ceil
+        var ground = chunk.GetGround();
+        //ширина сегмента потолка
         int width = 0;
-        // width for traps placement
+        // ширина сегмента для расположения ловушек
         int groundWidth = 0;
-        // ceil start
-        Vector3Int start = room.GetStartPosition() + Vector3Int.right;
-        // trap placement start
+        // начало сегмента потолка
+        Vector3Int start = chunk.GetStartPosition() + Vector3Int.right;
+        // начало сегмента для расположения ловушек
         int groundStart = start.x;
-        //height of the ceil
-        int height = room.GetRoomHighestPoint() - start.y + m_minStraightSection;
-        // if new room is lower than previous - set ceil height higher so palayer can't jump on it
-        if (room.GetTransitionHeight() < 0)
+        //высота потолка (количество тайлов)
+        int height = chunk.GetChunkHighestPoint() - start.y + m_minStraightSection;
+        //если новый чанк ниже предыдущего - ставим высоту потолка выше, чтобы игрок не смог запрыгнуть
+        if (chunk.GetTransitionHeight() < 0)
         {
-            height = Mathf.Max(room.GetNextTransition().GetTransitionRightHeight() + m_minStraightSection, height);
+            height = Mathf.Max(chunk.GetNextTransition().GetTransitionRightHeight() + m_minStraightSection, height);
         }
-        // ceil polygon
-        room.MakePolygon(0, start, false);
+        // полигон потолка
+        chunk.MakePolygon(0, start, false);
         for (int i = 1; i < ground.Count - 1; i++)
         {
+            //идет по земле, пока не закончится ровный участок
             if (ground[i].y == start.y && ground[i].x == start.x + width)
             {
                 width++;
                 groundWidth++;
             }
-            //if ground straight section is over 
+            //когда заканчивается ровный участок 
             else
             {
                 if (start.y > ground[i].y)
@@ -84,9 +87,9 @@ public class CeilStrategy : FillStrategy
                 }
                 else
                 {
-                    groundWidth = groundWidth - offset;
-                    width = width - offset;
-                    // if elevation is higher than player's jump - add space for platform
+                    groundWidth -= offset;
+                    width -= offset;
+                    //если возвышенность выше прыжка игрока - добавляет место для платформы
                     if (ground[i].y - start.y > m_playerJumpHeight)
                     {
                         groundWidth--;
@@ -96,17 +99,17 @@ public class CeilStrategy : FillStrategy
 
                 if (width > 1)
                 {
-                    room.AddTiles(height, Mathf.Min(width, room.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
-                    AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), room);
+                    chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
+                    AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), chunk);
                     width = 1;
                     height += start.y - ground[i].y;
-                    // if lowland - offset ground
+                    //если низменность - отступает несколько клеток
                     if (start.y > ground[i].y)
                     {
                         i += offset;
                         start = ground[i];
                     }
-                    //if elevation - add extra width in the left
+                    //если возвышенность - добавляет дополнительную ширину слева
                     else
                     {
                         width += offset + 1;
@@ -124,34 +127,38 @@ public class CeilStrategy : FillStrategy
                 if (i >= ground.Count - 1)
                     break;
                 groundStart = ground[i].x;
+                //дообавляет ловушки на потолок
                 trap = m_levelTheme.m_ceilTraps[Random.Range(0, m_levelTheme.m_ceilTraps.Length)];
                 m_container.Inject(trap);
                 trap.SetTrapNum();
-
-                Coin coin = m_container.InstantiatePrefabForComponent<Coin>(m_levelTheme.m_coin, ground[i], Quaternion.identity,null);
+                // добавляет монетку в конце ровного сегмента
+                Coin coin = m_container.InstantiatePrefabForComponent<Coin>(m_levelTheme.m_coin, ground[i], Quaternion.identity, null);
                 coin.SetCost(Random.Range(10, 100), false);
-                room.AddEnviromentObject(coin.gameObject);
+                chunk.AddEnviromentObject(coin.gameObject);
                 coins.Add((coin.gameObject, new Vector3(ground[i].x + m_levelTheme.m_coin.GetOffset().x, ground[i].y + m_levelTheme.m_coin.GetOffset().y)));
             }
         }
-        room.AddTiles(height, Mathf.Min(width, room.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
-        AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), room);
-        room.DrawTiles(m_editor,(HashSet<Vector3Int> groundTiles) => { 
-            AddLandscape(room, groundTiles, offset, true);
-            foreach(var (obj,pos) in coins)
+        //последний ровный сегмент
+        chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
+        AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), chunk);
+        //отрисовываем тайлы
+        chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) =>
+        {
+            AddLandscape(chunk, groundTiles, offset, true);
+            foreach (var (obj, pos) in coins)
             {
                 obj.transform.position = pos;
             }
         });
     }
     /// <summary>
-    /// Adds a series of traps with offsets
+    /// Добавляет серию ловушек на потолок
     /// </summary>
-    /// <param name="trap"></param>
-    /// <param name="width"></param>
-    /// <param name="start"></param>
+    /// <param name="trap">тип ловушки</param>
+    /// <param name="width">ширина потолка</param>
+    /// <param name="start">начало потолка</param>
     /// <returns></returns>
-    void AddCeilTraps(Trap trap, int width, Vector3Int start, Room room)
+    void AddCeilTraps(Trap trap, int width, Vector3Int start, Chunk chunk)
     {
         float offset = Random.Range(1.5f * m_playerWidth, 2 * m_playerWidth);
         float leftBorder = start.x - trap.GetLeftBorder() + offset;
@@ -159,9 +166,9 @@ public class CeilStrategy : FillStrategy
 
         for (float x = leftBorder; x <= rightBorder;)
         {
-            Trap newTrap = m_container.InstantiatePrefabForComponent<Trap>(trap, new Vector3(x, start.y), Quaternion.identity,null);
+            Trap newTrap = m_container.InstantiatePrefabForComponent<Trap>(trap, new Vector3(x, start.y), Quaternion.identity, null);
             newTrap.SetTrap(trap.GetTrapNum());
-            room.AddEnviromentObject(newTrap.gameObject);
+            chunk.AddEnviromentObject(newTrap.gameObject);
             x += trap.GetRightBorder() + offset;
         }
     }

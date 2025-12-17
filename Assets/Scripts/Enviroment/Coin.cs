@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 public class Coin : MonoBehaviour
@@ -11,7 +11,7 @@ public class Coin : MonoBehaviour
     UIController m_UI;
 
     int m_cost;
-    // Start is called before the first frame update
+
     void Awake()
     {
         m_rb = GetComponent<Rigidbody2D>();
@@ -24,10 +24,10 @@ public class Coin : MonoBehaviour
         m_cost = cost;
         if (destroy)
         {
+            //подбрасывает монету вверх и удаляет ее через 10 сек
             m_rb.AddForce(new Vector2(Random.Range(-2f, 2f), 7f), ForceMode2D.Impulse);
             Destroy(gameObject, 10f);
         }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -37,8 +37,7 @@ public class Coin : MonoBehaviour
             m_coinGain.Play();
             m_col.isTrigger = true;
             m_UI.AddMoney(m_cost);
-            Destroy(gameObject,0.2f);
+            Destroy(gameObject, 0.2f);
         }
     }
-
 }

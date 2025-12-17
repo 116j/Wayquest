@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using Zenject;
 
@@ -45,7 +45,7 @@ public class Cat : MonoBehaviour
     int m_currentDir = 1;
     float m_speed;
     float m_walkTime;
-    // Start is called before the first frame update
+
     void Start()
     {
         m_anim = GetComponent<Animator>();
@@ -57,10 +57,9 @@ public class Cat : MonoBehaviour
         m_addHeart.AddListener(m_lvlBuilder.CatPetted);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // stop and turn around if cant go further
+        //остановиться и повернуть если нет пути дальше
         if (!m_groundZone.TargetDetected || m_touchings.IsWalls())
         {
             m_walkTimer = 0f;
@@ -68,17 +67,17 @@ public class Cat : MonoBehaviour
             m_speed = 0f;
             TurnAround();
         }
-        //if is not petting - walk
+        //если не гладят - ходить
         if (!m_petting && CanPet)
             Walk();
         m_anim.SetBool(m_HashWalk, m_walking && !m_petting);
-        // is not triggered - trigger
+        //если нет триггера - включить
         if (!m_petting && !m_triggered)
         {
             m_anim.SetTrigger(m_triggers[Random.Range(0, m_triggers.Length)]);
             m_triggered = true;
         }
-        // if triggered - set trigger cooldown
+        //если есть тригер - перезарядка триггера
         if (m_triggered)
         {
             m_triggerTimer += Time.deltaTime;
@@ -96,7 +95,7 @@ public class Cat : MonoBehaviour
     }
 
     /// <summary>
-    /// Walk for walktime, than stop
+    /// Ходить в течении времени ходьбы, затем остановиться
     /// </summary>
     void Walk()
     {
@@ -123,7 +122,7 @@ public class Cat : MonoBehaviour
         m_anim.SetBool(m_HashCanMove, !stop);
     }
     /// <summary>
-    /// Stop when start pettng and sleep when end
+    /// Остановится когда начинают гладить и заспуть, когда закончат
     /// </summary>
     /// <param name="pet"></param>
     public void Pet(bool pet)

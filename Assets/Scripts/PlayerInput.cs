@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 public class PlayerInput : MonoBehaviour
@@ -106,17 +105,25 @@ public class PlayerInput : MonoBehaviour
         m_input = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         m_input.uiInputModule.cancel.action.performed += m_menu.CloseLayout;
     }
-
+    /// <summary>
+    /// Блокирует и разблокитрует ввод
+    /// </summary>
+    /// <param name="toLock">блокировать</param>
     public void LockInput(bool toLock)
     {
         m_inputLocked = toLock;
     }
-
+    /// <summary>
+    /// Тип устройства ввода - клавиатура или джойстик
+    /// </summary>
+    /// <returns>название типа</returns>
     public string GetCurrentDeviceType() => m_input.currentControlScheme;
-
-    public void EnableShop()
+    /// <summary>
+    /// Включает и выключает возможность взаимодействия с магазином
+    /// </summary>
+    public void EnableShop(bool enable)
     {
-        m_shop = !m_shop;
+        m_shop = enable;
     }
 
     public void StartGame()
@@ -125,12 +132,14 @@ public class PlayerInput : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-
+    /// <summary>
+    /// Ставит и снимает с паузы игру
+    /// </summary>
     public void OnPause()
     {
-        if (m_gameStarted&&!m_shopOpened)
+        if (m_gameStarted && !m_shopOpened)
         {
-            Cursor.lockState = m_pause? CursorLockMode.Locked: CursorLockMode.None;
+            Cursor.lockState = m_pause ? CursorLockMode.Locked : CursorLockMode.None;
             m_pause = !m_pause;
             Cursor.visible = m_pause;
             Time.timeScale = m_pause ? 0 : 1;
@@ -183,7 +192,9 @@ public class PlayerInput : MonoBehaviour
     {
         m_pet = value.isPressed;
     }
-
+    /// <summary>
+    /// Открывает меню магазина
+    /// </summary>
     void OnShop()
     {
         if (m_shop)

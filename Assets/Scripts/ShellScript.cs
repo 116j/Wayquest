@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(SoundController))]
 public class ShellScript : AttackListener
@@ -9,9 +9,9 @@ public class ShellScript : AttackListener
 
     float m_life = 0f;
 
-    // Update is called once per frame
     void Update()
     {
+        //удаляет снаряд, если он прожил больше m_lifeTime
         m_life += Time.deltaTime;
         if (m_life >= m_lifeTime)
         {
@@ -22,7 +22,7 @@ public class ShellScript : AttackListener
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(m_collideLayers==(m_collideLayers | (1<< collision.gameObject.layer)))
+        if (m_collideLayers == (m_collideLayers | (1 << collision.gameObject.layer)))
         {
             GetComponent<SoundController>().PlaySound(gameObject.name + "Hit");
             Destroy(gameObject);

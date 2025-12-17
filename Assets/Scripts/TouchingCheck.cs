@@ -1,5 +1,4 @@
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TouchingCheck : MonoBehaviour
 {
@@ -14,24 +13,29 @@ public class TouchingCheck : MonoBehaviour
 
     Collider2D m_col;
 
-    //distance to detect wall
+    //Дистанция для определения стены
     readonly float m_wallHitDist = 0.1f;
-    //distance to detect ground
+    //Дистанция для определения земли
     readonly float m_groundHitDist = 0.05f;
-    //distance to detect slope
+    //Дистанция для определения холма
     readonly float m_slopeHitDist = 0.2f;
+    //Ширина расширения границ для определения застревания
     readonly float m_skinWidth = 0.02f;
 
     RaycastHit2D[] m_rayHits = new RaycastHit2D[5];
 
-    // Start is called before the first frame update
     void Start()
     {
         m_col = GetComponent<Collider2D>();
     }
-
+    /// <summary>
+    /// Определяет небольшое застревание вправо или влево
+    /// </summary>
+    /// <param name="dist"></param>
+    /// <returns></returns>
     public float WallsStuck(float dist)
     {
+        //cоздает вокруг объекта прямоугольник для определения застревания 
         var hit = Physics2D.BoxCast(
             transform.position,
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
@@ -41,9 +45,14 @@ public class TouchingCheck : MonoBehaviour
         );
         return hit.collider != null ? hit.distance : 0f;
     }
-
+    /// <summary>
+    /// Определяет небольшое застревание вниз
+    /// </summary>
+    /// <param name="dist"></param>
+    /// <returns></returns>
     public float GroundStuck(float dist)
     {
+        //cоздает вокруг объекта прямоугольник для определения застревания 
         var hit = Physics2D.BoxCast(
             transform.position,
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
@@ -53,31 +62,46 @@ public class TouchingCheck : MonoBehaviour
         );
         return hit.collider != null ? hit.distance : 0f;
     }
-
+    /// <summary>
+    /// Если застрял в земле со всех сторон, кроме верха
+    /// </summary>
+    /// <returns></returns>
     public bool IsGroundStuck()
     {
         return m_col.Cast(-transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
-            m_col.Cast(transform.right, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 && 
+            m_col.Cast(transform.right, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
             m_col.Cast(-transform.right, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
-            m_col.Cast(transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) ==0;
+            m_col.Cast(transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) == 0;
     }
-
+    /// <summary>
+    /// Если касается земли
+    /// </summary>
+    /// <returns></returns>
     public bool IsGrounded()
     {
         return m_col.Cast(-transform.up, m_groundCastFilter, m_rayHits, m_groundHitDist) > 0;
     }
-
+    /// <summary>
+    /// Если касается стены
+    /// </summary>
+    /// <returns></returns>
     public bool IsWalls()
     {
         return m_col.Cast(transform.right, m_wallCastFilter, m_rayHits, m_wallHitDist) > 0;
     }
-
+    /// <summary>
+    /// Если поднимается по холму
+    /// </summary>
+    /// <returns></returns>
     public bool IsSlopeUp()
     {
         return m_col.Cast(transform.right, m_slopeCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
         m_col.Cast(-transform.up, m_groundCastFilter, m_rayHits, m_groundHitDist) > 0;
     }
-
+    /// <summary>
+    /// Если спускается по холму
+    /// </summary>
+    /// <returns></returns>
     public bool IsSlopeDown()
     {
         return m_col.Cast(-transform.right, m_slopeCastFilter, m_rayHits, m_slopeHitDist) > 0 &&

@@ -1,72 +1,90 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GridStrategy : FillStrategy
 {
-    protected int m_maxRoomSize = 50;
-    protected int m_minRoomSize = 20;
+    protected int m_maxChunkSize = 50;
+    protected int m_minChunkSize = 20;
 
     protected new int m_minTransitionWidth = 4;
     protected new int m_maxTransitionWidth = 10;
     protected int m_minTransitionHeight = 11;
     protected new int m_maxTransitionHeight = 25;
 
+    //Мин длина платформа
     readonly int m_minWidth = 1;
+    //Макс длина платформы
     readonly int m_maxWidth = 6;
+    //Мин расстояние между платформами
     readonly int m_minDist = 3;
 
+    //Макс количество попыток генерации чанка
     readonly int m_maxAttempts = 3;
+    //Макс количество попыток генерации платформы
     readonly int m_platformMaxAttempts = 100;
+
+    readonly float m_negativeChunkHeightChance = 0.7f;
 
     public GridStrategy(LevelTheme levelTheme) : base(levelTheme)
     {
     }
-
-    public override Room FillRoom(Room prevRoom, FillStrategy transitionStrategy)
+    /// <summary>
+    /// Созддает чанк состоящий из плтформ, ведущий вверх или вниз, по которым нужно прыгать, 
+    /// добавляет ландшавт и отрисовывает
+    /// </summary>
+    /// <param name="prevChunk">предыдущий чанк</param>
+    /// <param name="transitionStrategy">стратегия построения перехода на следующий чанк</param>
+    /// <returns></returns>
+    public override Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        Room transition = new Room(prevRoom.GetEndPosition(), prevRoom.GetEndPosition());
+        //рисует тайлы перехода от предыдущего чанка к этому
+        Chunk transition = new Chunk(prevChunk.GetEndPosition(), prevChunk.GetEndPosition());
 
-        int width = Random.Range(m_minRoomSize, m_maxRoomSize);
-        int height = Random.Range(m_minRoomSize, m_maxRoomSize);
-        if (Random.value > 0.7f)
+        int width = Random.Range(m_minChunkSize, m_maxChunkSize);
+        int height = Random.Range(m_minChunkSize, m_maxChunkSize);
+        if (Random.value > m_negativeChunkHeightChance)
         {
             height = -height;
         }
-        Vector3Int start = prevRoom.GetEndPosition();
+        Vector3Int start = prevChunk.GetEndPosition();
         Vector3Int end = new Vector3Int(start.x + width, start.y + height);
-        Room room = new Room(start, end, transition);
+        Chunk chunk = new Chunk(start, end, transition);
         int attempts = 0;
-
-        while (!MakeGrid(room))
+        //генерирует уровень m_maxAttempts раз, если не получаеятся, то пробует другую стратегию
+        while (!MakeGrid(chunk))
         {
             attempts++;
-            room.ClearGrid();
+            chunk.ClearGrid();
             if (attempts >= m_maxAttempts)
             {
                 Debug.Log("Grid failed");
                 return null;
             }
         }
-        prevRoom.GetNextTransition().Clear(m_editor);
+        prevChunk.GetNextTransition().Clear(m_editor);
 
-        // create bounds for player's fall
-        room.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
+        //создает границы для падения игрока
+        chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 
-        CreateSideBound(room, height < 0);
+        CreateSideBound(chunk, height < 0);
 
-        prevRoom.AddTransition(transition);
-        room.AddTransition(new Room(end,end));
-        room.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(room, groundTiles, int.MaxValue, false));
-        return room;
+        prevChunk.AddTransition(transition);
+        chunk.AddTransition(new Chunk(end, end));
+        chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(chunk, groundTiles, int.MaxValue, false));
+        return chunk;
     }
-
-    public override Room FillTransition(Room room)
+    /// <summary>
+    /// Создает переход наверх из маленьких платформ
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <returns></returns>
+    public override Chunk FillTransition(Chunk chunk)
     {
         int width = Random.Range(m_minTransitionWidth, m_maxTransitionWidth);
         int height = Random.Range(m_minTransitionHeight, m_maxTransitionHeight);
-        Vector3Int start = room.GetEndPosition();
+        Vector3Int start = chunk.GetEndPosition();
         Vector3Int end = new Vector3Int(start.x + width, start.y + height);
-        Room transition = new Room(start, end);
+        Chunk transition = new Chunk(start, end);
 
         Vector3Int lastPoint = start + Vector3Int.right;
         int platformWidth = (width - 2) / 2;
@@ -80,169 +98,200 @@ public class GridStrategy : FillStrategy
             posOffset = !posOffset;
         }
         while (lastPoint.y < end.y);
-        // create bounds for player's fall
+        //создает границы для падения игрока
         transition.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 
         return transition;
     }
-
-    bool MakeGrid(Room room)
+    /// <summary>
+    /// Создает сетку из платформ
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <returns>удалось ли создать сетку из платформ</returns>
+    bool MakeGrid(Chunk chunk)
     {
-        Vector3Int start = room.GetStartPosition();
-        Vector3Int end = room.GetEndPosition();
+        Vector3Int start = chunk.GetStartPosition();
+        Vector3Int end = chunk.GetEndPosition();
         Vector3Int lastPoint = start;
+        //позиция последней второй платформы
         Vector3Int lastOffset = start;
+        int chunkHeight = end.y - start.y;
         int attempts = 0;
         int lastWidth = 0;
         int w1 = 0;
-        int platformsOffsetY = 0;
+        int secondaryOffsetY;
 
         while (attempts < m_platformMaxAttempts)
         {
-            // Check if we've reached the end
+            //проверяет не достигли ли конца чанка
             if ((lastPoint.x + lastWidth >= end.x - m_minWidth) &&
                 (Mathf.Abs(lastPoint.y - end.y) <= m_playerJumpHeight))
             {
                 return true;
             }
 
-            // Calculate next platform position
+            //вериикальный отступ платформы
             int offsetY = (lastPoint.y > end.y ? -1 : 1) * Random.Range(m_minDist, m_playerJumpHeight);
+            //отступ платформы по сравнению с оставшейся высотой
             float progress = Mathf.Abs(offsetY) * 1.0f / Mathf.Max(1, Mathf.Abs(end.y - lastPoint.y));
+            //возможная позиция X
             int x = lastPoint.x + lastWidth + (int)(progress * (end.x - lastPoint.x - lastWidth));
 
-            // Calculate horizontal offset
+            //длина прыжка игрока на новую платформу в зависимости от высоты вертикального отступа
             int jumpWidth = lastPoint.y < end.y ? GetJumpWidth(offsetY) : m_playerJumpWidth;
-            int offsetX;
-
-            if (x - lastPoint.x - lastWidth < jumpWidth)
+            int offsetX = x - lastPoint.x - lastWidth;
+            //если расстояние между платформами меньше ширины прыжка
+            if (offsetX < jumpWidth)
             {
                 offsetX = Random.Range(-jumpWidth, jumpWidth);
             }
             else
             {
-                int rangeStart = jumpWidth - x + lastPoint.x + lastWidth + m_minWidth;
-                int rangeEnd = -lastPoint.x + x - jumpWidth - m_minWidth;
-                offsetX = Random.Range(rangeStart, rangeEnd);
+                int minOffset = jumpWidth - offsetX + m_minWidth;
+                int maxOffset = offsetX - m_minWidth;
+                offsetX = Random.Range(minOffset, maxOffset);
             }
-
+            //обрезает горизонтальный отступ по границам чанка
             offsetX = Mathf.Clamp(offsetX, start.x - x + m_minWidth, end.x - x - m_minWidth * 2);
+            //проверяет окрестности на стокновение с платформами
+            Vector3Int pos = new Vector3Int(x + offsetX, lastPoint.y + offsetY);
 
-            Vector3Int pos = CheckSurroundings(room, new Vector3Int(x + offsetX, lastPoint.y + offsetY), end);
-
-            // Validate platform position
-            if (Mathf.Abs(lastPoint.x + lastWidth - pos.x) > GetJumpWidth(offsetY) ||
-                !AvailablePlatform(room, lastPoint.y > lastOffset.y && end.y - start.y > 0 ? lastPoint.y : lastOffset.y,
-                                 pos, GetMaxWidth(room, pos), ref lastWidth, end) ||
+            //проверка платформы на жизнеспособность и подбор ширины платформы
+            if (!CheckSurroundings(chunk, pos) || Mathf.Abs(lastPoint.x + lastWidth - pos.x) > GetJumpWidth(offsetY) ||
+                !AvailablePlatformWidth(chunk, pos, GetMaxWidth(chunk, pos), ref lastWidth, end) ||
                 pos.x > end.x - m_minWidth * 2 || pos.x <= start.x)
             {
                 attempts++;
                 continue;
             }
 
-            // Create main platform
+            //новая платформа
             lastWidth = Mathf.Clamp(lastWidth, m_minWidth, end.x - pos.x - m_minWidth);
             lastPoint = pos;
-            room.CreatePlatform(lastPoint, lastWidth);
+            chunk.CreatePlatform(lastPoint, lastWidth);
 
-            // Create secondary platform
-            platformsOffsetY = (offsetX * (end.y - start.y) >= 0 ? -1 : 1) * Random.Range(m_minDist - 1, m_playerJumpHeight);
-            bool offsetDirection = (offsetX * (end.y - start.y) >= 0);
+            //если знак горизонтального отступа платформы и знак высоты чанка совпадают
+            bool offsetDirection = offsetX * chunkHeight >= 0;
+            secondaryOffsetY = (offsetDirection ? -1 : 1) * Random.Range(m_minDist - 1, m_playerJumpHeight);
 
-            int offsetX1;
+            int secondaryOffsetX;
             if (offsetX > 0)
             {
+                //при положительном отступе больше склоняется к правому отступу
                 int min = offsetDirection ? Mathf.Clamp(-m_minDist + 1, lastOffset.x + w1 - lastPoint.x + m_minWidth, 0) : -m_minDist + 1;
-                offsetX1 = Random.Range(min, GetJumpWidth(platformsOffsetY) + lastWidth);
+                secondaryOffsetX = Random.Range(min, GetJumpWidth(secondaryOffsetY) + lastWidth);
             }
             else
             {
-                int min = offsetDirection ? Mathf.Clamp(-GetJumpWidth(platformsOffsetY) - m_minWidth,
-                                                     lastOffset.x + w1 - lastPoint.x + m_minWidth, 0) :
-                                         -GetJumpWidth(platformsOffsetY) - m_minWidth;
-                offsetX1 = Random.Range(min, m_minDist);
+                //при отрицательном отступе больше склоняется к левому отступу
+                int min = offsetDirection ? Mathf.Clamp(-GetJumpWidth(secondaryOffsetY) - m_minWidth,
+                                            lastOffset.x + w1 - lastPoint.x + m_minWidth, 0) :
+                                            -GetJumpWidth(secondaryOffsetY) - m_minWidth;
+                secondaryOffsetX = Random.Range(min, m_minDist);
             }
+            //обрезает горизонтальный отступ по границам чанка
+            secondaryOffsetX = Mathf.Clamp(secondaryOffsetX, start.x - lastPoint.x + m_minWidth, end.x - lastPoint.x - m_minWidth * 2);
+            //проверяем окрестности на стокновение с платформами
+            pos = new Vector3Int(lastPoint.x + secondaryOffsetX, lastPoint.y + secondaryOffsetY);
 
-            offsetX1 = Mathf.Clamp(offsetX1, start.x - lastPoint.x + m_minWidth, end.x - lastPoint.x - m_minWidth * 2);
-            pos = CheckSurroundings(room, new Vector3Int(lastPoint.x + offsetX1, lastPoint.y + platformsOffsetY), end);
-
-            if (!AvailablePlatform(room, lastPoint.y > lastOffset.y && end.y - start.y > 0 ? lastPoint.y : lastOffset.y,
-                                pos, GetMaxWidth(room, pos), ref w1, end) ||
+            //проверка платформы на жизнеспособность и подбор ширины платформы
+            if (!CheckSurroundings(chunk, pos) || !AvailablePlatformWidth(chunk, pos, GetMaxWidth(chunk, pos), ref w1, end) ||
                 pos.x > end.x - m_minWidth || pos.x <= start.x)
             {
-                platformsOffsetY = lastOffset.y;
                 attempts++;
                 continue;
             }
 
-            // Create secondary platform
+            //вторая платформа
             w1 = Mathf.Clamp(w1, m_minWidth, end.x - pos.x - m_minWidth);
-            room.CreatePlatform(pos, w1);
+            chunk.CreatePlatform(pos, w1);
             lastOffset = pos;
-            attempts = 0; // Reset attempts after successful placement
+            //сбрасывает попытки после успешной генерации
+            attempts = 0;
         }
 
         return false;
     }
-
-    bool AvailablePlatform(Room room, int lastPointY, Vector3Int currentPoint, int maxWidth, ref int currentWidth, Vector3Int end)
+    /// <summary>
+    /// Проверяет, можно ли разместить платформу и подбирает для нее длину
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="currentPos">позиция начала платформы</param>
+    /// <param name="maxWidth">макс длина платформы</param>
+    /// <param name="currentWidth">переменная для длина</param>
+    /// <param name="end">конец чанка</param>
+    /// <returns>подходит ли платформа и нашлась ли для нее длина</returns>
+    bool AvailablePlatformWidth(Chunk chunk, Vector3Int currentPos, int maxWidth, ref int currentWidth, Vector3Int end)
     {
         if (maxWidth < m_minWidth) return false;
 
         for (int i = 0; i < m_playerJumpHeight; i++)
         {
-            if (CheckVerticalCollision(room, currentPoint, i)) return false;
-
-            if (room.PositionIsUsed(new Vector3Int(currentPoint.x, currentPoint.y + i)))
-            {
-                return HandlePlatformWidth(room, currentPoint, maxWidth, ref currentWidth, end, i);
-            }
-
-            if (CheckHorizontalCollision(room, currentPoint, maxWidth, i, ref currentWidth, end))
-            {
+            //если платформа будет перекрывать платфорому снизу на расстоянии прыжка - не подходит
+            if (CheckVerticalCollision(chunk, currentPos, i))
+                return false;
+            //если на расстоянии нижнего отступа i находится другая платформа - подбирает длину с учетом нее
+            if (chunk.PositionIsUsed(new Vector3Int(currentPos.x, currentPos.y + i)))
+                return SelectPlatformWidthWithOffset(chunk, currentPos, maxWidth, ref currentWidth, end, i);
+            //если на расстоянии длины maxWidth и нижнего ортступа находится платформа - пробует подобрать длину с учетом нее
+            if (CheckHorizontalCollision(chunk, currentPos, maxWidth, i, ref currentWidth, end))
                 return true;
-            }
         }
 
         currentWidth = Random.Range(m_minWidth, maxWidth);
         return true;
     }
-
-    // Helper methods for AvailablePlatform
-    private bool CheckVerticalCollision(Room room, Vector3Int point, int offset)
+    /// <summary>
+    /// Подбирает длину платформы, чтобы она перекрывала справа другую платформу
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <param name="maxWidth">макс длина платформы</param>
+    /// <param name="width">переменная для записи длины</param>
+    /// <param name="end">конец чанка</param>
+    /// <param name="offset">вертикальный отступ, где находится другая платформа</param>
+    /// <returns>удалось ли побобрать длину</returns>
+    bool SelectPlatformWidthWithOffset(Chunk chunk, Vector3Int pos, int maxWidth, ref int width, Vector3Int end, int offset)
     {
-        return room.PositionIsUsed(new Vector3Int(point.x, point.y - offset)) &&
-               !room.PositionIsUsed(new Vector3Int(point.x - 1, point.y - offset)) &&
-               !room.PositionIsUsed(new Vector3Int(point.x + 1, point.y - offset));
-    }
-
-    private bool HandlePlatformWidth(Room room, Vector3Int point, int maxWidth, ref int width, Vector3Int end, int offset)
-    {
-        for (int j = 1; j < maxWidth; j++)
+        for (int i = m_minWidth; i < maxWidth; i++)
         {
-            if (!room.PositionIsUsed(new Vector3Int(point.x + j, point.y + offset)))
+            //когда другая платформа закончится
+            if (!chunk.PositionIsUsed(new Vector3Int(pos.x + i, pos.y + offset)))
             {
-                if (point.x + j + 1 > end.x - m_minWidth || j + 1 == Mathf.Clamp(maxWidth, 0, end.x - point.x) - 1)
+                //если слишком мало места до конца или длина больше макс длины - не подходит
+                if (pos.x + i + 1 > end.x - m_minWidth || i + 1 == Mathf.Clamp(maxWidth, 0, end.x - pos.x) - 1)
                     return false;
-
-                width = Random.Range(j + 1, Mathf.Clamp(maxWidth, 0, end.x - point.x));
+                //платформа должна быть длиннее нижней млатформы
+                width = Random.Range(i + 1, Mathf.Clamp(maxWidth, 0, end.x - pos.x));
                 return true;
             }
         }
         return false;
     }
-
-    private bool CheckHorizontalCollision(Room room, Vector3Int point, int maxWidth, int verticalOffset, ref int width, Vector3Int end)
+    /// <summary>
+    /// Смотрит наличие платформы под отступом внизу на растоянни макс длины1
+    /// и подбирате длину в зависимости от платформы, если платформа есть
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <param name="maxWidth">макс длина платформы</param>
+    /// <param name="verticalOffset">вертикальный отступ</param>
+    /// <param name="width">переменная для записи длины</param>
+    /// <param name="end">конец чанка</param>
+    /// <returns>если длина определена с учетом найденной платформы</returns>
+    bool CheckHorizontalCollision(Chunk chunk, Vector3Int pos, int maxWidth, int verticalOffset, ref int width, Vector3Int end)
     {
-        for (int j = 0; j < maxWidth; j++)
+        for (int i = 0; i < maxWidth; i++)
         {
-            if (room.PositionIsUsed(new Vector3Int(point.x + j, point.y - verticalOffset)))
+            //если на данной длине под отступом находится платформа
+            if (chunk.PositionIsUsed(new Vector3Int(pos.x + i, pos.y - verticalOffset)))
             {
-                for (int k = 1; k <= maxWidth - j; k++)
+                for (int j = m_minWidth; j <= maxWidth - i; j++)
                 {
-                    if (!room.PositionIsUsed(new Vector3Int(point.x + j + k, point.y - verticalOffset)))
+                    //смотрит когда платформа закончится
+                    if (!chunk.PositionIsUsed(new Vector3Int(pos.x + i + j, pos.y - verticalOffset)))
                     {
-                        width = Random.Range(m_minWidth, Mathf.Clamp(j + k, 0, end.x - point.x));
+                        width = Random.Range(m_minWidth, Mathf.Clamp(i + j, 0, end.x - pos.x));
                         return true;
                     }
                 }
@@ -250,94 +299,74 @@ public class GridStrategy : FillStrategy
         }
         return false;
     }
-
-    int GetMaxWidth(Room room, Vector3Int pos)
+    /// <summary>
+    /// Проверяет, перекрывает ли платформа другую платформу с отступом offset
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <param name="offset">вертикальный отступ от платформы</param>
+    /// <returns></returns>
+    bool CheckVerticalCollision(Chunk chunk, Vector3Int pos, int offset)
+    {
+        return chunk.PositionIsUsed(new Vector3Int(pos.x, pos.y - offset)) &&
+               !chunk.PositionIsUsed(new Vector3Int(pos.x - 1, pos.y - offset)) &&
+               !chunk.PositionIsUsed(new Vector3Int(pos.x + 1, pos.y - offset));
+    }
+    /// <summary>
+    /// Определяет максимальную длину для платформы
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <returns></returns>
+    int GetMaxWidth(Chunk chunk, Vector3Int pos)
     {
         for (int i = 0; i < m_maxWidth; i++)
         {
-            if (CheckImmediateCollision(room, pos, i) || CheckDistanceCollision(room, pos, i))
-            {
+            //если на данной длине есть пересечения - макс длина
+            if (CheckInterferingPlarforms(chunk, pos, i))
                 return i;
-            }
         }
         return m_maxWidth;
     }
-
-    // Helper methods for GetMaxWidth
-    private bool CheckImmediateCollision(Room room, Vector3Int pos, int offset)
+    /// <summary>
+    /// Смотрит для определенной длины (offset + 1), есть ли другие платформы в радиусе
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <param name="offset">горизонтальный отступ - предполагаемый конец платформы</param>
+    /// <returns></returns>
+    bool CheckInterferingPlarforms(Chunk chunk, Vector3Int pos, int offset)
     {
-        return room.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y + 1)) ||
-               room.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y - 1));
-    }
-
-    private bool CheckDistanceCollision(Room room, Vector3Int pos, int offset)
-    {
-        for (int j = 0; j < m_minDist; j++)
+        for (int i = 0; i < m_minDist; i++)
         {
-            if (room.PositionIsUsed(new Vector3Int(pos.x + offset + j, pos.y)) ||
-                room.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y - j)) ||
-                room.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y + j)))
+            //если для данной длины мверху, справа или снизу на расстоянии i есть платформа 
+            if (chunk.PositionIsUsed(new Vector3Int(pos.x + offset + i, pos.y)) ||
+                chunk.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y - i)) ||
+                chunk.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y + i)))
             {
                 return true;
             }
         }
-        return false;
+        // если впритык к платформе в радиусе 1 справа есть другая платформа
+        return chunk.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y + 1)) ||
+               chunk.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y - 1));
     }
-    Vector3Int CheckSurroundings(Room room, Vector3Int pos, Vector3Int end)
+    /// <summary>
+    /// Смотрит, есть ли вокруг другие платформы
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="pos">начало платформы</param>
+    /// <returns>true - вокруг нет других платформ</returns>
+    bool CheckSurroundings(Chunk chunk, Vector3Int pos)
     {
-        // First check diagonal collisions
-        if (HasDiagonalCollision(room, pos))
-            return end;
-
-        // Check minimum distances (1 horizontal, 2 vertical)
-        if (!CheckMinimumDistances(room, pos))
-            return end;
-
-        // Check all 8 surrounding corners
-        Vector3Int[] cornerOffsets = new Vector3Int[]
+        for (int x = -m_minDist + 1; x < m_minDist; x++)
         {
-        new Vector3Int(1, 1, 0),    // Top-right
-        new Vector3Int(-1, 1, 0),   // Top-left
-        new Vector3Int(1, -1, 0),   // Bottom-right
-        new Vector3Int(-1, -1, 0),  // Bottom-left
-        new Vector3Int(1, 0, 0),    // Right
-        new Vector3Int(-1, 0, 0),   // Left
-        new Vector3Int(0, 1, 0),    // Top
-        new Vector3Int(0, -1, 0)    // Bottom
-        };
-
-        foreach (Vector3Int offset in cornerOffsets)
-        {
-            if (room.PositionIsUsed(pos + offset))
-                return end;
-        }
-
-        // If we get here, position is valid
-        return pos;
-    }
-
-    bool CheckMinimumDistances(Room room, Vector3Int pos)
-    {
-        // Check horizontal clearance (1 unit)
-        for (int x = -2; x <= 2; x++)
-        {
-
-            for (int y = -2; y <= 2; y++)
+            for (int y = -m_minDist + 1; y < m_minDist; y++)
             {
-                if (room.PositionIsUsed(new Vector3Int(pos.x + x, pos.y + y)))
+                if (chunk.PositionIsUsed(new Vector3Int(pos.x + x, pos.y + y)))
                     return false;
             }
         }
-
         return true;
-    }
-
-    bool HasDiagonalCollision(Room room, Vector3Int pos)
-    {
-        // Your original diagonal collision check
-        return (room.PositionIsUsed(new Vector3Int(pos.x - 1, pos.y - 1)) &&
-               room.PositionIsUsed(new Vector3Int(pos.x + 1, pos.y + 1))) ||
-               (room.PositionIsUsed(new Vector3Int(pos.x - 1, pos.y + 1)) &&
-               room.PositionIsUsed(new Vector3Int(pos.x + 1, pos.y - 1)));
     }
 }

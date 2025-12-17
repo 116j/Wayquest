@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
-using Zenject;
 
 public class Damagable : MonoBehaviour
 {
@@ -18,8 +17,9 @@ public class Damagable : MonoBehaviour
     float m_freezeTime = 0f;
 
     int m_health = 4;
-
+    //Неуязвимость
     public bool Invinsible { get; set; } = false;
+    //Замирание
     public bool Freezed { get; set; } = false;
 
     private void Start()
@@ -38,6 +38,7 @@ public class Damagable : MonoBehaviour
                 m_recoverTimer = 0f;
             }
         }
+        //замирать на время
         else if (Freezed)
         {
             m_freezeTime -= Time.deltaTime;
@@ -47,7 +48,10 @@ public class Damagable : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// При получении урона замирание останавливается
+    /// </summary>
+    /// <param name="damage"></param>
     public void ApplyDamage(int damage)
     {
         if (m_dead || m_recovering) return;
@@ -98,8 +102,11 @@ public class Damagable : MonoBehaviour
         m_health = health;
     }
 
-    public float GetHealthPercentage() => Mathf.Max(0,m_health) / (1.0f * m_maxHealth);
-
+    public float GetHealthPercentage() => Mathf.Max(0, m_health) / (1.0f * m_maxHealth);
+    /// <summary>
+    /// Восстанавливает полное здоровье и становится неуязвимым если нужно
+    /// </summary>
+    /// <param name="invinsible">неуязвим после возрождения</param>
     public void Reborn(bool invinsible = false)
     {
         m_recovering = invinsible;

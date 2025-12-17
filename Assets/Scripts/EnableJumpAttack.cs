@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnableJumpAttack : MonoBehaviour
 {
@@ -19,12 +17,13 @@ public class EnableJumpAttack : MonoBehaviour
 
     private void Update()
     {
-        if (!m_attackDisabled&&m_wallsDetect.TargetDetected)
+        //если впереди стена - нельзя выполнить атаку прыжком
+        if (!m_attackDisabled && m_wallsDetect.TargetDetected)
         {
             m_enemyController.SetAttacksCount(m_attacksCount - 1);
             m_attackDisabled = true;
         }
-        else if(m_attackDisabled&&!m_wallsDetect.TargetDetected)
+        else if (m_attackDisabled && !m_wallsDetect.TargetDetected)
         {
             m_attackDisabled = false;
             m_enemyController.SetAttacksCount(m_attacksCount);

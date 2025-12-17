@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DefendingEnemy : WalkEnemy
 {
@@ -10,13 +10,13 @@ public class DefendingEnemy : WalkEnemy
     readonly int m_HashProtect = Animator.StringToHash("Protect");
 
     bool m_protecting = false;
-    float m_protectCooldownTime = 3f;
+    //Время действия защиты
+    readonly float m_protectCooldownTime = 3f;
     float m_protectCooldown;
-
-    float m_protectDelay = 0.3f;
+    //Время перезагрузки защиты
+    readonly float m_protectDelay = 0.3f;
     float m_protectDelayCooldown;
 
-    // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
@@ -28,7 +28,8 @@ public class DefendingEnemy : WalkEnemy
         if (m_protecting)
         {
             m_protectCooldown += Time.deltaTime;
-            if (m_protectCooldown >= m_protectCooldownTime || !m_playerAttackZone.TargetDetected|| m_attackZone.TargetDetected)
+            //отменить защиту, если закончилось время, игрок вошел в зону атаки или объект вышел из зоны атаки игрока
+            if (m_protectCooldown >= m_protectCooldownTime || !m_playerAttackZone.TargetDetected || m_attackZone.TargetDetected)
             {
                 DisableProtection();
             }
@@ -36,7 +37,9 @@ public class DefendingEnemy : WalkEnemy
 
         base.Update();
     }
-
+    /// <summary>
+    ///  Отключает защиту
+    /// </summary>
     void DisableProtection()
     {
         m_anim.SetBool(m_HashProtect, false);
@@ -44,7 +47,9 @@ public class DefendingEnemy : WalkEnemy
         m_protecting = false;
         m_damagable.Invinsible = false;
     }
-
+    /// <summary>
+    /// Включает защиту
+    /// </summary>
     void EnableProtection()
     {
         m_attackScript.EnableAttack = false;
@@ -59,7 +64,9 @@ public class DefendingEnemy : WalkEnemy
     {
         if (!m_protecting)
         {
-            if (m_playerAttackZone.TargetDetected&&!m_attackZone.TargetDetected)
+            // если игрок вне зоны атаки и объект в зоне атаки игрока - перезарядка защиты и ее активация,
+            // иначе - сбросить 
+            if (m_playerAttackZone.TargetDetected && !m_attackZone.TargetDetected)
             {
                 m_protectDelayCooldown += Time.fixedDeltaTime;
                 if (m_protectDelayCooldown >= m_protectDelay)
@@ -75,7 +82,10 @@ public class DefendingEnemy : WalkEnemy
             }
         }
     }
-
+    /// <summary>
+    /// При получении урона активировать защиту
+    /// </summary>
+    /// <param name="damage"></param>
     public override void ReceiveDamage(int damage)
     {
         base.ReceiveDamage(damage);

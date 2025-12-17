@@ -119,27 +119,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20624187768832
-    m_Localized: RECUENTO DE SALAS
+    m_Localized: "N\xDAMERO DE CHUNKS"
     m_Metadata:
       m_Items: []
   - m_Id: 20650360225792
-    m_Localized: "FRECUENCIA DE GENERACI\xD3N DE SALAS"
+    m_Localized: "FRECUENCIA DE GENERACI\xD3N DE CHUNKS"
     m_Metadata:
       m_Items: []
   - m_Id: 20704886177792
-    m_Localized: Sala base
+    m_Localized: "Chunk b\xE1sico"
     m_Metadata:
       m_Items: []
   - m_Id: 20736116965376
-    m_Localized: Sala de techo
+    m_Localized: Chunk con techo
     m_Metadata:
       m_Items: []
   - m_Id: 20750046248960
-    m_Localized: Sala de plataformas de malla
+    m_Localized: Chunk de plataformas en rejilla
     m_Metadata:
       m_Items: []
   - m_Id: 20774792642560
-    m_Localized: "Sala de plataformas m\xF3viles"
+    m_Localized: "Chunk de plataformas m\xF3viles"
     m_Metadata:
       m_Items: []
   - m_Id: 22886800867328
@@ -211,7 +211,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
-    m_Localized: Sala destruible
+    m_Localized: Chunk destruible
     m_Metadata:
       m_Items: []
   - m_Id: 12711559031865344
@@ -219,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057984500514816
-    m_Localized: TIPOS DE HABITACIONES
+    m_Localized: TIPOS DE CHUNKS
     m_Metadata:
       m_Items: []
   - m_Id: 13057887209439232
@@ -227,25 +227,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057949494853632
-    m_Localized: "Especifica cu\xE1ntas \"habitaciones\" individuales (fragmentos)
-      consecutivas habr\xE1 en el nivel."
+    m_Localized: "Establece cu\xE1ntos \"chunks\" (segmentos) individuales aparecer\xE1n
+      consecutivamente en el nivel.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13058096987553792
-    m_Localized: "Hay cinco tipos de habitaciones:\n\n\u2022 La sala base es una
-      sala con enemigos y trampas.\n\n\u2022 La sala del techo es una habitaci\xF3n
-      con techo y trampas.\n\n\u2022 La sala de plataformas de malla es una sala
-      con plataformas sobre las que salta el jugador.\n\n\u2022 La sala de plataformas
-      m\xF3viles es una sala con plataformas m\xF3viles que se acercan entre s\xED.\n\n\u2022
-      La sala destruible es una habitaci\xF3n con un piso que se derrumba."
+    m_Localized: "Hay cinco tipos de chunks:\r\n\r\n\u2022 Chunk b\xE1sico \u2013
+      un chunk con enemigos y trampas.\r\n\r\n\u2022 Chunk con techo \u2013 un chunk
+      con techo y trampas en el techo.\r\n\r\n\u2022 Chunk de plataformas en rejilla
+      \u2013 un chunk con plataformas por las que el jugador salta.\r\n\r\n\u2022
+      Chunk de plataformas m\xF3viles \u2013 un chunk con plataformas m\xF3viles
+      que se acercan entre s\xED.\r\n\r\n\u2022 Chunk destructible \u2013 un chunk
+      con suelo que se colapsa."
     m_Metadata:
       m_Items: []
   - m_Id: 13058139958198272
-    m_Localized: "Cada vista de la sala tiene un valor de 0.00\u20131.00 (el m\xEDnimo
-      b\xE1sico es 0.3). Para cada nueva sala, el juego toma la suma de todos los
-      valores y elige una estrategia en proporci\xF3n a su participaci\xF3n.\nPor
-      ejemplo, si la base = 0.8, con el techo = 0.4, el resto de 0.2, entonces las
-      probabilidades son:\n44% - b\xE1sico, 22% - con techo, 11% \u2013 otros."
+    m_Localized: "Cada tipo de chunk tiene un valor de peso entre 0.00 y 1.00 (el
+      chunk b\xE1sico tiene un m\xEDnimo de 0.3). Para cada nuevo chunk, el juego
+      toma la suma de todos los valores de peso y selecciona un tipo de chunk proporcionalmente
+      a su participaci\xF3n.\r\n\r\nPor ejemplo, si B\xE1sico = 0.8, Con Techo =
+      0.4, y otros = 0.2 cada uno, entonces las probabilidades son:\r\n44% \u2013
+      B\xE1sico, 22% \u2013 Con Techo, 11% cada uno \u2013 otros.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13442591293095936

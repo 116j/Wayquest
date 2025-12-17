@@ -1,5 +1,4 @@
-﻿using ModestTree;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -46,27 +45,27 @@ public class SettingsMenu : MonoBehaviour
 
     [Header("Level Builder")]
     [SerializeField]
-    Transform m_roomsCountFill;
+    Transform m_chunksCountFill;
     [SerializeField]
-    Slider m_roomsCountSlider;
+    Slider m_chunksCountSlider;
     [SerializeField]
-    TextMeshProUGUI m_roomsCountText;
+    TextMeshProUGUI m_chunksCountText;
     [SerializeField]
-    TextMeshProUGUI[] m_roomStrategyWeightTexts;
+    TextMeshProUGUI[] m_chunkStrategyWeightTexts;
     [SerializeField]
-    Slider[] m_roomStrategySliders;
+    Slider[] m_chunkStrategySliders;
     [SerializeField]
     LevelValues m_values;
 
     int m_currentLanguageInd = 0;
-    int m_currentResolutionInd;
 
     KeyValuePair<int, int> m_currentResolution;
     bool m_fullScreen = true;
-
-    readonly int m_defaultRoomsCount = 50;
+    //Количество чанков по умолчанию
+    readonly int m_defaultChunksCount = 50;
+    //Значения весов стратегий по умолчанию
     readonly float[] m_defaultStrategyWeights = { 0.6f, 0.15f, 0.3f, 0.15f, 0.3f };
-
+    //Названия разделов меню
     string[][] m_layoutNames =
     {
         new string[]
@@ -235,65 +234,71 @@ public class SettingsMenu : MonoBehaviour
         SetSliders();
     }
 
-    public void ChangeRoomsCount(float value)
+    public void ChangeChunksCount(float value)
     {
-        m_roomsCountText.text = value.ToString();
+        m_chunksCountText.text = value.ToString();
 
-        int num = Mathf.RoundToInt(value / m_roomsCountSlider.maxValue * m_roomsCountFill.childCount) - 1;
+        int num = Mathf.RoundToInt(value / m_chunksCountSlider.maxValue * m_chunksCountFill.childCount) - 1;
         for (int i = 0; i <= num; i++)
         {
-            m_roomsCountFill.GetChild(i).gameObject.SetActive(true);
+            m_chunksCountFill.GetChild(i).gameObject.SetActive(true);
         }
 
-        for (int i = num + 1; i < m_roomsCountFill.childCount; i++)
+        for (int i = num + 1; i < m_chunksCountFill.childCount; i++)
         {
-            m_roomsCountFill.GetChild(i).gameObject.SetActive(false);
+            m_chunksCountFill.GetChild(i).gameObject.SetActive(false);
         }
     }
 
-    public void ChangeBaseRoomWeight(float value)
+    public void ChangeBaseChunkWeight(float value)
     {
-        m_roomStrategyWeightTexts[0].text = value.ToString("F3", CultureInfo.InvariantCulture);
+        m_chunkStrategyWeightTexts[0].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
 
-    public void ChangeCeilRoomWeight(float value)
+    public void ChangeCeilChunkWeight(float value)
     {
-        m_roomStrategyWeightTexts[1].text = value.ToString("F3", CultureInfo.InvariantCulture);
+        m_chunkStrategyWeightTexts[1].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
 
-    public void ChangeGridRoomWeight(float value)
+    public void ChangeGridChunkWeight(float value)
     {
-        m_roomStrategyWeightTexts[2].text = value.ToString("F3", CultureInfo.InvariantCulture);
+        m_chunkStrategyWeightTexts[2].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
 
-    public void ChangeMovingPlatformRoomWeight(float value)
+    public void ChangeMovingPlatformChunkWeight(float value)
     {
-        m_roomStrategyWeightTexts[3].text = value.ToString("F3", CultureInfo.InvariantCulture);
+        m_chunkStrategyWeightTexts[3].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
 
-    public void ChangeDestroyableRoomWeight(float value)
+    public void ChangeDestroyableChunkWeight(float value)
     {
-        m_roomStrategyWeightTexts[4].text = value.ToString("F3", CultureInfo.InvariantCulture);
+        m_chunkStrategyWeightTexts[4].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
-
+    /// <summary>
+    /// Обновляет значения слайдеров в соотвествии с глобальной переменной
+    /// </summary>
     void SetSliders()
     {
-        for (int i = 0; i < m_roomStrategySliders.Length; i++)
+        for (int i = 0; i < m_chunkStrategySliders.Length; i++)
         {
-            m_roomStrategySliders[i].value = m_values.m_strategyWeights[i];
+            m_chunkStrategySliders[i].value = m_values.m_strategyWeights[i];
         }
-        m_roomsCountSlider.value = m_values.m_roomsCount;
+        m_chunksCountSlider.value = m_values.m_chunksCount;
     }
-
+    /// <summary>
+    /// Устанавливает веса и количество комнат в глобальную переменную
+    /// </summary>
     public void SaveLevelBuilder()
     {
         for (int i = 0; i < m_values.m_strategyWeights.Length; i++)
         {
-            m_values.m_strategyWeights[i] = m_roomStrategySliders[i].value;
+            m_values.m_strategyWeights[i] = m_chunkStrategySliders[i].value;
         }
-        m_values.m_roomsCount = (int)m_roomsCountSlider.value;
+        m_values.m_chunksCount = (int)m_chunksCountSlider.value;
     }
-
+    /// <summary>
+    /// Сбрасыввет значения количества комнат и весов стратегий по умолчанию
+    /// </summary>
     public void SetDefault()
     {
         for (int i = 0; i < m_values.m_strategyWeights.Length; i++)
@@ -301,7 +306,7 @@ public class SettingsMenu : MonoBehaviour
             m_values.m_strategyWeights[i] = m_defaultStrategyWeights[i];
         }
 
-        m_values.m_roomsCount = m_defaultRoomsCount;
+        m_values.m_chunksCount = m_defaultChunksCount;
 
         SetSliders();
     }

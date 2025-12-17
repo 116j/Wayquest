@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -16,9 +16,9 @@ public class LevelBuilder : MonoBehaviour
 
     [Header("Spawn chances")]
     [SerializeField]
-    AnimationCurve m_enemiesCountPerRoom;
+    AnimationCurve m_enemiesCountPerChunk;
     [SerializeField]
-    AnimationCurve m_trapsCountPerRoom;
+    AnimationCurve m_trapsCountPerChunk;
     [SerializeField]
     AnimationCurve m_movingPlatformSpeed;
 
@@ -35,22 +35,29 @@ public class LevelBuilder : MonoBehaviour
     [Inject]
     PlayerController m_player;
 
-    List<Room> m_rooms;
-    List<FillStrategy> m_usedRoomStrategies = new List<FillStrategy>();
+    List<Chunk> m_chunks;
+    //Стратегии, использованные для чанков
+    List<FillStrategy> m_usedChunksStrategies = new List<FillStrategy>();
+    //Стратегии, использованные для переходов
     List<FillStrategy> m_usedTransitionStrategies = new List<FillStrategy>();
     FillStrategy[] m_strategies;
-    Room m_currentRoom;
+    Chunk m_currentChunk;
     bool m_changeTransposer = false;
+    //Нужно ли включить ли границы перехода
     bool m_transitionBounds = true;
-    bool m_roomBounds = true;
-    //Count of spawned rooms
-    int m_roomsCount = 1;
-    int m_roomIndex = 0;
-    int m_newRoomIndex = 1;
+    //Нужно ли включить границы чанка
+    bool m_chunkBounds = true;
+    //Количество созданных чанков
+    int m_chunksCount = 1;
+    //Индекс текущего чанка в массиве чанков
+    int m_chunkIndex = 0;
+    //Индекс следующего чанка в массиве чанков
+    int m_newChunkIndex = 1;
+    //Создан ли финальный чанк
+    bool m_isFinalChunkSpawned = false;
 
     AudioSource m_audio;
 
-    // Start is called before the first frame update
     void Start()
     {
         int m_currentThemeNum = Random.Range(0, m_themes.Length);
@@ -60,7 +67,7 @@ public class LevelBuilder : MonoBehaviour
 
         m_strategies = new FillStrategy[]
         {
-            new FillStrategy(m_currentTheme,m_enemiesCountPerRoom,m_trapsCountPerRoom),
+            new FillStrategy(m_currentTheme,m_enemiesCountPerChunk,m_trapsCountPerChunk),
             new CeilStrategy(m_currentTheme),
             new GridStrategy(m_currentTheme),
             new MovingPlatformStrategy(m_currentTheme, m_movingPlatformSpeed),
@@ -71,136 +78,155 @@ public class LevelBuilder : MonoBehaviour
         {
             m_container.Inject(strategy);
         }
+        //стратегия перехода от начального чанка
         FillStrategy startTransitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
-        m_rooms = new List<Room>
+        m_chunks = new List<Chunk>
         {
-            m_strategies[0].FillStratRoom(m_startPosition,startTransitionStrategy)
+            m_strategies[0].FillStratChunk(m_startPosition,startTransitionStrategy)
         };
-        m_usedRoomStrategies.Add(m_strategies[0]);
+        m_usedChunksStrategies.Add(m_strategies[0]);
         m_usedTransitionStrategies.Add(startTransitionStrategy);
-        m_currentRoom = m_rooms[0];
-        SpawnRoom();
-        SpawnRoom();
+        m_currentChunk = m_chunks[0];
+        //создает в начале еще 2 чанка после начального
+        SpawnChunk();
+        SpawnChunk();
 
         m_audio = GetComponent<AudioSource>();
         m_audio.clip = m_backgroundMusic[Random.Range(0, m_backgroundMusic.Length)];
         m_audio.Play();
-
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (m_currentRoom != null && m_player.transform.position.x < m_currentRoom.GetPreviousTransition().GetStartPosition().x)
+        //игрок вернулся на предыдущий чанк
+        if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetPreviousTransition().GetStartPosition().x)
         {
-            if (m_roomIndex > 0)
+            if (m_chunkIndex > 0)
             {
-                if (m_usedRoomStrategies[m_roomIndex] is GridStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is MovingPlatformStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
+                //если чанк с пространством для падения - ставит границы камеры
+                //и чекпоинт для падения на конец предыдущего чанка
+                if (IsChunkWithFallSpace(m_chunkIndex))
                 {
-                    m_roomBounds = true;
+                    m_chunkBounds = true;
                     m_transitionBounds = false;
-                    m_player.SetLevelCheckpoint(m_rooms[m_roomIndex - 1].GetEndPosition(), false);
+                    m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex - 1].GetEndPosition(), false);
                 }
+                //иначе ставит чекпоинт для падения на начало этого чанка
                 else
                 {
-                    m_player.SetLevelCheckpoint(m_currentRoom.GetStartPosition(), true);
+                    m_player.SetChunkCheckpoint(m_currentChunk.GetStartPosition(), true);
                 }
 
-                m_currentRoom = m_rooms[--m_roomIndex];
+                m_currentChunk = m_chunks[--m_chunkIndex];
 
-                if (m_usedRoomStrategies[m_roomIndex] is GridStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is MovingPlatformStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
+                //если предыдущий чанк с пространством для падения - ставит границы камеры
+                if (IsChunkWithFallSpace(m_chunkIndex))
                 {
-                    m_roomBounds = true;
+                    m_chunkBounds = true;
                     m_transitionBounds = false;
                 }
             }
         }
-        else if (m_currentRoom != null && m_player.transform.position.x > m_currentRoom.GetEndPosition().x)
+        //если игрок уходит с чанка вперерд
+        else if (m_currentChunk != null && m_player.transform.position.x > m_currentChunk.GetEndPosition().x)
         {
-            if (m_usedRoomStrategies[m_roomIndex] is GridStrategy
-                || m_usedRoomStrategies[m_roomIndex] is MovingPlatformStrategy
-                || m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
+            //если чанк с пространством для падения - ставит границы камеры
+            //и чекпоинт для падения на начало следующего чанка
+            if (IsChunkWithFallSpace(m_chunkIndex))
             {
-                m_roomBounds = true;
+                m_chunkBounds = true;
                 m_transitionBounds = false;
-                m_player.SetLevelCheckpoint(m_rooms[m_roomIndex + 1].GetStartPosition(), true);
+                m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex + 1].GetStartPosition(), true);
             }
+            //иначе ставит чекпоинт для падения на конец этого чанка
             else
             {
-                m_player.SetLevelCheckpoint(m_currentRoom.GetEndPosition(), false);
+                m_player.SetChunkCheckpoint(m_currentChunk.GetEndPosition(), false);
             }
-
-            if (m_newRoomIndex == m_roomIndex + 1 && m_roomsCount <= m_values.m_roomsCount)
+            //если игрок на последнем чанке, до которого он добрался (не уходил назад) и не был создан еще финальный чанк
+            //создает новый чанк
+            if (m_newChunkIndex == m_chunkIndex + 1 && !m_isFinalChunkSpawned)
             {
-                SpawnRoom();
-                m_newRoomIndex++;
+                SpawnChunk();
+                m_newChunkIndex++;
             }
-            ClearRoom();
+            //убирает первый чанк в списке, если количество созданных больше 4
+            ClearChunk();
 
-            m_currentRoom = m_rooms[++m_roomIndex];
+            m_currentChunk = m_chunks[++m_chunkIndex];
 
-            if (m_usedRoomStrategies[m_roomIndex] is GridStrategy
-                || m_usedRoomStrategies[m_roomIndex] is MovingPlatformStrategy
-                || m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
+            //если следующий чанк с пространством для падения - ставит границы камеры
+            if (IsChunkWithFallSpace(m_chunkIndex))
             {
-                m_roomBounds = true;
+                m_chunkBounds = true;
                 m_transitionBounds = false;
             }
         }
-        //resize camera bounds and camera offset
-        else if (m_currentRoom != null && m_player.transform.position.x < m_currentRoom.GetStartPosition().x && m_transitionBounds)
+        //если игрок уходит с чанка назад на переход и нужно включить границы камеры пререхода
+        else if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetStartPosition().x && m_transitionBounds)
         {
-            if (m_currentRoom.GetTransitionHeight() < 0 && !m_changeTransposer)
+            //меняет сдвиг в камере выше, если перход низходящий и сдвиг не был изменен
+            if (m_currentChunk.GetTransitionHeight() < 0 && !m_changeTransposer)
             {
                 m_changeTransposer = !m_changeTransposer;
                 m_player.ChangeTransposerHeight(m_changeTransposer);
             }
+            //сигнал, что границы перехода включены 
             m_transitionBounds = false;
-            m_roomBounds = true;
-            m_currentRoom.SetTransitionCameraBounds();
-            m_player.SetCameraBoundsHeight(Mathf.Abs(m_currentRoom.GetTransitionHeight()));
+            m_chunkBounds = true;
+            //ставит границы камеры перехода
+            m_currentChunk.SetTransitionCameraBounds();
+            m_player.SetCameraBoundsHeight(Mathf.Abs(m_currentChunk.GetTransitionHeight()));
         }
-        //resize camera bounds and camera offset
-        else if (m_currentRoom != null && m_player.transform.position.x >= m_currentRoom.GetStartPosition().x && m_roomBounds)
+        //если игрок и нужно включить границы камеры чанка
+        else if (m_currentChunk != null && m_player.transform.position.x >= m_currentChunk.GetStartPosition().x && m_chunkBounds)
         {
-            if (m_roomsCount >= m_values.m_roomsCount && m_roomIndex == m_rooms.Count - 1)
+            //если финальный чанк - ставит точку перерождения в начале чанка
+            if (m_chunksCount >= m_values.m_chunksCount && m_chunkIndex == m_chunks.Count - 1)
             {
-                m_player.SetRebornCheckpoint(m_currentRoom.GetStartPosition());
+                m_player.SetRebornCheckpoint(m_currentChunk.GetStartPosition());
             }
-
-            if (m_usedRoomStrategies[m_roomIndex] is not GridStrategy
-                && m_usedRoomStrategies[m_roomIndex] is not MovingPlatformStrategy
-                && m_usedRoomStrategies[m_roomIndex] is not DestroyableBrickStrategy)
+            //если чанк с без пространства для падения - ставит чекроинт для падения на начало предыдущиего чанка
+            if (!IsChunkWithFallSpace(m_chunkIndex))
             {
-                m_player.SetLevelCheckpoint(m_rooms[m_roomIndex].GetStartPosition(), true);
+                m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex].GetStartPosition(), true);
             }
-
-            if (((m_usedRoomStrategies[m_roomIndex] is GridStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is MovingPlatformStrategy
-                    || m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
-                && (m_currentRoom.GetEndPosition().y < m_currentRoom.GetStartPosition().y))
+            //если чанк с пространством для падения, низходящий и не было сдвига, или ничего из этого и уже был сдвиг - меняет сдвиг камеры
+            if (IsChunkWithFallSpace(m_chunkIndex)
+                && (m_currentChunk.GetEndPosition().y < m_currentChunk.GetStartPosition().y)
                 && !m_changeTransposer
                 || m_changeTransposer)
             {
                 m_changeTransposer = !m_changeTransposer;
                 m_player.ChangeTransposerHeight(m_changeTransposer);
             }
-
+            //сигнал, что границы чанка включены 
             m_transitionBounds = true;
-            m_roomBounds = false;
-            m_currentRoom.SetCameraBounds();
-            m_player.SetCameraBoundsHeight(m_currentRoom.GetRoomCameraHeight());
+            m_chunkBounds = false;
+            //ставит границы камеры чанка
+            m_currentChunk.SetCameraBounds();
+            m_player.SetCameraBoundsHeight(m_currentChunk.GetChunkCameraHeight());
         }
     }
-
-    public float LevelProgress() => m_roomsCount / m_values.m_roomsCount;
-
-    public int GetMaxRoomsCount() => m_values.m_roomsCount;
-
+    /// <summary>
+    /// Проверяет, есть ли у чанка пространство для падения
+    /// </summary>
+    /// <param name="index">индекс существующего чанка</param>
+    /// <returns>true - есть пространство для падения</returns>
+    bool IsChunkWithFallSpace(int index)
+    {
+        return m_usedChunksStrategies[index] is GridStrategy
+                    || m_usedChunksStrategies[index] is MovingPlatformStrategy
+                    || m_usedChunksStrategies[index] is DestroyableBrickStrategy;
+    }
+    //Количество созданных чанков относительно количества чанков на уровне
+    public float LevelProgress() => m_chunksCount / m_values.m_chunksCount;
+    //Количество чанков на уровне всего
+    public int GetLevelChunksCount() => m_values.m_chunksCount;
+    /// <summary>
+    /// Сообщает, что кошек погладили или они разрушены
+    /// </summary>
+    /// <param name="cats"></param>
     public void CatPetted(int cats)
     {
         m_strategies[0].CatPetted(cats);
@@ -210,7 +236,9 @@ public class LevelBuilder : MonoBehaviour
     {
         m_strategies[0].ShopDestroyed();
     }
-
+    /// <summary>
+    /// Устанавливает тройной прыжок игрока для всех стратегий
+    /// </summary>
     public void SetTripleJump()
     {
         foreach (var s in m_strategies)
@@ -219,43 +247,53 @@ public class LevelBuilder : MonoBehaviour
         }
     }
     /// <summary>
-    /// Creates room from random strategy
+    /// Создает чанк из рандомной стратегии
     /// </summary>
-    void SpawnRoom()
+    void SpawnChunk()
     {
-        m_roomsCount++;
-        if (m_roomsCount > m_values.m_roomsCount)
+        m_chunksCount++;
+        //если все чанки уровня созданы - создает финальный чанк
+        if (m_chunksCount > m_values.m_chunksCount)
         {
-            m_usedRoomStrategies.Add(m_strategies[0]);
+            m_isFinalChunkSpawned = true;
+            m_usedChunksStrategies.Add(m_strategies[0]);
             m_usedTransitionStrategies.Add(m_strategies[0]);
-            m_rooms.Add(m_strategies[0].FillFinalRoom(m_rooms.Last()));
+            m_chunks.Add(m_strategies[0].FillFinalChunk(m_chunks.Last()));
         }
         else
             while (true)
             {
+                //стртегия для создания чанка
                 FillStrategy rs = m_strategies[GetStrategy()];
-                if ((m_usedRoomStrategies.Last() is GridStrategy
-                    || m_usedRoomStrategies.Last() is MovingPlatformStrategy
-                    || m_usedRoomStrategies.Last() is DestroyableBrickStrategy) &&
+                //если последний чанк был с пространством для падения, 
+                //и этот чанк тоже, то меняет стратегию, т.к. они не могут идти подряд
+                if (IsChunkWithFallSpace(m_usedChunksStrategies.Count - 1) &&
                     (rs is GridStrategy
                     || rs is MovingPlatformStrategy
                     || rs is DestroyableBrickStrategy))
                     continue;
+                //стратегия для перехода
                 FillStrategy ts = m_strategies[Random.Range(0, m_strategies.Length)];
-                Room r = rs.FillRoom(m_rooms.Last(), ts);
+                Chunk r = rs.FillChunk(m_chunks.Last(), ts);
+                //если не получилось создать чанк - меняет стратегию
                 if (r == null)
                     continue;
-                m_usedRoomStrategies.Add(rs);
+                m_usedChunksStrategies.Add(rs);
                 m_usedTransitionStrategies.Add(ts);
-                m_rooms.Add(r);
+                m_chunks.Add(r);
                 break;
             }
     }
-
+    /// <summary>
+    /// Выбирает номер стратегии для создания
+    /// </summary>
+    /// <returns></returns>
     int GetStrategy()
     {
+        //рандомное число между 0 и суммой шансов всех стратегий
         float value = Random.Range(0, m_values.m_strategyWeights.Sum());
         float sum = 0;
+        //идет по списку шансов, пока сумма шансов не будет больше, чем value
         for (int i = 0; i < m_strategies.Length; i++)
         {
             sum += m_values.m_strategyWeights[i];
@@ -264,64 +302,68 @@ public class LevelBuilder : MonoBehaviour
                 return i;
             }
         }
-        return 3;
+        //если сумма меньше чисел, то возвращает последнее
+        return m_strategies.Length - 1;
     }
-
+    //Процент вероятности генерации чанков с врагами от генерацыии других чанков
     public float GetEnemySpawnChance()
     {
         return m_values.m_strategyWeights[0] / m_values.m_strategyWeights.Sum();
     }
     /// <summary>
-    /// Removes first room if rooms count is larger than 4
+    /// Удаляет первый чанк, если количество существующих чанков больше 4
     /// </summary>
-    void ClearRoom()
+    void ClearChunk()
     {
-        if (m_roomIndex >= 3)
+        if (m_chunkIndex >= 3)
         {
-            m_rooms[0].Clear(m_editor, true);
-            m_rooms.RemoveAt(0);
-            m_usedRoomStrategies.RemoveAt(0);
+            m_chunks[0].Clear(m_editor, true);
+            m_chunks.RemoveAt(0);
+            m_usedChunksStrategies.RemoveAt(0);
             m_usedTransitionStrategies.RemoveAt(0);
-            int i = m_usedRoomStrategies[0] is GridStrategy
-                || m_usedRoomStrategies[0] is MovingPlatformStrategy
-                || m_usedRoomStrategies[0] is DestroyableBrickStrategy ? 1 : 0;
-            m_roomIndex--;
-            m_newRoomIndex--;
-
-            m_rooms[i].AddEnviromentObject(m_usedRoomStrategies[i].CreateVerticalBounds(m_rooms[i].GetStartPosition()));
-            m_player.SetRebornCheckpoint(m_rooms[i].GetStartPosition());
+            //если первый чанк с пространством для падения - берет второй как начальный
+            int i = IsChunkWithFallSpace(0) ? 1 : 0;
+            m_chunkIndex--;
+            m_newChunkIndex--;
+            //создает вертикальную границу на 2 чанке и устанавливает там точку возрождения
+            m_chunks[i].AddEnviromentObject(m_usedChunksStrategies[i].CreateVerticalBounds(m_chunks[i].GetStartPosition()));
+            m_player.SetRebornCheckpoint(m_chunks[i].GetStartPosition());
         }
     }
-
+    /// <summary>
+    /// Перезапускает чанки (врагов, котов) при возрождении игрока, 
+    /// ставит текущим чанком первый, если подходит
+    /// </summary>
     public void Restart()
     {
         m_player.Restart();
         m_strategies[0].ResetCats();
-        for (int i = m_roomIndex; i >= 0; i--)
+        for (int i = m_chunkIndex; i >= 0; i--)
         {
-            m_rooms[i].Restart();
+            m_chunks[i].Restart();
         }
-        m_roomIndex = m_usedRoomStrategies[0] is GridStrategy
-                || m_usedRoomStrategies[0] is MovingPlatformStrategy
-                || m_usedRoomStrategies[0] is DestroyableBrickStrategy ? 1 : 0;
-        m_currentRoom = m_rooms[m_roomIndex];
+        //если первый чанк с пространством для падения - берет второй как начальный
+        m_chunkIndex = IsChunkWithFallSpace(0) ? 1 : 0;
+        m_currentChunk = m_chunks[m_chunkIndex];
         m_transitionBounds = false;
-        m_roomBounds = true;
+        m_chunkBounds = true;
     }
-
+    /// <summary>
+    /// Перезапускает кирпичи для чанка и переходов сдади и спереди, если нужно
+    /// </summary>
     public void RestartBricks()
     {
-        if (m_usedRoomStrategies[m_roomIndex] is DestroyableBrickStrategy)
+        if (m_usedChunksStrategies[m_chunkIndex] is DestroyableBrickStrategy)
         {
-            m_rooms[m_roomIndex].Restart();
+            m_chunks[m_chunkIndex].Restart();
         }
-        if (m_usedTransitionStrategies[m_roomIndex] is DestroyableBrickStrategy)
+        if (m_usedTransitionStrategies[m_chunkIndex] is DestroyableBrickStrategy)
         {
-            m_rooms[m_roomIndex].GetNextTransition().Restart();
+            m_chunks[m_chunkIndex].GetNextTransition().Restart();
         }
-        if (m_roomIndex > 0 && m_usedTransitionStrategies[m_roomIndex - 1] is DestroyableBrickStrategy)
+        if (m_chunkIndex > 0 && m_usedTransitionStrategies[m_chunkIndex - 1] is DestroyableBrickStrategy)
         {
-            m_rooms[m_roomIndex].GetPreviousTransition().Restart();
+            m_chunks[m_chunkIndex].GetPreviousTransition().Restart();
         }
     }
 }

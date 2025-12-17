@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Jumper : Trap
 {
@@ -34,7 +34,10 @@ public class Jumper : Trap
             m_target.GetComponent<Rigidbody2D>().velocity = new Vector2(m_target.GetComponent<Rigidbody2D>().velocity.x, m_jumpPower * m_wallHeigh);
         }
     }
-
+    /// <summary>
+    /// Устанавливает высоту стены, на которую нужно запрыгнуть
+    /// </summary>
+    /// <param name="height"></param>
     public void SetWallHeight(int height)
     {
         m_wallHeigh = height;

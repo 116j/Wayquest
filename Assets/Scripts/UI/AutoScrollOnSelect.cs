@@ -5,23 +5,20 @@ using UnityEngine.UI;
 public class AutoScrollOnSelect : MonoBehaviour
 {
     ScrollRect m_scroll;
-    RectTransform m_content;
-    RectTransform m_viewport;
 
     void Awake()
     {
         m_scroll = GetComponent<ScrollRect>();
-        m_content = m_scroll.content;
-        m_viewport = m_scroll.viewport;
     }
 
-    // Подпишитесь на событие Select у каждого дочернего Selectable
+    //Функция для ScrollView
     public void OnElementSelected(RectTransform selected)
     {
         Canvas.ForceUpdateCanvases();
 
-        // мировые углы элемента и вьюпорта
+        //углы выбранного элемента списка
         Vector3[] itemCorners = new Vector3[4];
+        //углы области видимости списка
         Vector3[] viewCorners = new Vector3[4];
         selected.GetWorldCorners(itemCorners);
         m_scroll.viewport.GetWorldCorners(viewCorners);
@@ -32,16 +29,15 @@ public class AutoScrollOnSelect : MonoBehaviour
         float itemTop = itemCorners[1].y;
         float itemBottom = itemCorners[0].y;
 
-        // текущее normalized
         float norm = m_scroll.verticalNormalizedPosition;
 
-        // если элемент «вылез» сверху — прокручиваем вверх
+        //если элемент вылез сверху — прокручивает вверх
         if (itemTop > viewTop)
         {
             float delta = itemTop - viewTop;
             norm += delta / (m_scroll.content.rect.height - m_scroll.viewport.rect.height);
         }
-        // если «вылез» снизу — прокручиваем вниз
+        //если вылез снизу — прокручивает вниз
         else if (itemBottom < viewBottom)
         {
             float delta = viewBottom - itemBottom;

@@ -1,35 +1,35 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class Polygon
 {
     HashSet<Vector3Int> m_tilePositions = new HashSet<Vector3Int>();
     HashSet<Vector3Int> m_ground = new HashSet<Vector3Int>();
-    Vector3Int m_start;
-
-
-    public Polygon(Vector3Int start)
-    {
-        m_start = start;
-    }
-
-
+    /// <summary>
+    /// Отрисовывает тайлы полигона
+    /// </summary>
+    /// <param name="editor"></param>
+    /// <param name="callback">функция, которую нужно выполнить после отрисовки тайлов</param>
+    /// <param name="isInitial">начальный чанк</param>
     public void DrawTiles(TileEditor editor, System.Action<HashSet<Vector3Int>> callback, bool isInitial)
     {
-        editor.SetTiles(m_tilePositions,()=>callback?.Invoke(m_ground),isInitial);
+        editor.SetTiles(m_tilePositions, () => callback?.Invoke(m_ground), isInitial);
     }
-
+    /// <summary>
+    /// Удаляет тайлы полигона из игры
+    /// </summary>
+    /// <param name="editor"></param>
+    /// <param name="async">удалять асинхронно</param>
     public void ClearTiles(TileEditor editor, bool async)
     {
         editor.ClearTiles(m_tilePositions, async);
     }
     /// <summary>
-    /// add tiles from startPosition to (startPosition.x+width,startPosition.y-height)
+    /// Добавляет тайлы от startPosition до (startPosition.x + width,startPosition.y - height)
     /// </summary>
-    /// <param name="height"></param>
-    /// <param name="width"></param>
-    /// <param name="startPosition"></param>
+    /// <param name="height">высота участка тайлов вниз</param>
+    /// <param name="width">ширина участка тайлов</param>
+    /// <param name="startPosition">начало участка тайлов</param>
     public void AddTiles(int height, int width, Vector3Int startPosition, bool ground = true)
     {
         for (int i = 0; i < height; i++)
@@ -40,10 +40,6 @@ public class Polygon
                 if (!m_tilePositions.Contains(pos))
                 {
                     m_tilePositions.Add(pos);
-                }
-                if (ground && m_start.y < pos.y && m_start.x == pos.x)
-                {
-                    Debug.Log(startPosition);
                 }
             }
         }
@@ -75,5 +71,4 @@ public class Polygon
     {
         return m_tilePositions.Contains(tilePos);
     }
-
 }

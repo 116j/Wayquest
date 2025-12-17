@@ -4,5 +4,5 @@ using UnityEngine;
 public class LevelValues : ScriptableObject
 {
     public float[] m_strategyWeights;
-    public int m_roomsCount;
+    public int m_chunksCount;
 }

@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
-using System.Runtime.InteropServices;
 
 public class AdManager : MonoBehaviour
 {
@@ -8,8 +7,6 @@ public class AdManager : MonoBehaviour
     UIController m_UI;
     [Inject]
     PlayerController m_player;
-    [Inject]
-    PlayerInput m_input;
 
     public enum AdPurpose
     {
@@ -26,7 +23,10 @@ public class AdManager : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void ShowRewardedAdForBonus();
 #endif
-
+    /// <summary>
+    /// Отправляет в index.html запрос на просмотр рекламы
+    /// </summary>
+    /// <param name="purpose">номер причины просмотра рекламы</param>
     public void ShowAd(int purpose)
     {
         m_currentAd = (AdPurpose)purpose;
@@ -42,6 +42,7 @@ public class AdManager : MonoBehaviour
 
     public void OnAdResult(string result)
     {
+        //если не получилось загрузить рекламу - выход
         if (result != "reward_success")
         {
             Debug.Log("An ad isn't watched.");
@@ -53,12 +54,14 @@ public class AdManager : MonoBehaviour
 
         switch (m_currentAd)
         {
+            //игрок возраждается с полным здоровьем
             case AdPurpose.Revive:
                 m_UI.Die(false);
                 m_player.Restart(false);
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
                 break;
+            //добавляет 500 монет
             case AdPurpose.Bonus:
                 m_UI.AddMoney(500);
                 break;

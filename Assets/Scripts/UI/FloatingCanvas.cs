@@ -8,11 +8,11 @@ public class FloatingCanvas : MonoBehaviour
     [SerializeField]
     Transform m_player;
     [SerializeField]
-    TextMeshProUGUI m_playerTextG;    
+    TextMeshProUGUI m_playerTextG;
     [SerializeField]
     TextMeshProUGUI m_playerTextKB;
     [SerializeField]
-    TextMeshProUGUI m_shopTextG;    
+    TextMeshProUGUI m_shopTextG;
     [SerializeField]
     TextMeshProUGUI m_shopTextKB;
     [SerializeField]
@@ -32,7 +32,6 @@ public class FloatingCanvas : MonoBehaviour
 
     Transform m_dino;
 
-    // Update is called once per frame
     void Update()
     {
         if (m_showPlayerText)

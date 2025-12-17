@@ -1,4 +1,4 @@
-using Zenject;
+﻿using Zenject;
 
 public class ProjectInstaller : MonoInstaller
 {
@@ -7,11 +7,11 @@ public class ProjectInstaller : MonoInstaller
         Container
             .Bind<LevelBuilder>()
             .FromComponentInHierarchy()
-            .AsSingle();       
+            .AsSingle();
         Container
             .Bind<AdManager>()
             .FromComponentInHierarchy()
-            .AsSingle();       
+            .AsSingle();
         Container
             .Bind<TileEditor>()
             .FromComponentInHierarchy()

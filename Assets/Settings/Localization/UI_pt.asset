@@ -119,27 +119,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20624187768832
-    m_Localized: "N\xDAMERO DE SALAS"
+    m_Localized: "N\xDAMERO DE CHUNKS\r"
     m_Metadata:
       m_Items: []
   - m_Id: 20650360225792
-    m_Localized: "FREQU\xCANCIA DE GERA\xC7\xC3O DE SALAS"
+    m_Localized: "FREQU\xCANCIA DE GERA\xC7\xC3O DE CHUNKS"
     m_Metadata:
       m_Items: []
   - m_Id: 20704886177792
-    m_Localized: Sala Base
+    m_Localized: "Chunk b\xE1sico"
     m_Metadata:
       m_Items: []
   - m_Id: 20736116965376
-    m_Localized: Sala do teto
+    m_Localized: Chunk com teto
     m_Metadata:
       m_Items: []
   - m_Id: 20750046248960
-    m_Localized: Sala de plataformas de rede
+    m_Localized: Chunk de plataformas em grade
     m_Metadata:
       m_Items: []
   - m_Id: 20774792642560
-    m_Localized: "Sala das plataformas m\xF3veis"
+    m_Localized: "Chunk de plataformas m\xF3veis"
     m_Metadata:
       m_Items: []
   - m_Id: 22886800867328
@@ -213,7 +213,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8312222965219328
-    m_Localized: "Sala destru\xEDvel"
+    m_Localized: "Chunk destru\xEDvel"
     m_Metadata:
       m_Items: []
   - m_Id: 12711559031865344
@@ -221,7 +221,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057984500514816
-    m_Localized: TIPOS DE QUARTOS
+    m_Localized: TIPOS DE CHUNKS
     m_Metadata:
       m_Items: []
   - m_Id: 13057887209439232
@@ -229,25 +229,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13057949494853632
-    m_Localized: "Especifica quantas \"salas\" separadas (fragmentos) consecutivas
-      estar\xE3o em um n\xEDvel."
+    m_Localized: "Define quantos \"chunks\" (segmentos) individuais aparecer\xE3o
+      consecutivamente no n\xEDvel.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13058096987553792
-    m_Localized: "Existem cinco tipos de quartos:\n\n\u2022 A sala base \xE9 uma
-      sala com inimigos e armadilhas.\n\n\u2022 A sala do teto \xE9 uma sala com
-      teto e armadilhas.\n\n\u2022 A sala de plataformas de rede \xE9 uma sala com
-      plataformas sobre as quais o jogador salta.\n\n\u2022 A sala das plataformas
-      m\xF3veis \xE9 uma sala com plataformas m\xF3veis que se aproximam umas das
-      outras.\n\n\u2022 A sala destru\xEDvel \xE9 uma sala com um piso em colapso."
+    m_Localized: "Existem cinco tipos de chunks:\r\n\r\n\u2022 Chunk b\xE1sico \u2013
+      um chunk com inimigos e armadilhas.\r\n\r\n\u2022 Chunk com teto \u2013 um
+      chunk com teto e armadilhas no teto.\r\n\r\n\u2022 Chunk de plataformas em
+      grade \u2013 um chunk com plataformas que o jogador deve pular.\r\n\r\n\u2022
+      Chunk de plataformas m\xF3veis \u2013 um chunk com plataformas m\xF3veis que
+      se aproximam umas das outras.\r\n\r\n\u2022 Chunk destrut\xEDvel \u2013 um
+      chunk com ch\xE3o que desmorona."
     m_Metadata:
       m_Items: []
   - m_Id: 13058139958198272
-    m_Localized: "Cada tipo de sala tem um valor de 0,00-1,00 (o m\xEDnimo b\xE1sico
-      \xE9 0,3). Para cada novo sal\xE3o, o jogo leva a soma de todos os valores
-      e escolhe uma estrat\xE9gia proporcional \xE0 sua participa\xE7\xE3o.\nPor
-      exemplo, se base = 0.8, com teto = 0.4, o resto \xE9 0.2, ent\xE3o as chances
-      s\xE3o:\n44% \u2013 b\xE1sico, 22% \u2013 com teto, 11% - outros."
+    m_Localized: "Cada tipo de chunk tem um valor de peso entre 0.00 e 1.00 (o chunk
+      b\xE1sico tem um m\xEDnimo de 0.3). Para cada novo chunk, o jogo soma todos
+      os valores de peso e seleciona um tipo de chunk proporcionalmente \xE0 sua
+      participa\xE7\xE3o.\r\n\r\nPor exemplo, se B\xE1sico = 0.8, Com Teto = 0.4,
+      e os outros = 0.2 cada, ent\xE3o as probabilidades s\xE3o:\r\n44% \u2013 B\xE1sico,
+      22% \u2013 Com Teto, 11% cada \u2013 outros.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 13442591293095936

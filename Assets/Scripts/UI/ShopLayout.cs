@@ -18,9 +18,13 @@ public class ShopLayout : MonoBehaviour
     [Inject]
     PlayerInput m_input;
 
+    //
     bool[] m_clicked = new bool[5];
+    //Количество товаров
     int[] m_itemsCount = { 3, 2, 2, 2, 1 };
+    //Цены товаров
     int[] m_prices = { 1000, 1500, 2000, 2000, 2500 };
+    //Описание каждого товара
     string[][] m_dialogueTexts =
     {
         new string[]{
@@ -97,10 +101,12 @@ public class ShopLayout : MonoBehaviour
         "¡Hola, Forastero! Bienvenido a mi tienda! ¿Qué le gustaría comprar?",
         "Merhaba Yabancı! Benim dükkana hoşgeldiniz! Ne satın almak istersiniz?"
     };
-
+    //Стоимость всех товаров
     public int AllPrices { get; private set; }
-
-
+    /// <summary>
+    /// Самая маленькая ценна товара в магазине
+    /// </summary>
+    /// <returns></returns>
     public float GetLowestPrice()
     {
         for (int i = 0; i < m_prices.Length; i++)
@@ -111,7 +117,9 @@ public class ShopLayout : MonoBehaviour
 
         return float.MaxValue;
     }
-
+    /// <summary>
+    /// Ставит цены на товары
+    /// </summary>
     void InitializePrices()
     {
         m_prices = new int[] { 1000, 1500, 2000, 2000, 2500 };
@@ -128,36 +136,41 @@ public class ShopLayout : MonoBehaviour
         m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
         InitializePrices();
     }
-
+    /// <summary>
+    /// Приветственная реплика продавца
+    /// </summary>
     public void Greet()
     {
         m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
     }
-
+    /// <summary>
+    /// Показывает описание товара
+    /// </summary>
+    /// <param name="index">номер товара</param>
     public void ShowItemText(int index)
     {
         m_dialogueText.text = m_dialogueTexts[index][m_UI.CurrentLanguage];
-        m_dialogueText.text += m_UI.GetMoney() >= m_prices[index] ? m_canBuyText[m_input.GetCurrentDeviceType()=="Gamepad"?1:0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
+        m_dialogueText.text += m_UI.GetMoney() >= m_prices[index]? m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
         for (int i = 0; i < m_clicked.Length; i++)
         {
             m_clicked[i] = false;
         }
         m_clicked[index] = true;
     }
-
+    /// <summary>
+    /// Купить товар
+    /// </summary>
+    /// <param name="index">номер товара</param>
+    /// <param name="price">текст цены товара</param>
+    /// <param name="func">применение  товара к игроку</param>
     void Buy(int index, TextMeshProUGUI price, Action func)
     {
         if (m_itemsCount[index] <= 0)
             return;
+        //еслит товар еще не был выбран - показать описание
         if (!m_clicked[index])
         {
-            m_dialogueText.text = m_dialogueTexts[index][m_UI.CurrentLanguage];
-            m_dialogueText.text += m_UI.GetMoney() >= m_prices[index] ? m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
-            for (int i = 0; i < m_clicked.Length; i++)
-            {
-                m_clicked[i] = false;
-            }
-            m_clicked[index] = true;
+            ShowItemText(index);
         }
         else if (m_UI.GetMoney() >= m_prices[index])
         {
@@ -173,30 +186,44 @@ public class ShopLayout : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Добавляет + 1 здоровье игроку
+    /// </summary>
+    /// <param name="price"></param>
     public void AddHealth(TextMeshProUGUI price)
     {
         Action func = m_UI.AddHeart;
         func += m_player.GetComponent<Damagable>().IncreaseHealth;
         Buy(0, price, func);
     }
-
-
+    /// <summary>
+    /// Уменьшает время презагрузки рывка
+    /// </summary>
+    /// <param name="price"></param>
     public void AddDash(TextMeshProUGUI price)
     {
         Buy(1, price, m_player.GetComponent<PlayerController>().DecreaseDashCooldown);
     }
-
+    /// <summary>
+    /// Увеличивает урон лекгой актаки на 1
+    /// </summary>
+    /// <param name="price"></param>
     public void AddLightDamage(TextMeshProUGUI price)
     {
         Buy(2, price, m_player.transform.GetChild(0).GetComponent<AttackListener>().IncreaseDamage);
     }
-
+    /// <summary>
+    /// Увеличивает урон тяжелой актаки на 1
+    /// </summary>
+    /// <param name="price"></param>
     public void AddHeavyDamage(TextMeshProUGUI price)
     {
         Buy(3, price, m_player.transform.GetChild(1).GetComponent<AttackListener>().IncreaseDamage);
     }
-
+    /// <summary>
+    /// Добавляет 1 макс прыжок игроку
+    /// </summary>
+    /// <param name="price"></param>
     public void AddJump(TextMeshProUGUI price)
     {
         Action func = m_player.GetComponent<PlayerController>().AddJump;

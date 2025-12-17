@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShootingEnemy : WalkEnemy
 {
@@ -12,6 +12,7 @@ public class ShootingEnemy : WalkEnemy
     readonly int m_shootNum = 2;
     protected override void FixedUpdate()
     {
+        //если игрок вошел в зону стрельбы, но не в зону преследования - стрелять
         if (!m_dead && m_shootZone.TargetDetected && !m_detectZone.TargetDetected)
         {
             m_shootScript.EnableAttack = true;
