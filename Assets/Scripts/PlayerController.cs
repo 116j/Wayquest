@@ -339,7 +339,7 @@ public class PlayerController : MonoBehaviour
                 m_currentJumps++;
                 return;
             }
-            //добавить прыжок во время прыдка, если возможно
+            //добавить прыжок во время прыжка, если возможно
             if (m_canMove && m_jumping && m_input.Jump && !m_jump && m_currentJumps < m_jumpsMaxCount)
             {
                 m_sound.PlaySound("Jump");
@@ -416,9 +416,9 @@ public class PlayerController : MonoBehaviour
         m_rb.velocity = Vector2.zero;
         m_canMove = false;
         m_anim.SetBool(m_HashCanMove, false);
-        m_damagable.Invinsible = true;
+        m_damagable.Invincible = true;
         yield return new WaitForSeconds(m_blockDuration);
-        m_damagable.Invinsible = false;
+        m_damagable.Invincible = false;
         m_blocking = false;
         m_canMove = true;
         m_anim.SetBool(m_HashCanMove, true);

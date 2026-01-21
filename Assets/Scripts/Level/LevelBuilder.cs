@@ -48,10 +48,10 @@ public class LevelBuilder : MonoBehaviour
     //Нужно ли включить границы чанка
     bool m_chunkBounds = true;
     //Количество созданных чанков
-    int m_chunksCount = 1;
+    int m_chunksCount = 0;
     //Индекс текущего чанка в массиве чанков
     int m_chunkIndex = 0;
-    //Индекс следующего чанка в массиве чанков
+    //Индекс чанка, на котором нужно уже создать новый чанк
     int m_newChunkIndex = 1;
     //Создан ли финальный чанк
     bool m_isFinalChunkSpawned = false;
@@ -78,16 +78,8 @@ public class LevelBuilder : MonoBehaviour
         {
             m_container.Inject(strategy);
         }
-        //стратегия перехода от начального чанка
-        FillStrategy startTransitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
-        m_chunks = new List<Chunk>
-        {
-            m_strategies[0].FillStratChunk(m_startPosition,startTransitionStrategy)
-        };
-        m_usedChunksStrategies.Add(m_strategies[0]);
-        m_usedTransitionStrategies.Add(startTransitionStrategy);
-        m_currentChunk = m_chunks[0];
-        //создает в начале еще 2 чанка после начального
+        //создает в начале 3 чанка после начального
+        SpawnChunk();
         SpawnChunk();
         SpawnChunk();
 
@@ -150,7 +142,7 @@ public class LevelBuilder : MonoBehaviour
                 SpawnChunk();
                 m_newChunkIndex++;
             }
-            //убирает первый чанк в списке, если количество созданных больше 4
+            //убирает чанки в начале, если надо
             ClearChunk();
 
             m_currentChunk = m_chunks[++m_chunkIndex];
@@ -252,8 +244,21 @@ public class LevelBuilder : MonoBehaviour
     void SpawnChunk()
     {
         m_chunksCount++;
+        //начальный чанк
+        if (m_chunksCount == 1)
+        {
+            //стратегия перехода от начального чанка
+            FillStrategy startTransitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
+            m_chunks = new List<Chunk>
+            {
+                m_strategies[0].FillStartChunk(m_startPosition,startTransitionStrategy)
+            };
+            m_usedChunksStrategies.Add(m_strategies[0]);
+            m_usedTransitionStrategies.Add(startTransitionStrategy);
+            m_currentChunk = m_chunks[0];
+        }
         //если все чанки уровня созданы - создает финальный чанк
-        if (m_chunksCount > m_values.m_chunksCount)
+        else if (m_chunksCount > m_values.m_chunksCount)
         {
             m_isFinalChunkSpawned = true;
             m_usedChunksStrategies.Add(m_strategies[0]);
@@ -263,24 +268,24 @@ public class LevelBuilder : MonoBehaviour
         else
             while (true)
             {
-                //стртегия для создания чанка
-                FillStrategy rs = m_strategies[GetStrategy()];
+                //стратегия для создания чанка
+                FillStrategy сhunckStrategy = m_strategies[GetStrategy()];
                 //если последний чанк был с пространством для падения, 
                 //и этот чанк тоже, то меняет стратегию, т.к. они не могут идти подряд
                 if (IsChunkWithFallSpace(m_usedChunksStrategies.Count - 1) &&
-                    (rs is GridStrategy
-                    || rs is MovingPlatformStrategy
-                    || rs is DestroyableBrickStrategy))
+                    (сhunckStrategy is GridStrategy
+                    || сhunckStrategy is MovingPlatformStrategy
+                    || сhunckStrategy is DestroyableBrickStrategy))
                     continue;
                 //стратегия для перехода
-                FillStrategy ts = m_strategies[Random.Range(0, m_strategies.Length)];
-                Chunk r = rs.FillChunk(m_chunks.Last(), ts);
+                FillStrategy transitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
+                Chunk chunck = сhunckStrategy.FillChunk(m_chunks.Last(), transitionStrategy);
                 //если не получилось создать чанк - меняет стратегию
-                if (r == null)
+                if (chunck == null)
                     continue;
-                m_usedChunksStrategies.Add(rs);
-                m_usedTransitionStrategies.Add(ts);
-                m_chunks.Add(r);
+                m_usedChunksStrategies.Add(сhunckStrategy);
+                m_usedTransitionStrategies.Add(transitionStrategy);
+                m_chunks.Add(chunck);
                 break;
             }
     }
@@ -311,7 +316,7 @@ public class LevelBuilder : MonoBehaviour
         return m_values.m_strategyWeights[0] / m_values.m_strategyWeights.Sum();
     }
     /// <summary>
-    /// Удаляет первый чанк, если количество существующих чанков больше 4
+    /// Удаляет первый чанк, если сзади осталось больше 3х чанков
     /// </summary>
     void ClearChunk()
     {

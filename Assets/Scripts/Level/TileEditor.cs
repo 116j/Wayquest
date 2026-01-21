@@ -262,7 +262,7 @@ public class TileEditor : MonoBehaviour
                             tiles.Remove(tile);
                             break;
                         }
-                        //если была трава, а теперь не нужнв - удалить ее
+                        //если была трава, а теперь не нужна - удалить ее
                         else if (i == 2 && tilemap.ContainsKey(surPosition) && surTile != null && !newChanger.addGrass)
                         {
                             tilemap[surPosition] = null;

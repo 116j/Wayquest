@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3535936475004516182}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &991568554170551248
 MonoBehaviour:
@@ -49,32 +49,32 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0edba0faed9ddb543905aa9894642359, type: 2}
   - {fileID: 11400000, guid: 84d0f5ecdab10a54aa78d83b1b6a76fc, type: 2}
   m_backgroundMusic:
-  - {fileID: 8300000, guid: 970a88b12fb8aa2479e2f6af6d597740, type: 3}
-  - {fileID: 8300000, guid: 5e4052937fdf43a419f1cbe7a6d98a86, type: 3}
-  - {fileID: 8300000, guid: f55b47d1bc882db4eb5bf653ef26e1cb, type: 3}
-  - {fileID: 8300000, guid: 802491224e4bac74584d636a379879f6, type: 3}
-  - {fileID: 8300000, guid: da558d7387ee28d4c846363adb3eb76d, type: 3}
-  - {fileID: 8300000, guid: ba7e389568d8f4647846ed68ba1c12da, type: 3}
-  - {fileID: 8300000, guid: e3ed6b93fdf9ed34ab26937416c56d47, type: 3}
-  - {fileID: 8300000, guid: 9970cc45a79cab045be62faae8474e6d, type: 3}
+  - {fileID: 8300000, guid: 35f50baea6f3b43409cf5658bb063cdb, type: 3}
+  - {fileID: 8300000, guid: ad6485b648697e948a428388123272cf, type: 3}
+  - {fileID: 8300000, guid: 04a28d016217f264a91d0c926ee1c9f1, type: 3}
+  - {fileID: 8300000, guid: ea2eb6b24d893924c98a27e696e5d93e, type: 3}
+  - {fileID: 8300000, guid: 4b1d6d1f5c4e62743b3f0f2995314789, type: 3}
+  - {fileID: 8300000, guid: 32d83caba165b8e41904bd16d7871fe9, type: 3}
+  - {fileID: 8300000, guid: 80d91bc3d09b36b458e637603b337b78, type: 3}
+  - {fileID: 8300000, guid: 043e4e8194dc9b94e80de85b71db519e, type: 3}
   m_brick: {fileID: 2340521542611145314, guid: be13a00c777e91e458215c38b16254d1, type: 3}
-  m_enemiesCountPerRoom:
+  m_enemiesCountPerChunk:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 3
-      outSlope: 3
+      inSlope: 2
+      outSlope: 2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 4
-      inSlope: 3
-      outSlope: 3
+      value: 3
+      inSlope: 2
+      outSlope: 2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -82,23 +82,23 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_trapsCountPerRoom:
+  m_trapsCountPerChunk:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 3
-      outSlope: 3
+      inSlope: 2
+      outSlope: 2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 4
-      inSlope: 3
-      outSlope: 3
+      value: 3
+      inSlope: 2
+      outSlope: 2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -143,6 +143,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5836907705764678863, guid: fec4151c0eb2b5444af142439c06bfcf, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.15
   m_Pitch: 1

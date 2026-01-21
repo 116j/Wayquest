@@ -64,7 +64,7 @@ public class MovingPlatformStrategy : FillStrategy
             float vSpace = Mathf.Abs(end.y + 1 - m_levelTheme.m_movingPlatform.GetHeight() - lastPoint.y);
 
             Trajectory currentTrajectory;
-            //выбирает траекторию дижения новой платформы
+            //выбирает траекторию дивжения новой платформы
             if (vSpace > m_minVerticalDist
                 && hSpace > m_minHorizontalDist)
             {
@@ -73,9 +73,9 @@ public class MovingPlatformStrategy : FillStrategy
                 float weightH = hSpace;
                 //вертикаль  — чем выше, тем чаще
                 float weightV = vSpace;
-                //диагональ — чем «квадратнее», тем чаще
+                //диагональ — чем квадратнее, тем чаще
                 float weightD = Mathf.Min(vSpace, hSpace);
-                //круговая — растёт с размерами комнаты
+                //круговая — растёт с размерами чанка
                 float weightC = (height + vSpace) * 0.5f;        
 
                 float pick = Random.value * (weightV + weightH + weightD + weightC);
@@ -125,7 +125,7 @@ public class MovingPlatformStrategy : FillStrategy
                     {
                         //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (m_minWidth / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в простанство и чтобы совпадало со временем прохода предыдущей платформы
+                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, vSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //количество проходов платформы, пока она не встретиться с предыдущей
                         int n;
@@ -164,7 +164,7 @@ public class MovingPlatformStrategy : FillStrategy
                     {
                         //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (m_minWidth / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в простанство и чтобы совпадало со временем прохода предыдущей платформы
+                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, hSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //количество проходов платформы, пока она не встретиться с предыдущей
                         int n;
@@ -201,7 +201,7 @@ public class MovingPlatformStrategy : FillStrategy
                     {
                         //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (Mathf.Sqrt(Mathf.Pow(m_minWidth, 2) + Mathf.Pow(m_minWidth, 2)) / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в простанство и чтобы совпадало со временем прохода предыдущей платформы
+                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
                         int maxN = Mathf.FloorToInt((Mathf.Min(Mathf.Sqrt(Mathf.Pow(m_maxWidth, 2) + Mathf.Pow(m_maxWidth, 2)), Mathf.Min(vSpace, hSpace)) / speed
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //количество проходов платформы, пока она не встретиться с предыдущей
@@ -259,7 +259,7 @@ public class MovingPlatformStrategy : FillStrategy
                     {
                         //сколько минимальных полукругов траектории можно уложить во время прохода предыдущей платформы
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (Mathf.Sqrt(Mathf.Pow(m_minWidth, 2) + Mathf.Pow(m_minWidth, 2)) / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных полукругов траектории можно уложить в простанство и чтобы совпадало со временем прохода предыдущей платформы
+                        //сколько максимальных полукругов траектории можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
                         int maxN = Mathf.FloorToInt((Mathf.Min(Mathf.Sqrt(Mathf.Pow(m_maxWidth, 2) + Mathf.Pow(m_maxWidth, 2)), Mathf.Min(vSpace, hSpace)) / speed
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //количество проходов платформы, пока она не встретиться с предыдущей

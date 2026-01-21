@@ -75,19 +75,6 @@ public class UIController : MonoBehaviour
         m_currentHeart = m_hearts.Count - 1;
     }
 
-    IEnumerator Start()
-    {
-        yield return LocalizationSettings.InitializationOperation;
-
-        for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; ++i)
-        {
-            var locale = LocalizationSettings.AvailableLocales.Locales[i];
-            if (LocalizationSettings.SelectedLocale == locale)
-            {
-                CurrentLanguage = i;
-            }
-        }
-    }
     /// <summary>
     /// Добавляет сердце к макс количеству сердец
     /// </summary>

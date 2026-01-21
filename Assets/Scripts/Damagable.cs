@@ -18,7 +18,7 @@ public class Damagable : MonoBehaviour
 
     int m_health = 4;
     //Неуязвимость
-    public bool Invinsible { get; set; } = false;
+    public bool Invincible { get; set; } = false;
     //Замирание
     public bool Freezed { get; set; } = false;
 
@@ -106,10 +106,10 @@ public class Damagable : MonoBehaviour
     /// <summary>
     /// Восстанавливает полное здоровье и становится неуязвимым если нужно
     /// </summary>
-    /// <param name="invinsible">неуязвим после возрождения</param>
-    public void Reborn(bool invinsible = false)
+    /// <param name="invincible">неуязвим после возрождения</param>
+    public void Reborn(bool invincible = false)
     {
-        m_recovering = invinsible;
+        m_recovering = invincible;
         ApplyHealth(m_maxHealth - m_health);
         m_dead = false;
     }

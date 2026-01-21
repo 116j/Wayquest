@@ -146,7 +146,7 @@ public class GridStrategy : FillStrategy
                 offsetX = Random.Range(-jumpWidth, jumpWidth);
             }
             else
-            {
+            {   
                 int minOffset = jumpWidth - offsetX + m_minWidth;
                 int maxOffset = offsetX - m_minWidth;
                 offsetX = Random.Range(minOffset, maxOffset);
@@ -200,7 +200,7 @@ public class GridStrategy : FillStrategy
             {
                 attempts++;
                 continue;
-            }
+            }   
 
             //вторая платформа
             w1 = Mathf.Clamp(w1, m_minWidth, end.x - pos.x - m_minWidth);

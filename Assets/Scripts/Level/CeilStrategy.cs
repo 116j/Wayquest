@@ -8,6 +8,8 @@ public class CeilStrategy : FillStrategy
 
     protected new int m_minElevationHeight = 2;
     protected new int m_maxElevationHeight = 20;
+    //Отступ потолка над полом
+    readonly int m_ceilOffset = 3;
 
     public CeilStrategy(LevelTheme levelTheme) : base(levelTheme)
     {
@@ -49,8 +51,6 @@ public class CeilStrategy : FillStrategy
         Trap trap = m_levelTheme.m_ceilTraps[Random.Range(0, m_levelTheme.m_ceilTraps.Length)];
         m_container.Inject(trap);
         trap.SetTrapNum();
-        //отступ потолка над полом
-        int offset = Mathf.CeilToInt(trap.GetHeight());
 
         var ground = chunk.GetGround();
         //ширина сегмента потолка
@@ -83,12 +83,12 @@ public class CeilStrategy : FillStrategy
             {
                 if (start.y > ground[i].y)
                 {
-                    width += offset;
+                    width += m_ceilOffset;
                 }
                 else
                 {
-                    groundWidth -= offset;
-                    width -= offset;
+                    groundWidth -= m_ceilOffset;
+                    width -= m_ceilOffset;
                     //если возвышенность выше прыжка игрока - добавляет место для платформы
                     if (ground[i].y - start.y > m_playerJumpHeight)
                     {
@@ -99,21 +99,21 @@ public class CeilStrategy : FillStrategy
 
                 if (width > 1)
                 {
-                    chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
-                    AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), chunk);
+                    chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + m_ceilOffset), false);
+                    AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + m_ceilOffset), chunk);
                     width = 1;
                     height += start.y - ground[i].y;
                     //если низменность - отступает несколько клеток
                     if (start.y > ground[i].y)
                     {
-                        i += offset;
+                        i += m_ceilOffset;
                         start = ground[i];
                     }
                     //если возвышенность - добавляет дополнительную ширину слева
                     else
                     {
-                        width += offset + 1;
-                        start = ground[i] - Vector3Int.right * (offset + 1);
+                        width += m_ceilOffset + 1;
+                        start = ground[i] - Vector3Int.right * (m_ceilOffset + 1);
                     }
                 }
                 else
@@ -127,7 +127,7 @@ public class CeilStrategy : FillStrategy
                 if (i >= ground.Count - 1)
                     break;
                 groundStart = ground[i].x;
-                //дообавляет ловушки на потолок
+                //выбирает ловушки на потолок на следующий участок
                 trap = m_levelTheme.m_ceilTraps[Random.Range(0, m_levelTheme.m_ceilTraps.Length)];
                 m_container.Inject(trap);
                 trap.SetTrapNum();
@@ -139,12 +139,12 @@ public class CeilStrategy : FillStrategy
             }
         }
         //последний ровный сегмент
-        chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + offset), false);
-        AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + offset), chunk);
+        chunk.AddTiles(height, Mathf.Min(width, chunk.GetEndPosition().x - start.x), start + Vector3Int.up * (height + m_ceilOffset), false);
+        AddCeilTraps(trap, groundWidth, new Vector3Int(groundStart, start.y + m_ceilOffset), chunk);
         //отрисовываем тайлы
         chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) =>
         {
-            AddLandscape(chunk, groundTiles, offset, true);
+            AddLandscape(chunk, groundTiles, m_ceilOffset, true);
             foreach (var (obj, pos) in coins)
             {
                 obj.transform.position = pos;

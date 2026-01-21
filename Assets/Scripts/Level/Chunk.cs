@@ -281,7 +281,6 @@ public class Chunk
             //если на предыдущем участке были добавлены внизу доп. тайлы,
             //и последняя позиция Х такого тайла совпадает с началом X нового участка -
             //добавить тайлы под предыдущим участком
-            //if previous lowland or elevation width's last point is the same as start, add tiles below previous lowland or elevation
             if (startPos.x == m_lastExtraWidthPoint.x)
             {
                 w = Mathf.Min(m_minWidth, startPos.x - m_lastSectionPoint);
@@ -290,7 +289,6 @@ public class Chunk
             //или последний тайл был до конца участка -
             //добавить тайлы сначала между доп. тайлами и концом предыдущего участка,
             //а затем оставшуюся часть 
-            // if previous lowland or elevation width's last point is farther then start, add tiles below previous lowland or elevation and bettween start and lowland or elevation width's last point
             else
             {
                 //секция между доп. тайлами снизу и концом участка
@@ -375,7 +373,7 @@ public class Chunk
         m_polygons.Add(polygon);
     }
     /// <summary>
-    /// Создает платформу для перехода
+    /// Создает платформу 
     /// </summary>
     /// <param name="pos">начало платформы</param>
     /// <param name="width">ширина платформы</param>

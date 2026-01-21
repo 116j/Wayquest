@@ -160,8 +160,7 @@ public class FillStrategy
                 int maxGapWidth = GetMaxWidthGapForJump(lastPoint, end);
                 //ширина промежутка
                 gapWidth = Random.Range(m_minTransitionWidth, Mathf.Clamp(maxGapWidth, m_minTransitionWidth, Mathf.Min(m_playerJumpWidth, end.x - lastPoint.x - 2)));
-                //высота промежутка между высотой от ширины промежутка до высотой от макс ширины промежутка
-                // height between the point of the local width and the max width on the straight line between the end of the transition and the current point 
+                //высота промежутка между высотой от ширины промежутка и высотой от макс ширины промежутка
                 gapHeight = Random.Range(GetGapHeightInDiagonalWidth(lastPoint, end, gapWidth), GetGapHeightInDiagonalWidth(lastPoint, end, maxGapWidth));
                 if (height < 0)
                 {
@@ -222,7 +221,7 @@ public class FillStrategy
     /// <param name="start">начало чанка</param>
     /// <param name="transitionStrategy">стратегия для создания перехода между этим и след чанками</param>
     /// <returns>filled chunk</returns>
-    public Chunk FillStratChunk(Vector3Int start, FillStrategy transitionStrategy)
+    public Chunk FillStartChunk(Vector3Int start, FillStrategy transitionStrategy)
     {
         Vector3Int end = new Vector3Int(start.x + Random.Range(m_minChunkWidth, m_maxChunkWidth), start.y);
         Chunk chunk = new Chunk(start, end, new Chunk(start, start));
@@ -343,7 +342,7 @@ public class FillStrategy
                 int slopeHeight = Random.Range(m_minElevationHeight, Mathf.Clamp((chunk.GetEndPosition().x - m_minStraightSection * 2 - lastPoint.x - 1) / 2, m_minElevationHeight, m_maxSlopeHeight));
                 width = Random.Range(m_minStraightSection, chunk.GetEndPosition().x - m_minStraightSection - slopeHeight * 2 - lastPoint.x - 1);
                 chunk.CreateSlope(slopeHeight, width, lastPoint);
-                // создает ловушки и врагов нв холме если надо
+                // создает ловушки и врагов на холме если надо
                 if (spawnEnemyOrTrap)
                     SpawnEnemyOrTrap(chunk, width, int.MaxValue, new Vector3(lastPoint.x + slopeHeight + 1, lastPoint.y + slopeHeight), ref lastEnemy);
                 //точка после холма
@@ -526,7 +525,7 @@ public class FillStrategy
             //если растение:
             //- растение выше макс высоты 
             //- пересекается с другим созданным объектом больше, чем на 1/3 своей ширины
-            //- с вероятностью 35% общая ширина всех созданных растений на участке больше половины ширины растения
+            //- с вероятностью 35% общая ширина всех созданных растений на участке больше половины ширины участка
             //- растение выходит за рамки участка
             //тогда запускает генераци. заново и удаляемсозданный объект, так как он не подходит
             if (obj.GetHeight() > height || collides || (Random.value > 0.65f && length > width * 1.0f / 2) || pos.x + obj.GetRightBorder() > start.x + width || pos.x + obj.GetLeftBorder() < start.x)
@@ -627,12 +626,11 @@ public class FillStrategy
 
                 if (trap.GetAttackDirection() == Vector3.right || trap.GetAttackDirection() == Vector3.forward)
                 {
-                    // если ловушка стреляет - обрезать границу
                     if (trap.GetWidth() > sectionWidth / 3)
                     {
                         m_trapsNum = 1;
                     }
-
+                    // если ловушка стреляет - обрезать границу
                     if (trap.GetAttackDirection() == Vector3.forward)
                     {
                         rightBorder -= sectionWidth / 2;

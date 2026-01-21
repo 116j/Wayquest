@@ -45,7 +45,7 @@ public class DefendingEnemy : WalkEnemy
         m_anim.SetBool(m_HashProtect, false);
         m_protectCooldown = 0;
         m_protecting = false;
-        m_damagable.Invinsible = false;
+        m_damagable.Invincible = false;
     }
     /// <summary>
     /// Включает защиту
@@ -56,7 +56,7 @@ public class DefendingEnemy : WalkEnemy
         m_rb.velocity = Vector2.zero;
         m_protecting = true;
         m_anim.SetBool(m_HashProtect, true);
-        m_damagable.Invinsible = true;
+        m_damagable.Invincible = true;
         m_waiting = false;
     }
 

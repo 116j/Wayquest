@@ -166,7 +166,7 @@ public class DestroyableBrickStrategy : FillStrategy
         //ширина платформы
         int platformWidth = Random.Range(m_minStepWidth, m_maxStepWidth);
         int offsetX = Random.Range(m_minStarirsOffset, m_maxStarirsOffsetX);
-        int offsetY = Random.Range(m_minStarirsOffset, GetJumpHeight(offsetX) + 1);
+        int offsetY = Random.Range(m_minStarirsOffset, GetJumpHeight(offsetX));
         //уровень платформы
         int level = 0;
 
