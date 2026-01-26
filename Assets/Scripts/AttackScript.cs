@@ -8,6 +8,8 @@ public class AttackScript : MonoBehaviour
     [SerializeField]
     //Время перезарядки атаки
     float m_attackCooldownTime = 1.5f;
+    [SerializeField]
+    DetectZone m_groundZone;
     //Может ли объект атаковать сейчас
     public bool EnableAttack { get; set; } = true;
 
@@ -45,7 +47,7 @@ public class AttackScript : MonoBehaviour
     /// </summary>
     public void AttackMoveForward()
     {
-        if (m_rb != null)
+        if (m_rb != null && m_groundZone!=null && m_groundZone.TargetDetected)
             m_rb.velocity = transform.right * 5f;
     }
     /// <summary>

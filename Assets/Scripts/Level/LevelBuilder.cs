@@ -56,6 +56,7 @@ public class LevelBuilder : MonoBehaviour
     //Создан ли финальный чанк
     bool m_isFinalChunkSpawned = false;
 
+    bool m_newChunk = false;
     AudioSource m_audio;
 
     void Start()
@@ -153,15 +154,27 @@ public class LevelBuilder : MonoBehaviour
                 m_chunkBounds = true;
                 m_transitionBounds = false;
             }
+            else
+            {
+                m_newChunk = true;
+            }
         }
-        //если игрок уходит с чанка назад на переход и нужно включить границы камеры пререхода
+        //если игрок на переходе и нужно включить границы камеры пререхода
         else if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetStartPosition().x && m_transitionBounds)
         {
-            //меняет сдвиг в камере выше, если перход низходящий и сдвиг не был изменен
-            if (m_currentChunk.GetTransitionHeight() < 0 && !m_changeTransposer)
+            //меняет сдвиг в камере выше, если перход нисходящий и сдвиг не был изменен
+             if (m_currentChunk.GetTransitionHeight() < 0 && !m_changeTransposer)
             {
                 m_changeTransposer = !m_changeTransposer;
                 m_player.ChangeTransposerHeight(m_changeTransposer);
+            }
+            if (!m_newChunk)
+            {
+                m_player.SetChunkCheckpoint(m_currentChunk.GetStartPosition(), true);
+            }
+            else 
+            {
+                m_newChunk = false;
             }
             //сигнал, что границы перехода включены 
             m_transitionBounds = false;
@@ -170,7 +183,7 @@ public class LevelBuilder : MonoBehaviour
             m_currentChunk.SetTransitionCameraBounds();
             m_player.SetCameraBoundsHeight(Mathf.Abs(m_currentChunk.GetTransitionHeight()));
         }
-        //если игрок и нужно включить границы камеры чанка
+        //если игрок на чанке и нужно включить границы камеры чанка
         else if (m_currentChunk != null && m_player.transform.position.x >= m_currentChunk.GetStartPosition().x && m_chunkBounds)
         {
             //если финальный чанк - ставит точку перерождения в начале чанка
@@ -178,12 +191,7 @@ public class LevelBuilder : MonoBehaviour
             {
                 m_player.SetRebornCheckpoint(m_currentChunk.GetStartPosition());
             }
-            //если чанк с без пространства для падения - ставит чекроинт для падения на начало предыдущиего чанка
-            if (!IsChunkWithFallSpace(m_chunkIndex))
-            {
-                m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex].GetStartPosition(), true);
-            }
-            //если чанк с пространством для падения, низходящий и не было сдвига, или ничего из этого и уже был сдвиг - меняет сдвиг камеры
+            //если чанк с пространством для падения, нисходящий и не было сдвига, или ничего из этого и уже был сдвиг - меняет сдвиг камеры
             if (IsChunkWithFallSpace(m_chunkIndex)
                 && (m_currentChunk.GetEndPosition().y < m_currentChunk.GetStartPosition().y)
                 && !m_changeTransposer
@@ -212,7 +220,7 @@ public class LevelBuilder : MonoBehaviour
                     || m_usedChunksStrategies[index] is DestroyableBrickStrategy;
     }
     //Количество созданных чанков относительно количества чанков на уровне
-    public float LevelProgress() => m_chunksCount / m_values.m_chunksCount;
+    public float LevelProgress() => m_chunksCount * 1f / m_values.m_chunksCount;
     //Количество чанков на уровне всего
     public int GetLevelChunksCount() => m_values.m_chunksCount;
     /// <summary>

@@ -62,7 +62,7 @@ public class DefendingEnemy : WalkEnemy
 
     protected override void FixedUpdate()
     {
-        if (!m_protecting)
+        if (!m_protecting&&!m_dead)
         {
             // если игрок вне зоны атаки и объект в зоне атаки игрока - перезарядка защиты и ее активация,
             // иначе - сбросить 

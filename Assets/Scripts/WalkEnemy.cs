@@ -179,10 +179,10 @@ public class WalkEnemy : MonoBehaviour
         m_attackScript.EnableAttack = false;
         m_waiting = false;
         //если игрок близко - идти, далеко - бежать
-        m_speed = m_canRun && GetDistance() > m_col.size.x ? Mathf.Lerp(m_speed,m_runSpeed,0.5f) : Mathf.Lerp(m_speed, m_walkSpeed, 0.5f);
+        m_speed = m_canRun && GetDistance() > m_col.size.x ? Mathf.Lerp(m_speed, m_runSpeed, 0.5f) : Mathf.Lerp(m_speed, m_walkSpeed, 0.5f);
     }
     /// <summary>
-    /// Дистанция между врагом и началом зоны атаки
+    /// Дистанция между игроком и началом зоны атаки
     /// </summary>
     /// <returns></returns>
     protected float GetDistance()

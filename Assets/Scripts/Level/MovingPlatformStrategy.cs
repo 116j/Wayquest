@@ -333,7 +333,7 @@ public class MovingPlatformStrategy : FillStrategy
         end = new Vector3Int(Mathf.CeilToInt(lastPoint.x) - 1, Mathf.CeilToInt(lastPoint.y) - 1);
         chunk.SetEndPosition(end);
         //создает границу для падения игрока
-        chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, width, height));
+        chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, end.x - start.x, height));
         //создает боковые границы под предыдущим и следующим чанками
         CreateSideBound(chunk, height < 0);
 

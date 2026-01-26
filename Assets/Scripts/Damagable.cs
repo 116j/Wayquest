@@ -20,7 +20,7 @@ public class Damagable : MonoBehaviour
     //Неуязвимость
     public bool Invincible { get; set; } = false;
     //Замирание
-    public bool Freezed { get; set; } = false;
+    public bool Freezed { get; private set; } = false;
 
     private void Start()
     {

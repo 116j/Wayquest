@@ -10,10 +10,6 @@ public class PlatformLanguageManager : MonoBehaviour
     [Inject]
     UIController m_UI;
 
-    [DllImport("__Internal")]
-    private static extern string GetYandexLanguage();
-
-
     Dictionary<string, int> m_yandexToLocaleIndex = new()
     {
         {"en", 0},
@@ -22,6 +18,11 @@ public class PlatformLanguageManager : MonoBehaviour
         {"es", 3},
         {"tr", 4},
     };
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern string GetYandexLanguage();
+#endif
 
     IEnumerator Start()
     {
@@ -56,6 +57,7 @@ public class PlatformLanguageManager : MonoBehaviour
     {
         try
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
             string yandexLang = GetYandexLanguage();
             if (string.IsNullOrEmpty(yandexLang))
             {
@@ -70,6 +72,9 @@ public class PlatformLanguageManager : MonoBehaviour
             {
                 throw new System.Exception($"Incorrect language: {yandexLang}");
             }
+#else
+            throw new System.Exception($"Not WebGL");
+#endif
         }
         catch (System.Exception e)
         {

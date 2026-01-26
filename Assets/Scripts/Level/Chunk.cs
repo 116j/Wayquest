@@ -163,7 +163,7 @@ public class Chunk
     //Самая высокая точка чанка
     public int GetChunkHighestPoint() => m_lowestPoint + m_chunkHeight;
     //Высота для установки границ камеры этого чанка
-    public int GetChunkCameraHeight() => m_chunkHeight - m_cameraBoundsStart + m_lowestPoint;
+    public int GetChunkCameraHeight() => m_lowestPoint + m_chunkHeight - m_cameraBoundsStart;
 
     public void DontFillTiles()
     {
