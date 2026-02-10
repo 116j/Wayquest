@@ -32,6 +32,7 @@ public class AdManager : MonoBehaviour
     {
         m_currentAd = (AdPurpose)purpose;
 #if UNITY_WEBGL && !UNITY_EDITOR
+        AudioListener.pause = true;
         if (m_currentAd == AdPurpose.Revive)
             ShowRewardedAdForRevive();
         else
@@ -44,6 +45,7 @@ public class AdManager : MonoBehaviour
     public void OnAdResult(string result)
     {
         //если не получилось загрузить рекламу - выход
+        AudioListener.pause = false;
         if (result != "reward_success")
         {
             Debug.Log("An ad isn't watched.");

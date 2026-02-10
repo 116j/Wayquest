@@ -59,7 +59,6 @@ public class SettingsMenu : MonoBehaviour
 
     int m_currentLanguageInd = 0;
 
-    KeyValuePair<int, int> m_currentResolution;
     bool m_fullScreen = true;
     //Количество чанков по умолчанию
     readonly int m_defaultChunksCount = 50;
@@ -102,6 +101,50 @@ public class SettingsMenu : MonoBehaviour
         }
     };
 
+    string[][] m_localizationNames =
+    {
+        new string[]
+        {
+            "ENGLISH (EN)",
+            "PORTUGUESE (PT)",
+            "RUSSIAN (RU)",
+            "SPANISH (ES)",
+            "TURKISH (TR)"
+        },
+        new string[]
+        {
+            "INGLÊS (EN)",
+            "PORTUGUÊS (PT)",
+            "RUSSO (RU)",
+            "ESPANHOL (ES)",
+            "TURCO (TR)"
+        },
+        new string[]
+        {
+            "АНГЛИЙСКИЙ (EN)",
+            "ПОРТУГАЛЬСКИЙ (PT)",
+            "РУССКИЙ (RU)",
+            "ИСПАНСКИЙ (ES)",
+            "ТУРЕЦКИЙ (TR)"
+        },
+        new string[]
+        {
+            "INGLÉS (EN)",
+            "PORTUGUÉS (PT)",
+            "RUSA (RU)",
+            "ESPAÑOL (ES)",
+            "TURCA (TR)"
+        },
+        new string[]
+        {
+            "İNGİLİZ (EN)",
+            "PORTEKİZ (PT)",
+            "RUS (RU)",
+            "İSPANYOL (ES)",
+            "TÜRK (TR)"
+        },
+    };
+
     [Inject]
     PlayerInput m_input;
     [Inject]
@@ -124,7 +167,7 @@ public class SettingsMenu : MonoBehaviour
     void SetDisplayValues()
     {
         m_fullScreenToggle.isOn = m_fullScreen = Screen.fullScreen;
-        m_languageText.text = LocalizationSettings.AvailableLocales.Locales[m_UI.CurrentLanguage].name.ToUpper();
+        m_languageText.text = m_localizationNames[m_UI.CurrentLanguage][m_UI.CurrentLanguage];
     }
 
     public void FullScreen(bool full)
@@ -134,9 +177,9 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetLanguageUp()
     {
-        if (m_currentLanguageInd < LocalizationSettings.AvailableLocales.Locales.Count - 1)
+        if (m_currentLanguageInd < m_localizationNames[m_UI.CurrentLanguage].Length - 1)
         {
-            m_languageText.text = LocalizationSettings.AvailableLocales.Locales[++m_currentLanguageInd].name.ToUpper();
+            m_languageText.text = m_localizationNames[m_UI.CurrentLanguage][++m_currentLanguageInd];
         }
     }
 
@@ -144,7 +187,7 @@ public class SettingsMenu : MonoBehaviour
     {
         if (m_currentLanguageInd > 0)
         {
-            m_languageText.text = LocalizationSettings.AvailableLocales.Locales[--m_currentLanguageInd].name.ToString();
+            m_languageText.text = m_localizationNames[m_UI.CurrentLanguage][--m_currentLanguageInd];
         }
     }
 
@@ -152,7 +195,8 @@ public class SettingsMenu : MonoBehaviour
     {
         m_UI.CurrentLanguage = m_currentLanguageInd;
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[m_currentLanguageInd];
-        Screen.SetResolution(m_currentResolution.Key, m_currentResolution.Key, m_fullScreen);
+        m_languageText.text = m_localizationNames[m_UI.CurrentLanguage][m_UI.CurrentLanguage];
+        Screen.fullScreen = m_fullScreen;
     }
 
     public void Audio()

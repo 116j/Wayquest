@@ -201,6 +201,8 @@ public class PlayerInput : MonoBehaviour
         {
             m_shopOpened = !m_shopOpened;
             LockInput(m_shopOpened);
+            Cursor.visible = m_shopOpened;
+            Cursor.lockState = m_shopOpened? CursorLockMode.None:CursorLockMode.Locked;
             m_UI.OpenShop();
         }
     }
