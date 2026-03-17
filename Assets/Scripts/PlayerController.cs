@@ -540,6 +540,7 @@ public class PlayerController : MonoBehaviour
         m_damagable.Reborn(true);
         m_dead = !m_dead;
         m_col.enabled = true;
+        m_anim.SetBool(m_HashCanMove, true);
         m_rb.gravityScale = m_gravityScale;
     }
 }

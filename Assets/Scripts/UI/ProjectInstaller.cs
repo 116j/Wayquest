@@ -13,6 +13,10 @@ public class ProjectInstaller : MonoInstaller
             .FromComponentInHierarchy()
             .AsSingle();
         Container
+            .Bind<PlatformManager>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+        Container
             .Bind<TileEditor>()
             .FromComponentInHierarchy()
             .AsSingle();

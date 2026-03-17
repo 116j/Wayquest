@@ -45,7 +45,7 @@ public class SoundController : MonoBehaviour
     /// <param name="sound"></param>
     public void PlaySound(string sound)
     {
-        m_audio.PlayOneShot(m_sounds.Find(s => s.name == sound));
+        m_audio.PlayOneShot(m_sounds.Find(s => s.name.Contains(sound)));
     }
     /// <summary>
     /// Прервать воспроизведение

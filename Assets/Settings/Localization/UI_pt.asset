@@ -191,7 +191,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108273596088320
-    m_Localized: "PRESSIONE CTRL \nPARA PET"
+    m_Localized: "PRESSIONE F \nPARA PET"
     m_Metadata:
       m_Items: []
   - m_Id: 6108617147334656
@@ -201,7 +201,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108287227576320
-    m_Localized: "PRESSIONE CTRL \nPARA ABRIR A LOJA"
+    m_Localized: "PRESSIONE F \nPARA ABRIR A LOJA"
     m_Metadata:
       m_Items: []
   - m_Id: 6109798238175232
@@ -258,10 +258,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 25319826467766272
     m_Localized: "NOVO N\xCDVEL"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 28586607626076160
-    m_Localized: MOEDAS
     m_Metadata:
       m_Items: []
   - m_Id: 30082722653454336

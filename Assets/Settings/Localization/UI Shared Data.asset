@@ -239,10 +239,6 @@ MonoBehaviour:
     m_Key: new lvl
     m_Metadata:
       m_Items: []
-  - m_Id: 28586607626076160
-    m_Key: get money
-    m_Metadata:
-      m_Items: []
   - m_Id: 30082722653454336
     m_Key: dieAd
     m_Metadata:

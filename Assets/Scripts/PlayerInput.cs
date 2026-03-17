@@ -97,6 +97,8 @@ public class PlayerInput : MonoBehaviour
     UIController m_UI;
     [Inject]
     Menu m_menu;
+    [Inject]
+    PlatformManager m_platform;
 
     private void Awake()
     {
@@ -141,10 +143,12 @@ public class PlayerInput : MonoBehaviour
         {
             Cursor.lockState = m_pause ? CursorLockMode.Locked : CursorLockMode.None;
             m_pause = !m_pause;
+            m_platform.SetGameGameplay(!m_pause);
             Cursor.visible = m_pause;
             Time.timeScale = m_pause ? 0 : 1;
             LockInput(m_pause);
             m_menu.Pause(m_pause);
+            m_UI.SetMenuPause(m_pause);
         }
     }
 
@@ -200,10 +204,12 @@ public class PlayerInput : MonoBehaviour
         if (m_shop)
         {
             m_shopOpened = !m_shopOpened;
+            m_platform.SetGameGameplay(!m_shopOpened);
             LockInput(m_shopOpened);
             Cursor.visible = m_shopOpened;
             Cursor.lockState = m_shopOpened? CursorLockMode.None:CursorLockMode.Locked;
             m_UI.OpenShop();
+            m_UI.SetMenuPause(m_shopOpened);
         }
     }
 }

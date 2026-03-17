@@ -128,6 +128,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5901932265902264129, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_groundZone
+      value: 
+      objectReference: {fileID: 4417406210172306074}
     - target: {fileID: 6030628016457017003, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.011
@@ -273,3 +277,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+--- !u!114 &4417406210172306074 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4963784145035695208, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+  m_PrefabInstance: {fileID: 8768263190040368882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b96dc3ef4efb8145ab5d23f1db327a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,10 +1,8 @@
 ﻿using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Zenject;
 
@@ -39,12 +37,16 @@ public class UIController : MonoBehaviour
     [Header("Win")]
     [SerializeField]
     GameObject m_winLayout;
+    [SerializeField]
+    Button m_mainMenuButton;
 
     [Header("Die")]
     [SerializeField]
     GameObject m_dieLayout;
     [SerializeField]
     RectTransform m_dielButtonslayout;
+    [SerializeField]
+    Button m_restartButton;
     [SerializeField]
     GameObject m_continueButton;
 
@@ -62,17 +64,28 @@ public class UIController : MonoBehaviour
     int m_currentMoney = 0;
 
     bool m_boss = false;
+    bool m_ad = false;
+    bool m_menu = false;
 
     public int CurrentLanguage { get; set; }
     [Inject]
     PlayerInput m_input;
     [Inject]
     ShopLayout m_shop;
+    [Inject]
+    PlatformManager m_platform;
+
+    AudioSource m_moneyAudio;
 
     private void Awake()
     {
         m_hearts = m_healthLayout.GetComponentsInChildren<Image>().ToList();
         m_currentHeart = m_hearts.Count - 1;
+    }
+
+    private void Start()
+    {
+        m_moneyAudio = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -98,8 +111,12 @@ public class UIController : MonoBehaviour
     /// Прибавляет деньги
     /// </summary>
     /// <param name="amount"></param>
-    public void AddMoney(int amount)
+    public void AddMoney(int amount, bool playSound = false)
     {
+        if (playSound)
+        {
+            m_moneyAudio.Play();
+        }
         //рассчитывает длительность анимации
         float baseDuration = Mathf.Abs(amount) * Time.deltaTime;
         float duration = Mathf.Clamp(baseDuration, 0.5f, 3f);
@@ -183,6 +200,7 @@ public class UIController : MonoBehaviour
     {
         m_input.LockInput(true);
         m_winLayout.SetActive(true);
+        m_mainMenuButton.Select();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -193,10 +211,11 @@ public class UIController : MonoBehaviour
     public void Die(bool active)
     {
         m_dieLayout.SetActive(active);
+        m_restartButton.Select();
         Cursor.visible = active;
         m_input.LockInput(active);
         Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
-        //если умекр во время битвы с боссом - нельзя продожить, только перезапуск
+        //если умеер во время битвы с боссом - нельзя продожить, только перезапуск
         m_continueButton.SetActive(!m_boss);
         m_dielButtonslayout.sizeDelta = m_boss ? new Vector2(m_dielButtonslayout.sizeDelta.x, 90) : new Vector2(m_dielButtonslayout.sizeDelta.x, 170);
     }
@@ -204,12 +223,19 @@ public class UIController : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        AudioListener.pause = pause;
+        Pause(pause);
     }
 
     private void OnApplicationFocus(bool focus)
     {
-        AudioListener.pause = !focus;
+        Pause(!focus);
+    }
+
+    public void Pause(bool pause)
+    {
+        AudioListener.pause = pause || m_ad;
+        m_platform.SetGameGameplay(!pause || !m_ad || !m_menu);
+        Time.timeScale = pause || m_ad || m_menu ? 0 : 1;
     }
     /// <summary>
     /// Если игрок умер во время битвы с боссом
@@ -217,5 +243,15 @@ public class UIController : MonoBehaviour
     internal void Boss()
     {
         m_boss = true;
+    }
+
+    public void SetAd(bool ad)
+    {
+        m_ad = ad;
+    }
+
+    public void SetMenuPause(bool menu)
+    {
+        m_menu = menu;
     }
 }

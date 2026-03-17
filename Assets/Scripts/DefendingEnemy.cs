@@ -14,11 +14,12 @@ public class DefendingEnemy : WalkEnemy
     readonly float m_protectCooldownTime = 3f;
     float m_protectCooldown;
     //Время перезагрузки защиты
-    readonly float m_protectDelay = 0.3f;
+    readonly float m_protectDelay = 2f;
     float m_protectDelayCooldown;
 
     protected override void Start()
     {
+        base.Start();
         base.Start();
         m_damagable = GetComponent<Damagable>();
     }
@@ -46,6 +47,7 @@ public class DefendingEnemy : WalkEnemy
         m_protectCooldown = 0;
         m_protecting = false;
         m_damagable.Invincible = false;
+        m_protectDelayCooldown = m_protectDelay;
     }
     /// <summary>
     /// Включает защиту
@@ -68,11 +70,14 @@ public class DefendingEnemy : WalkEnemy
             // иначе - сбросить 
             if (m_playerAttackZone.TargetDetected && !m_attackZone.TargetDetected)
             {
-                m_protectDelayCooldown += Time.fixedDeltaTime;
-                if (m_protectDelayCooldown >= m_protectDelay)
+                m_protectDelayCooldown -= Time.fixedDeltaTime;
+                if (m_protectDelayCooldown <= 0)
                 {
-                    m_protectDelayCooldown = 0;
                     EnableProtection();
+                }
+                else
+                {
+                    base.FixedUpdate();
                 }
             }
             else

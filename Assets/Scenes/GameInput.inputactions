@@ -329,7 +329,7 @@
                 {
                     "name": "",
                     "id": "9bee9b10-ae6a-4b20-95ac-806b4e51715c",
-                    "path": "<Keyboard>/ctrl",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -362,7 +362,7 @@
                 {
                     "name": "",
                     "id": "438116b8-a8a2-48f0-94b4-d8f3afed68bc",
-                    "path": "<Keyboard>/ctrl",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -914,7 +914,7 @@
                     "path": "*/{Submit}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "groups": "Keyboard&Mouse;Touch;Joystick;XR;Gamepad",
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false

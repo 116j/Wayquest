@@ -191,7 +191,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108273596088320
-    m_Localized: 'PRESS CTRL
+    m_Localized: 'PRESS F
 
       TO PET'
     m_Metadata:
@@ -201,7 +201,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108287227576320
-    m_Localized: 'PRESS CTRL
+    m_Localized: 'PRESS F
 
       TO OPEN THE SHOP'
     m_Metadata:
@@ -258,10 +258,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 25319826467766272
     m_Localized: NEW LEVEL
-    m_Metadata:
-      m_Items: []
-  - m_Id: 28586607626076160
-    m_Localized: COINS
     m_Metadata:
       m_Items: []
   - m_Id: 30082722653454336

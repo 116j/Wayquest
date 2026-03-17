@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using Zenject;
 
-public class PlatformLanguageManager : MonoBehaviour
+public class PlatformManager : MonoBehaviour
 {
     [Inject]
     UIController m_UI;
+    [Inject]
+    LevelBuilder m_lvlBuilder;
 
     Dictionary<string, int> m_yandexToLocaleIndex = new()
     {
@@ -22,10 +25,20 @@ public class PlatformLanguageManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
     private static extern string GetYandexLanguage();
+
+    [DllImport("__Internal")]
+    private static extern void SetGameReady();
+
+    [DllImport("__Internal")]
+    private static extern void SetGameStart();
+
+    [DllImport("__Internal")]
+    private static extern void SetGameStop();
 #endif
 
     IEnumerator Start()
     {
+        LocalizationSettings.SelectedLocaleChanged += ApplySystemLanguage;
         yield return LocalizationSettings.InitializationOperation;
 
         if (CheckYandexPlatform())
@@ -83,12 +96,12 @@ public class PlatformLanguageManager : MonoBehaviour
         }
     }
 
-    void ApplySystemLanguage()
+    void ApplySystemLanguage(Locale newLocale = null)
     {
         for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; ++i)
         {
             var locale = LocalizationSettings.AvailableLocales.Locales[i];
-            if (LocalizationSettings.SelectedLocale == locale)
+            if (newLocale == null && LocalizationSettings.SelectedLocale == locale || newLocale == locale)
             {
                 m_UI.CurrentLanguage = i;
                 return;
@@ -96,5 +109,26 @@ public class PlatformLanguageManager : MonoBehaviour
         }
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
         m_UI.CurrentLanguage = 0;
+    }
+
+    public void SetGameReadyForAPI()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        SetGameReady();
+#endif
+    }
+
+    public void SetGameGameplay(bool start)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(start)
+        {
+            SetGameStart();
+        }
+        else 
+        {
+            SetGameStop();
+        }
+#endif
     }
 }

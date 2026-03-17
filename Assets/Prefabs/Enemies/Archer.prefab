@@ -473,7 +473,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 0.74536735
-      value: 0.89668614
+      value: 0.9155536
       inSlope: 1.0894017
       outSlope: 1.0894017
       tangentMode: 0
@@ -508,8 +508,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_animAttackParameter: Shoot
-  m_attackCooldownTime: 2
-  m_groundZone: {fileID: 0}
+  m_attackCooldownTime: 1
+  m_groundZone: {fileID: 4522216845412270785}
 --- !u!114 &3911415771993943434
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -141,6 +141,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5901932265902264129, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_groundZone
+      value: 
+      objectReference: {fileID: 7422445880199841341}
+    - target: {fileID: 5901932265902264129, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_attackCooldownTime
       value: 0.8
       objectReference: {fileID: 0}
@@ -285,3 +289,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+--- !u!114 &7422445880199841341 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4963784145035695208, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+  m_PrefabInstance: {fileID: 2585968140908106325}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b96dc3ef4efb8145ab5d23f1db327a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

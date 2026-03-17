@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2663350624533235289, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_Volume
-      value: 0.3
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_series
@@ -29,15 +29,15 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[0]
+      propertyPath: 'm_attacks.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: 73baacb2abaf4eb4085116762b7ec2e2, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[1]
+      propertyPath: 'm_attacks.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: c8d3f625a0009f546b4b54cdeb931f73, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[2]
+      propertyPath: 'm_attacks.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: eacd0078b56f2604492529f4719e6641, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -97,15 +97,15 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[0]
+      propertyPath: 'm_transitions.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: cdbbaf45f776b404d9c78f5651801d46, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[1]
+      propertyPath: 'm_transitions.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: 0f0452738c0401c479ee3d1b40835017, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[2]
+      propertyPath: 'm_transitions.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: 98f6677ff2a32a342b9755a4a694ee87, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}

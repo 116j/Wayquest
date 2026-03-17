@@ -18,8 +18,6 @@ public class ShopLayout : MonoBehaviour
     [Inject]
     PlayerInput m_input;
 
-    //
-    bool[] m_clicked = new bool[5];
     //Количество товаров
     int[] m_itemsCount = { 3, 2, 2, 2, 1 };
     //Цены товаров
@@ -150,12 +148,7 @@ public class ShopLayout : MonoBehaviour
     public void ShowItemText(int index)
     {
         m_dialogueText.text = m_dialogueTexts[index][m_UI.CurrentLanguage];
-        m_dialogueText.text += m_UI.GetMoney() >= m_prices[index]? m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
-        for (int i = 0; i < m_clicked.Length; i++)
-        {
-            m_clicked[i] = false;
-        }
-        m_clicked[index] = true;
+        m_dialogueText.text += m_UI.GetMoney() >= m_prices[index] ? m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
     }
     /// <summary>
     /// Купить товар
@@ -167,18 +160,12 @@ public class ShopLayout : MonoBehaviour
     {
         if (m_itemsCount[index] <= 0)
             return;
-        //еслит товар еще не был выбран - показать описание
-        if (!m_clicked[index])
-        {
-            ShowItemText(index);
-        }
-        else if (m_UI.GetMoney() >= m_prices[index])
+        if (m_UI.GetMoney() >= m_prices[index])
         {
             m_buySound.Play();
             m_UI.AddMoney(-m_prices[index]);
             m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
             func();
-            m_clicked[index] = false;
             m_itemsCount[index]--;
             if (m_itemsCount[index] <= 0)
             {

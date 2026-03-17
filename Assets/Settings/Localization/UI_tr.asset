@@ -187,7 +187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108273596088320
-    m_Localized: "EVC\u0130L HAYVAN \u0130\xC7\u0130N \nCTRL TU\u015EUNA BASIN"
+    m_Localized: "EVC\u0130L HAYVAN \u0130\xC7\u0130N \nF TU\u015EUNA BASIN"
     m_Metadata:
       m_Items: []
   - m_Id: 6108617147334656
@@ -195,7 +195,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108287227576320
-    m_Localized: "D\xDCKKANI A\xC7MAK \u0130\xC7\u0130N \nCTRL TU\u015EUNA BASIN"
+    m_Localized: "D\xDCKKANI A\xC7MAK \u0130\xC7\u0130N \nF TU\u015EUNA BASIN"
     m_Metadata:
       m_Items: []
   - m_Id: 6109798238175232
@@ -253,10 +253,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 25319826467766272
     m_Localized: "YEN\u0130 SEV\u0130YE"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 28586607626076160
-    m_Localized: PARALAR
     m_Metadata:
       m_Items: []
   - m_Id: 30082722653454336

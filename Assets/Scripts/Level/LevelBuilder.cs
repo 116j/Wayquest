@@ -34,6 +34,8 @@ public class LevelBuilder : MonoBehaviour
     TileEditor m_editor;
     [Inject]
     PlayerController m_player;
+    [Inject]
+    PlatformManager m_platformManager;
 
     List<Chunk> m_chunks;
     //Стратегии, использованные для чанков
@@ -84,6 +86,12 @@ public class LevelBuilder : MonoBehaviour
         SpawnChunk();
         SpawnChunk();
 
+        m_platformManager.SetGameReadyForAPI();
+        PlayBackgroundMusic();
+    }
+
+    public void PlayBackgroundMusic()
+    {
         m_audio = GetComponent<AudioSource>();
         m_audio.clip = m_backgroundMusic[Random.Range(0, m_backgroundMusic.Length)];
         m_audio.Play();
@@ -277,7 +285,7 @@ public class LevelBuilder : MonoBehaviour
             while (true)
             {
                 //стратегия для создания чанка
-                FillStrategy сhunckStrategy = m_strategies[GetStrategy()];
+                FillStrategy сhunckStrategy = m_strategies[GetWeightedIndex(m_values.m_strategyWeights)];
                 //если последний чанк был с пространством для падения, 
                 //и этот чанк тоже, то меняет стратегию, т.к. они не могут идти подряд
                 if (IsChunkWithFallSpace(m_usedChunksStrategies.Count - 1) &&
@@ -298,31 +306,35 @@ public class LevelBuilder : MonoBehaviour
             }
     }
     /// <summary>
-    /// Выбирает номер стратегии для создания
+    /// Выбирает номер элемента массива в зависисмости от весов
     /// </summary>
     /// <returns></returns>
-    int GetStrategy()
+    public int GetWeightedIndex(float[] weights)
     {
         //рандомное число между 0 и суммой шансов всех стратегий
-        float value = Random.Range(0, m_values.m_strategyWeights.Sum());
+        float value = Random.Range(0, weights.Sum());
         float sum = 0;
         //идет по списку шансов, пока сумма шансов не будет больше, чем value
-        for (int i = 0; i < m_strategies.Length; i++)
+        for (int i = 0; i < weights.Length; i++)
         {
-            sum += m_values.m_strategyWeights[i];
+            sum += weights[i];
             if (value < sum)
             {
                 return i;
             }
         }
         //если сумма меньше чисел, то возвращает последнее
-        return m_strategies.Length - 1;
+        return weights.Length - 1;
     }
     //Процент вероятности генерации чанков с врагами от генерацыии других чанков
     public float GetEnemySpawnChance()
     {
-        return m_values.m_strategyWeights[0] / m_values.m_strategyWeights.Sum();
+        float floorChunks = m_values.m_strategyWeights[0] + m_values.m_strategyWeights[1];
+        float actualFloorChunks = Mathf.Max(0.5f, floorChunks / m_values.m_strategyWeights.Sum());
+        float baseChunkRatio = m_values.m_strategyWeights[0] / floorChunks;
+        return actualFloorChunks * baseChunkRatio;
     }
+
     /// <summary>
     /// Удаляет первый чанк, если сзади осталось больше 3х чанков
     /// </summary>

@@ -189,7 +189,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108273596088320
-    m_Localized: "PRESIONE CTRL \nPARA ACARICIAR"
+    m_Localized: "PRESIONE F \nPARA ACARICIAR"
     m_Metadata:
       m_Items: []
   - m_Id: 6108617147334656
@@ -197,7 +197,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6108287227576320
-    m_Localized: 'PRESIONE CTRL
+    m_Localized: 'PRESIONE F
 
       PARA ABRIR LA TIENDA'
     m_Metadata:
@@ -256,10 +256,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 25319826467766272
     m_Localized: NUEVO NIVEL
-    m_Metadata:
-      m_Items: []
-  - m_Id: 28586607626076160
-    m_Localized: MONEDAS
     m_Metadata:
       m_Items: []
   - m_Id: 30082722653454336

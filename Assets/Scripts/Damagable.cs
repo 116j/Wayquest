@@ -110,6 +110,7 @@ public class Damagable : MonoBehaviour
     public void Reborn(bool invincible = false)
     {
         m_recovering = invincible;
+        Freezed = false;
         ApplyHealth(m_maxHealth - m_health);
         m_dead = false;
     }

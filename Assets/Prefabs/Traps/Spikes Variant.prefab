@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2663350624533235289, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_Volume
-      value: 0.28
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_series
@@ -37,7 +37,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[0]
+      propertyPath: 'm_attacks.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: 8efe0b6d2c0608a489997e4c1e1ac221, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -65,7 +65,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[0]
+      propertyPath: 'm_transitions.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: f6c3b6c576b7ec64f8b84f5d8cbb70f3, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}

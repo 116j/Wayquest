@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Zenject;
@@ -154,7 +156,12 @@ public class SettingsMenu : MonoBehaviour
     {
         m_fullScreenToggle.isOn = m_fullScreen = Screen.fullScreen;
         m_currentLanguageInd = m_UI.CurrentLanguage;
-        m_languageText.text = LocalizationSettings.AvailableLocales.Locales[m_currentLanguageInd].name.ToUpper();
+        m_languageText.text = m_localizationNames[m_currentLanguageInd][m_currentLanguageInd];
+        LocalizationSettings.SelectedLocaleChanged += (locale) =>
+        {
+            m_currentLanguageInd = m_UI.CurrentLanguage;
+            m_languageText.text = m_localizationNames[m_UI.CurrentLanguage][m_currentLanguageInd];
+        };
     }
 
     public void Display()
