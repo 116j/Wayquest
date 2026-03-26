@@ -1,8 +1,8 @@
-# Игра "Wayquest" #
-##### Пиксельный 2D сайд-скролл платформер с процедурной генерацией. Имеется возможность персонализировать уровень. #####
+# Game "Wayquest" #
+##### Pixel 2D side-scrolling platformer with procedural generation. It is possible to personalize the level #####
 ---
-Ссылка на VK Play:
+VK Play link:
 https://vk.com/app53673194
 
-Ссылка на itch.io:
+itch.io link:
 https://e2dev.itch.io/wayquest
