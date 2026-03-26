@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Wayquest</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="/sdk.js"></script>
+  </head>
+  <body>
+  <div id="loading-screen">
+      <div class="character-container">           <!-- новый блок -->
+          <img src="TemplateData/character.gif" 
+               class="running-character" 
+               alt="Загрузка...">
+      </div>
+    
+      <div class="progress-bar-container">
+          <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <div id="progress-text" class="progress-text">0%</div>
+  </div>
+  <div id="unity-container" style="display: none;">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-warning"></div>
+  </div>
+    <script>
+      window.addEventListener("load", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
+      });
+
+      let ysdk = null;
+      let unityInstance = null;
+
+
+      YaGames.init().then(sdk => {
+        ysdk = sdk;
+        console.log("Yandex SDK инициализирован");
+      });
+
+	function GetYandexLanguage() {
+        if (typeof ysdk !== 'undefined' && ysdk.environment && ysdk.environment.i18n) {
+	    console.log("Язык Яндекса: ", ysdk.environment.i18n.lang);
+            return ysdk.environment.i18n.lang;
+        }
+	console.log("Не удалось получить язык из Яндекса.");
+        return "";
+    }
+
+      function ShowRewardedAdForRevive() {
+        if (!ysdk || !unityInstance) return;
+        ysdk.adv.showRewardedVideo({
+          callbacks: {
+	    onOpen: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_opened'),
+            onRewarded: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'reward_success'),
+	    onClose: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_closed'),
+            onError: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'reward_fail'),
+          }
+        });
+      }
+
+      function ShowRewardedAdForBonus() {
+        if (!ysdk || !unityInstance) return;
+        ysdk.adv.showRewardedVideo({
+          callbacks: {
+	    onOpen: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_opened'),
+            onRewarded: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'reward_success'),
+	    onClose: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_closed'),
+            onError: () => unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'reward_fail'),
+          }
+        });
+      }
+
+      function SetGameReady() {
+         if (!ysdk) return;
+	 ysdk.features.LoadingAPI?.ready();
+      }
+
+      function SetGameStart() {
+         if (!ysdk) return;
+	 ysdk.features.GameplayAPI.start();
+      }
+
+      function SetGameStop() {
+         if (!ysdk || !unityInstance) return;
+	 ysdk.features.GameplayAPI.stop();
+      }
+    </script>
+
+    <script>
+      var loadingScreen = document.querySelector("#loading-screen");
+      var progressBar = document.querySelector("#progress-bar");
+      var progressText = document.querySelector("#progress-text");
+      var canvas = document.querySelector("#unity-canvas");
+      var unityContainer = document.querySelector("#unity-container");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function () {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/wayquest.loader.js";
+      var config = {
+	arguments: [],
+        dataUrl: buildUrl + "/wayquest.data.gz",
+        frameworkUrl: buildUrl + "/wayquest.framework.js.gz",
+        codeUrl: buildUrl + "/wayquest.wasm.gz",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "EugeniyaE",
+        productName: "Wayquest",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          var percent = Math.round(progress * 100);
+          progressBar.style.width = percent + "%";
+          progressText.innerHTML = percent + "%";
+          
+          if (progress === 1) {
+  // 1. Удаляем загрузочный экран
+    var screen = document.getElementById('loading-screen');
+    if (screen && screen.parentNode) {
+        screen.parentNode.removeChild(screen);
+    }
+    
+    // 2. Показываем контейнер игры
+    if (unityContainer) {
+        unityContainer.style.display = 'block';
+        unityContainer.style.visibility = 'visible';
+        unityContainer.style.opacity = '1';
+        unityContainer.style.zIndex = '10';
+    }
+    
+    // 3. Принудительно обновляем канвас
+    if (canvas) {
+        canvas.style.display = 'block';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.zIndex = '10';
+    }
+    
+    // 4. Убираем всё лишнее с body
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+    document.body.style.backgroundColor = '#000000'; // чёрный фон на подложке
+    
+    // 5. Принудительно вызываем ресайз (иногда помогает)
+    window.dispatchEvent(new Event('resize'));
+          }
+        }).then((instance) => {
+          unityInstance = instance;
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

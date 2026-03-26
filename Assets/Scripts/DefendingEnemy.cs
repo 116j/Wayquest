@@ -20,7 +20,6 @@ public class DefendingEnemy : WalkEnemy
     protected override void Start()
     {
         base.Start();
-        base.Start();
         m_damagable = GetComponent<Damagable>();
     }
 
@@ -56,6 +55,7 @@ public class DefendingEnemy : WalkEnemy
     {
         m_attackScript.EnableAttack = false;
         m_rb.velocity = Vector2.zero;
+        m_speed = 0;
         m_protecting = true;
         m_anim.SetBool(m_HashProtect, true);
         m_damagable.Invincible = true;

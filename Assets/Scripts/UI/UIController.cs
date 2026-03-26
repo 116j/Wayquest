@@ -44,7 +44,7 @@ public class UIController : MonoBehaviour
     [SerializeField]
     GameObject m_dieLayout;
     [SerializeField]
-    RectTransform m_dielButtonslayout;
+    RectTransform m_dieButtonsLayout;
     [SerializeField]
     Button m_restartButton;
     [SerializeField]
@@ -216,8 +216,8 @@ public class UIController : MonoBehaviour
         m_input.LockInput(active);
         Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
         //если умеер во время битвы с боссом - нельзя продожить, только перезапуск
-        m_continueButton.SetActive(!m_boss);
-        m_dielButtonslayout.sizeDelta = m_boss ? new Vector2(m_dielButtonslayout.sizeDelta.x, 90) : new Vector2(m_dielButtonslayout.sizeDelta.x, 170);
+        //m_continueButton.SetActive(!m_boss);
+        //m_dieButtonsLayout.sizeDelta = m_boss ? new Vector2(m_dieButtonsLayout.sizeDelta.x, 90) : new Vector2(m_dieButtonsLayout.sizeDelta.x, 170);
     }
 
 

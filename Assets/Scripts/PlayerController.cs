@@ -263,6 +263,12 @@ public class PlayerController : MonoBehaviour
         {
             FallReset();
         }
+
+        if (m_damagable.Freezed)
+        {
+            m_rb.velocity = Vector3.zero;
+        }
+
         //если игрок застрял в земле - поднять вверх
         if (m_touchings.IsGroundStuck())
         {

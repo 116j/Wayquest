@@ -7,7 +7,7 @@ AudioImporter:
     serializedVersion: 2
     loadType: 0
     sampleRateSetting: 2
-    sampleRateOverride: 22050
+    sampleRateOverride: 44100
     compressionFormat: 2
     quality: 1
     conversionMode: 0

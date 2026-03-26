@@ -82,6 +82,26 @@ public class ShopLayout : MonoBehaviour
         }
     };
 
+    string[][] m_closeShopText =
+    {
+        new string[]
+        {
+            "Press F to close the shop.",
+            "Pressione F para fechar a loja.",
+            "Нажмите F, чтобы закрыть магазин.",
+            "Presiona F para cerrar la tienda.",
+            "Dükkânı kapatmak için F'ye basın."
+        },
+        new string[]
+        {
+            "Press B to close the shop.",
+            "Pressione B para fechar a loja.",
+            "Нажмите B, чтобы закрыть магазин.",
+            "Presiona B para cerrar la tienda.",
+            "Dükkânı kapatmak için B'ye basın."
+        }
+    };
+
     string[] m_cantBuyText =
     {
         "But you don't have enough money, beggar.",
@@ -139,7 +159,8 @@ public class ShopLayout : MonoBehaviour
     /// </summary>
     public void Greet()
     {
-        m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
+        m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage]
+            + "\n\r" + m_closeShopText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage];
     }
     /// <summary>
     /// Показывает описание товара
@@ -148,7 +169,9 @@ public class ShopLayout : MonoBehaviour
     public void ShowItemText(int index)
     {
         m_dialogueText.text = m_dialogueTexts[index][m_UI.CurrentLanguage];
-        m_dialogueText.text += m_UI.GetMoney() >= m_prices[index] ? m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage];
+        m_dialogueText.text += (m_UI.GetMoney() >= m_prices[index] ?
+            m_canBuyText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage] : m_cantBuyText[m_UI.CurrentLanguage])
+            + "\n\r" + m_closeShopText[m_input.GetCurrentDeviceType() == "Gamepad" ? 1 : 0][m_UI.CurrentLanguage];
     }
     /// <summary>
     /// Купить товар
@@ -164,7 +187,7 @@ public class ShopLayout : MonoBehaviour
         {
             m_buySound.Play();
             m_UI.AddMoney(-m_prices[index]);
-            m_dialogueText.text = m_greetingText[m_UI.CurrentLanguage];
+            Greet();
             func();
             m_itemsCount[index]--;
             if (m_itemsCount[index] <= 0)
@@ -197,7 +220,9 @@ public class ShopLayout : MonoBehaviour
     /// <param name="price"></param>
     public void AddLightDamage(TextMeshProUGUI price)
     {
-        Buy(2, price, m_player.transform.GetChild(0).GetComponent<AttackListener>().IncreaseDamage);
+        Action func = m_player.transform.GetChild(0).GetComponent<AttackListener>().IncreaseDamage;
+        func += m_lvlBuilder.IncreaseBossHealth;
+        Buy(2, price, func);
     }
     /// <summary>
     /// Увеличивает урон тяжелой актаки на 1

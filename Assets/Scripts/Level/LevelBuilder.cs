@@ -254,6 +254,10 @@ public class LevelBuilder : MonoBehaviour
             s.SetTripleJump();
         }
     }
+    public void IncreaseBossHealth()
+    {
+        m_strategies[0].IncreaseBossHealth();
+    }
     /// <summary>
     /// Создает чанк из рандомной стратегии
     /// </summary>

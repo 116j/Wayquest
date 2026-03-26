@@ -71,6 +71,7 @@ public class FillStrategy
     protected readonly float m_playerWidth = 1f;
 
     bool m_shopSpawned = false;
+    bool m_increaseBossHealth = false;
 
     public FillStrategy(LevelTheme levelTheme)
     {
@@ -107,6 +108,10 @@ public class FillStrategy
     {
         m_playerJumpHeight = 8;
         m_playerJumpWidth = 13;
+    }
+    public void IncreaseBossHealth()
+    {
+        m_increaseBossHealth = true;
     }
     /// <summary>
     /// Создает возвышенности и низменности для чанка, добавляет ландшавт и отрисовывает тайлы
@@ -312,8 +317,13 @@ public class FillStrategy
         chunk.CreateElevationOrLowland(-m_finalChunkHeight, m_finalChunkWidth, start + m_minStraightSection * Vector3Int.right);
         //низменность, где ходит босс
         chunk.CreateElevationOrLowland(m_finalChunkHeight, m_minStraightSection, start + new Vector3Int(m_minStraightSection + m_finalChunkWidth, -m_finalChunkHeight));
-        //срздает босса
-        chunk.AddEnviromentObject(m_container.InstantiatePrefab(m_levelTheme.m_boss, new Vector3(start.x + (m_minStraightSection + m_finalChunkWidth - m_levelTheme.m_boss.GetWidth()) / 2, start.y - m_finalChunkHeight), Quaternion.identity, null));
+        //создает босса
+        BossScript boss = m_container.InstantiatePrefab(m_levelTheme.m_boss, new Vector3(start.x + (m_minStraightSection + m_finalChunkWidth - m_levelTheme.m_boss.GetWidth()) / 2, start.y - m_finalChunkHeight), Quaternion.identity, null).GetComponent<BossScript>();
+        if (m_increaseBossHealth)
+        {
+            boss.IncreaseHealth();
+        }
+        chunk.AddEnviromentObject(boss.gameObject);
         chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(chunk, groundTiles, int.MaxValue, true));
         return chunk;
     }
@@ -658,89 +668,6 @@ public class FillStrategy
             default:
                 break;
         }
-        ////если нужно создать кошку, нет в конце батута, нет созданных кошек или мало созданных кошек
-        //if (m_catsLeft > 0 && Random.value < m_catsLeft / (float)m_UI.AllHerats && !m_jumper)
-        //{
-        //    chunk.AddEnviromentObject(m_container.InstantiatePrefab(m_levelTheme.m_cat, new Vector3(startPos.x + (sectionWidth - m_levelTheme.m_cat.GetWidth()) / 2, startPos.y), Quaternion.identity, null));
-        //    m_catsLeft--;
-        //    m_catsSpawned++;
-        //}
-        ////если не создан магазин, денег у игрока достаточно для самой маленькой покупки, достаточно место и попалает в вероятность создания магазина
-        //else if (!m_shopSpawned && m_UI.GetMoney() >= m_shop.GetLowestPrice() && sectionWidth + m_rightOffset > m_levelTheme.m_shop.GetWidth() && Random.value > m_shopChance)
-        //{
-        //    chunk.AddEnviromentObject(m_container.InstantiatePrefab(m_levelTheme.m_shop, new Vector3(Random.Range(startPos.x, startPos.x + sectionWidth + m_rightOffset - m_levelTheme.m_shop.GetWidth() + 1), startPos.y), Quaternion.identity, null));
-        //    m_shopSpawned = true;
-        //}
-        //else if (!m_jumper && sectionWidth > m_minEnemyWidth && m_enemiesPerChunk > 0 && Random.value < (m_enemiesPerChunk / m_enemiesCount.Evaluate(m_lvlBuilder.LevelProgress())))
-        //{
-        //    SpawnValues enemy = m_levelTheme.m_enemies[GetEnemyNum()];
-        //    Vector3 pos = new Vector3(startPos.x + (sectionWidth - enemy.GetWidth()) / 2, startPos.y);
-        //    lastEnemy = m_container.InstantiatePrefabForComponent<WalkEnemy>(enemy, pos, Quaternion.identity, null);
-        //    chunk.AddEnviromentObject(lastEnemy.gameObject);
-        //    m_enemiesPerChunk--;
-        //}
-        ////если еще можно поставить ловушки на чанке и относительно мало ловушек
-        //else if (m_trapsPerChunk > 0 && Random.value < (m_trapsPerChunk / m_trapsCount.Evaluate(m_lvlBuilder.LevelProgress())))
-        //{
-        //    List<Trap> traps = new List<Trap>();
-        //    while (traps.Count == 0)
-        //    {
-        //        Trap trap = m_levelTheme.m_floorTraps[Random.Range(0, m_levelTheme.m_floorTraps.Length)];
-        //        m_container.Inject(trap);
-        //        trap.SetTrapNum();
-        //        //если ловушка слишком высокая или широкая - пробует заново
-        //        if (trap.GetWidth() > sectionWidth || trap.GetHeight() > height)
-        //        {
-        //            continue;
-        //        }
-        //        //границы участка для создания ловушки
-        //        float rightBorder = startPos.x + sectionWidth + m_rightOffset;
-        //        float leftBorder = startPos.x + m_leftOffset;
-        //        //количество ловушек на участке
-        //        m_trapsNum = Random.Range(1, (int)((rightBorder - leftBorder) / (trap.GetWidth() + m_playerWidth)) + 1);
-
-
-        //        if (trap.GetAttackDirection() == Vector3.right || trap.GetAttackDirection() == Vector3.forward)
-        //        {
-        //            if (trap.GetWidth() > sectionWidth / 3)
-        //            {
-        //                m_trapsNum = 1;
-        //            }
-        //            // если ловушка стреляет - обрезать границу
-        //            if (trap.GetAttackDirection() == Vector3.forward)
-        //            {
-        //                rightBorder -= sectionWidth / 2;
-
-        //            }
-        //            else
-        //            {
-        //                leftBorder += sectionWidth / 2;
-        //            }
-        //        }
-        //        //если ловушка серийная - сделать серию подряд ловушек
-        //        if (trap.IsSeries())
-        //        {
-        //            //пересчитывает возможное количество ловушек
-        //            m_trapsNum = Random.Range(1, (int)Mathf.Clamp(-(trap.GetHeight() - m_playerJumpHeight) * m_playerJumpWidth * 1.0f / m_playerJumpHeight, 1, (rightBorder - trap.GetRightBorder() - leftBorder + trap.GetLeftBorder()) / trap.GetWidth()));
-        //            Vector3 pos = new Vector3(Random.Range(leftBorder - trap.GetLeftBorder(), rightBorder - trap.GetRightBorder() - m_trapsNum * trap.GetWidth()), startPos.y);
-        //            for (int i = 0; i < m_trapsNum; i++)
-        //            {
-        //                traps.Add(m_container.InstantiatePrefabForComponent<Trap>(trap, pos + i * trap.GetWidth() * Vector3.right, Quaternion.identity, null));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            SpawnTrap(leftBorder, rightBorder, startPos.y, trap, traps);
-        //        }
-
-        //    }
-
-        //    foreach (var trap in traps)
-        //    {
-        //        chunk.AddEnviromentObject(trap.gameObject);
-        //    }
-        //    m_trapsPerChunk--;
-        //}
     }
     /// <summary>
     /// Создает ловушку в пределах границ и запускает создание справа и слева от себя
@@ -763,4 +690,5 @@ public class FillStrategy
         SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trap, traps);
         SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trap, traps);
     }
+
 }

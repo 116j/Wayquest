@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 22100000, guid: 6740cb9c0d3bb9f45be9322aa060f81a, type: 2}
     - target: {fileID: 1818020100778903183, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 1818020100778903183, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value

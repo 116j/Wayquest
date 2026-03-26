@@ -45,11 +45,13 @@ public class BossScript : WalkEnemy
     [Inject]
     FloatingCanvas m_healthBar;
 
+    bool m_increaseHealth = false;
+
     protected override void Start()
     {
         base.Start();
         //устанавливает здоровье босса в зависимости от количества 
-        m_damageable.SetHealth((int)m_bossHealth.Evaluate(m_lvlBuilder.GetLevelChunksCount() / m_maxLevelCount));
+        m_damageable.SetHealth(Mathf.CeilToInt((m_increaseHealth ? 1.2f : 1) * m_bossHealth.Evaluate(m_lvlBuilder.GetLevelChunksCount() / m_maxLevelCount)));
         m_attackZoneCol = m_attackZone.GetComponent<BoxCollider2D>();
     }
 
@@ -158,6 +160,11 @@ public class BossScript : WalkEnemy
             m_healthBar.SetHealthSprite(m_damageable.GetHealthPercentage());
         }
         base.ReceiveDamage(damage);
+    }
+
+    internal void IncreaseHealth()
+    {
+        m_increaseHealth = true;
     }
     /// <summary>
     /// Сбросить близкую атаку
