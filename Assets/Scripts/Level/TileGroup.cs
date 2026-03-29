@@ -13,19 +13,19 @@ public class TileGroup : Group
         return this.tiles;
     }
     /// <summary>
-    /// Проверяет, есть ли в группе заданный тайл
+    /// Checks if there is a specified tile in the group
     /// </summary>
-    /// <param name="tile">тайл для поиска</param>
-    /// <returns>есть ли тайл</returns>
+    /// <param name="tile">tile for the search</param>
+    /// <returns>if contains the tile</returns>
     public virtual bool ContainsTile(TileBase tile)
     {
         return tiles.Contains(tile);
     }
     /// <summary>
-    /// Проходит по группе заданных тайлов и смотрит, есть ли такие же в группе объекта
+    /// Passes through a group of specified tiles and searches for matches with the tiles
     /// </summary>
-    /// <param name="tiles">список тайлов для поиска</param>
-    /// <returns>список совпавших в обоих группах тайлов</returns>
+    /// <param name="tiles">list of tiles to search for</param>
+    /// <returns>list of matched tiles</returns>
     public virtual List<TileBase> MatchesTiles(IEnumerable<TileBase> tiles)
     {
         List<TileBase> matches = new List<TileBase>();

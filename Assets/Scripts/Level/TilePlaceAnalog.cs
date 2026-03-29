@@ -4,14 +4,14 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu]
 public class TilePlaceAnalog : ScriptableObject
 {
-    //Тайлы для темной темы
+    //Tiles for a dark theme
     public TileBase[] dark;
-    //Тайлы для болотной темы
+    //Tiles for a swamp theme
     public TileBase[] calm;
-    //Тег тайлмеп
+    //Tilemap tag
     public string tilemapTag;
-    //Есть ли у тайла соседние тайлы
+    //Does the tile have neighboring tiles
     public bool[] surroundings;
-    //Если два аналога с одинаковыми surroundings - другой аналог
+    //If there are two analogs with the same surroundings - another analogue is used
     public TilePlaceAnalog placeAnalog;
 }

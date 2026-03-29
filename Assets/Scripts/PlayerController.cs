@@ -27,8 +27,7 @@ public class PlayerController : MonoBehaviour
     [Inject]
     LevelBuilder m_lvlBuilder;
 
-    //Хеши анимаций
-
+    //Animation hashes
     readonly int m_HashHorizontal = Animator.StringToHash("Horizontal");
     readonly int m_HashHit = Animator.StringToHash("Hit");
     readonly int m_HashDie = Animator.StringToHash("Die");
@@ -115,7 +114,7 @@ public class PlayerController : MonoBehaviour
         {
             m_isHit = m_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Hit";
             m_canMove = m_anim.GetBool(m_HashCanMove) && !m_damagable.Freezed;
-            //если анимация рывка закончена - вернуть гравитацию, начать падать после рывка в воздухе
+            //If the dash animation is finished - returns gravity, starts falling after the dash in the air
             if (m_canMove && m_dash)
             {
                 if (m_jumping)
@@ -134,25 +133,25 @@ public class PlayerController : MonoBehaviour
                     m_rb.gravityScale = m_gravityScale;
                 }
             }
-            //когда отпустили кнопку прыжка - начать падать
+            //when the jump button is released - starts falling
             if (m_jump && !m_input.Jump)
             {
                 m_falling = true;
                 m_jump = false;
             }
-            //блок
+            //block
             if (m_canBlock && m_canMove && !m_isHit && !m_falling && !m_jumping && m_input.Block)
             {
                 m_blocking = true;
             }
-            //когда анимация атаки закончена - вернуть гравитацию
+            //when the attack animation is finished - returns gravity
             if (m_canMove && m_attack)
             {
                 m_attack = false;
                 m_rb.gravityScale = m_gravityScale;
                 m_anim.ResetTrigger(m_HashAttack);
             }
-            //рывок
+            //dash
             if (m_input.Dash && m_canDash && m_canMove && !m_isHit)
             {
                 m_dashTimer = 0f;
@@ -160,14 +159,14 @@ public class PlayerController : MonoBehaviour
                 m_anim.SetBool(m_HashCanMove, false);
                 m_anim.SetTrigger(m_HashDash);
                 m_UI.SetDashSprite(0f);
-                //убрать гравитацию
+                //removes gravity
                 m_rb.gravityScale = 0f;
                 m_dash = true;
-                //игрок двигается горизонтально
+                //the player moves only horizontally
                 m_rb.velocity = new Vector2(m_currentDir * m_runSpeed, 0f);
                 m_rb.AddForce(Vector2.right * m_currentDir * m_dashPower, ForceMode2D.Impulse);
             }
-            //уклонение
+            //dodge
             if (m_input.Dodge && m_canMove && !m_isHit)
             {
                 m_canMove = false;
@@ -175,7 +174,7 @@ public class PlayerController : MonoBehaviour
                 m_anim.SetTrigger(m_HashDodge);
                 m_rb.velocity = new Vector2(-m_currentDir * m_dashPower, 0f);
             }
-            //перезарядка рывка
+            //dash recharge
             if (!m_canDash)
             {
                 m_dashCooldown += Time.deltaTime;
@@ -191,7 +190,7 @@ public class PlayerController : MonoBehaviour
                     m_UI.SetDashSprite(m_dashCooldown / m_dashCooldownTime);
                 }
             }
-            //перезарядка блока
+            //block recharge
             if (!m_canBlock)
             {
                 m_blockCooldown += Time.deltaTime;
@@ -202,10 +201,10 @@ public class PlayerController : MonoBehaviour
                     m_blockCooldown = 0f;
                 }
             }
-            //легкая атака
+            //light attack
             if (m_input.Attack && !m_isHit && !m_damagable.Freezed)
             {
-                //если еще не атаковал - убирать гравитацию и движение
+                //if the player haven't attacked yet - removes gravity and movement
                 if (m_canMove)
                 {
                     m_canMove = false;
@@ -216,7 +215,7 @@ public class PlayerController : MonoBehaviour
                 }
                 m_anim.SetTrigger(m_HashAttack);
             }
-            //тяжелая атака
+            //heavy attack
             if (m_input.HeavyAttack && m_canMove && !m_isHit && !m_jumping && !m_falling)
             {
                 m_canMove = false;
@@ -224,7 +223,7 @@ public class PlayerController : MonoBehaviour
                 m_attack = true;
                 m_rb.velocity = Vector2.zero;
             }
-            //если кот в зоне кота - погладить
+            //if the cat is in the cat's area - pet it
             if (m_canPet && m_input.Pet && !m_damagable.Freezed)
             {
                 m_catZone.ApplyPet(true);
@@ -243,7 +242,7 @@ public class PlayerController : MonoBehaviour
     private void LateUpdate()
     {
         float targetY;
-        //вертикальный отступ камеры 
+        //camera vertical offset 
         if (!Mathf.Approximately(m_input.MoveCamera, 0))
         {
             targetY = Mathf.Clamp(m_transposer.m_TrackedObjectOffset.y + m_input.MoveCamera * m_cameraSpeed * Time.fixedDeltaTime, -m_cameraBoundsHeight, m_cameraBoundsHeight);
@@ -258,7 +257,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //если игрок падает долго и не встретил границ для падения - вернуть
+        //if the player falls for a long time and does not meet the limits for the fall - returns to the fall checkpoint
         if (m_falling && (m_fallCheckpoint.y - transform.position.y > 100))
         {
             FallReset();
@@ -269,7 +268,7 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = Vector3.zero;
         }
 
-        //если игрок застрял в земле - поднять вверх
+        //If the player is stuck in the ground, lift up
         if (m_touchings.IsGroundStuck())
         {
             Debug.Log("Ground stuck");
@@ -278,13 +277,13 @@ public class PlayerController : MonoBehaviour
 
         if (!m_dead)
         {
-            //погладить кота
+            //pet the cat
             if (m_pet)
             {
-                //приближается к коту
+                //aproaching the cat
                 Vector2 dir = m_catZone.TargetLocation - transform.position;
                 m_rb.velocity = new Vector2(dir.normalized.x * m_runSpeed, 0f);
-                //если дошел - анимация поглаживания
+                //If has reached it - turns on a petting animation.
                 if (Mathf.Abs(dir.x) <= 0.01f)
                 {
                     m_pet = false;
@@ -294,28 +293,28 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
-            //повернуться
+            //turn around
             if (m_currentDir * m_input.Move < 0 && m_canMove)
             {
                 m_currentDir *= -1;
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y + m_currentDir * 180f, 0f);
             }
-            //если касается стен во время прыжка - не двигаться горизонтально
+            //If touches the walls during the jump - stop moving horizontally
             if (m_touchings.IsWalls() && (m_jumping || m_falling))
             {
                 m_rb.velocity = new Vector2(0f, m_rb.velocity.y);
             }
-            //если не атака или рывок - двигаться
+            //if it's not an attack or a dash - move
             else if (m_canMove && !m_isHit)
             {
-                //если поднимается по холму - предотвратить падение, добавить вертикальную скорость вверх
+                //if goes up a slope - prevents a fall by adding vertical speed up
                 if (m_touchings.IsSlopeUp())
                 {
                     m_falling = false;
                     m_onSlope = m_rb.isKinematic = true;
                     m_rb.velocity = new Vector2(m_input.Move * m_runSpeed, Mathf.Abs(m_input.Move) * m_runSpeed);
                 }
-                //если спускается с холма - предотвратить падение, добавить вертикальную скорость вниз
+                //if goes down a slope - prevents a fall by adding vertical speed down
                 else if (m_touchings.IsSlopeDown())
                 {
                     m_falling = false;
@@ -331,7 +330,7 @@ public class PlayerController : MonoBehaviour
                     m_rb.velocity = new Vector2(m_input.Move * m_runSpeed, m_rb.velocity.y);
                 }
             }
-            //если не атака или рывок - прыжок
+            //if it's not an attack or a dash - jump
             if (m_canMove && m_input.Jump && !m_jump && m_touchings.IsGrounded())
             {
                 if (m_onSlope)
@@ -345,7 +344,7 @@ public class PlayerController : MonoBehaviour
                 m_currentJumps++;
                 return;
             }
-            //добавить прыжок во время прыжка, если возможно
+            //adds a jump during the jump, if possible
             if (m_canMove && m_jumping && m_input.Jump && !m_jump && m_currentJumps < m_jumpsMaxCount)
             {
                 m_sound.PlaySound("Jump");
@@ -355,7 +354,7 @@ public class PlayerController : MonoBehaviour
                 m_jumpCounter = 0f;
                 m_rb.velocity = new Vector2(m_rb.velocity.x, m_jumpPower + 5f);
             }
-            //если в прыжке и двигается вверх - добавить вертикальную скорость на m_jumpTime сек или пока не отпустит кнопку прыжка
+            //if jumping and moving up - adds vertical speed for m_jumpTime secs or until the jump button is released
             if (m_canMove && !m_onSlope && m_rb.velocity.y > 0f && m_jumping && !m_falling)
             {
                 m_jumpCounter += Time.fixedDeltaTime;
@@ -365,13 +364,13 @@ public class PlayerController : MonoBehaviour
                 }
                 m_rb.velocity += m_junpMultiplier * Time.fixedDeltaTime * m_gravity;
             }
-            //если не касается земли и движется вниз - установить падение и убавить вертикальную скорость
+            //if does not touch the ground and moves downwards - sets the drop and reduces the vertical speed
             if (!m_onSlope && m_rb.velocity.y < 0f && !m_touchings.IsGrounded())
             {
                 m_falling = true;
                 m_rb.velocity -= m_fallMultiplier * Time.fixedDeltaTime * m_gravity;
             }
-            //если игрок в воздухе и достигает земли, не касаясь стен (или касается, но не двигается горизонтально) - приземлиться
+            //if the player is in the air and reaches the ground without touching the walls (or touches, but does not move horizontally) - land
             if ((m_falling && !m_touchings.IsSlopeDown() && m_touchings.IsGrounded() && (!m_touchings.IsWalls() || Mathf.Approximately(m_rb.velocity.y, 0f))) ||
                 (m_touchings.IsSlopeDown() || m_touchings.IsSlopeUp()) && m_jumping)
             {
@@ -383,7 +382,7 @@ public class PlayerController : MonoBehaviour
 
             if (m_rb.velocity != Vector2.zero)
             {
-                //если игрок застрял в земле или стене - пододвинуть его к поверхности
+                //If the player is stuck in the ground or wall - move him to the surface
                 Vector2 move = new Vector2(m_touchings.WallsStuck(m_rb.velocity.x * Time.fixedDeltaTime), m_touchings.GroundStuck(m_rb.velocity.y * Time.fixedDeltaTime));
                 if (move != Vector2.zero)
                 {
@@ -391,7 +390,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        //перестать двигаться, если умер
+        //stop moving if is dead
         else if (m_touchings.IsGrounded())
         {
             m_rb.gravityScale = 0f;
@@ -414,7 +413,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Блокирует удар, становлясь на время неуязвимым
+    /// Blocks an attack, becoming temporarily invincible
     /// </summary>
     /// <returns></returns>
     IEnumerator Block()
@@ -431,12 +430,12 @@ public class PlayerController : MonoBehaviour
         m_canBlock = false;
     }
     /// <summary>
-    /// Получает урон 
+    /// Takes damage 
     /// </summary>
-    /// <param name="damage">количество урона</param>
+    /// <param name="damage">amount of damage</param>
     public void ReceiveDamage(int damage)
     {
-        //если 0 - игрок умер
+        //if 0 - the player is dead
         if (damage == 0)
         {
             m_rb.velocity = Vector2.zero;
@@ -453,9 +452,9 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Активирует или дективирует возможность погладить кота
+    /// Activates or deactivates the ability to pet a cat
     /// </summary>
-    /// <param name="value">можно ли гладить</param>
+    /// <param name="value">is a cat can be petted</param>
     public void EnablePet(bool value)
     {
         m_canPet = value;
@@ -468,7 +467,7 @@ public class PlayerController : MonoBehaviour
         m_falling = false;
     }
     /// <summary>
-    /// Прекратить поглаживание кота
+    /// Stop petting the cat
     /// </summary>
     public void StopPetting()
     {
@@ -476,25 +475,25 @@ public class PlayerController : MonoBehaviour
         m_catZone.ApplyPet(false);
     }
     /// <summary>
-    /// Ставит новую точку возрождения игрока после смерти
+    /// Sets a new reborn point for the player after death
     /// </summary>
-    /// <param name="checkpoint">новая точка возрождения</param>
+    /// <param name="checkpoint"></param>
     public void SetRebornCheckpoint(Vector3 checkpoint)
     {
         m_rebornCheckpoint = checkpoint + new Vector3(m_values.GetRightBorder(), m_values.GetOffset().y);
     }
     /// <summary>
-    /// Ставит новую точку восстановления после падения
+    /// Sets a new recovery point after the fall
     /// </summary>
-    /// <param name="checkpoint">новая точка</param>
-    /// <param name="start">начало или конец чанка</param>
+    /// <param name="checkpoint">param>
+    /// <param name="start">start or the end of the chunk</param>
     public void SetChunkCheckpoint(Vector3 checkpoint, bool start)
     {
         m_fallCheckpoint = checkpoint + new Vector3(start ? m_values.GetRightBorder() : m_values.GetLeftBorder(), m_values.GetOffset().y + 2);
     }
     /// <summary>
-    /// После падения игрока возвращает его в точку восстановления после падения
-    /// и восстанавливает кирпичи, если нужно
+    /// After the player falls - returns him to the fall checkpoint after the fall
+    /// and restarts the bricks, if necessary
     /// </summary>
     public void FallReset()
     {
@@ -504,9 +503,9 @@ public class PlayerController : MonoBehaviour
         m_currentDir = 1;
     }
     /// <summary>
-    /// Менят отступ камеры больше вверх или больше вниз
+    /// Will the camera offset change more up or more down
     /// </summary>
-    /// <param name="down">вниз</param>
+    /// <param name="down"></param>
     public void ChangeTransposerHeight(bool down)
     {
         m_baseTransposer += 3f * (down ? -1 : 1);
@@ -517,26 +516,26 @@ public class PlayerController : MonoBehaviour
         m_cameraBoundsHeight = (height * 3 - 3) / 2.0f;
     }
     /// <summary>
-    /// Увеличивает макс количество прыжков игрока
+    /// Increases the player's max number of jumps
     /// </summary>
     public void AddJump()
     {
         m_jumpsMaxCount++;
     }
     /// <summary>
-    /// Уменьмает время восстановления рывка
+    /// Decreases the recovery time of the dash
     /// </summary>
     public void DecreaseDashCooldown()
     {
         m_dashCooldownTime -= 0.5f;
     }
     /// <summary>
-    /// Восстанавливает здоровье игрока и возвращает егов точку перерождения, если нужно
+    /// Restores the player's health and returns him to the reborn checkpoint, if necessary
     /// </summary>
     /// <param name="reborn">перерождение</param>
     public void Restart(bool reborn = true)
     {
-        //если переродился - вернуться назад
+        //if reborn - goes back
         if (reborn)
         {
             m_enemyBar.HideBar();

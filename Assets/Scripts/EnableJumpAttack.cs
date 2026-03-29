@@ -17,7 +17,7 @@ public class EnableJumpAttack : MonoBehaviour
 
     private void Update()
     {
-        //если впереди стена - нельзя выполнить атаку прыжком
+        //If there is a wall in front - a jump attack can't be performed
         if (!m_attackDisabled && m_wallsDetect.TargetDetected)
         {
             m_enemyController.SetAttacksCount(m_attacksCount - 1);

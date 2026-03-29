@@ -7,7 +7,7 @@ public class Clouds : MonoBehaviour
 
     void Update()
     {
-        //облака сами движутся медленно
+        //the clouds themselves move slowly
         transform.position -= m_speed * Time.deltaTime * Vector3.right;
     }
 }

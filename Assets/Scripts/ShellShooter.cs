@@ -11,7 +11,7 @@ public class ShellShooter : MonoBehaviour
 
     public Vector3 Direction => m_shellSpawn.forward;
     /// <summary>
-    /// Создает снаряд и запускает его вправо
+    /// Creates a shell and launches it to the right
     /// </summary>
     public void SpawnShell()
     {

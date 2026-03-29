@@ -3,9 +3,9 @@
 public class ParallaxEffect : MonoBehaviour
 {
     [SerializeField]
-    //Переменная для определения отдаленности объекта от игрока
+    //Variable for determining the distance of an object from the player
     float m_parallaxMultiplier;
-    //Ширина картинки заднего фона
+    //Width of the background image
     readonly float m_textureUnitSizeX = 19.615f;
 
     Transform m_cam;
@@ -22,10 +22,10 @@ public class ParallaxEffect : MonoBehaviour
     void Update()
     {
         m_deltaCamMove = m_cam.position - m_lastCameraPosition;
-        //сдвигает объект влево относительно
+        //moves the object to the left relative to
         transform.position += m_deltaCamMove.x * m_parallaxMultiplier * Vector3.left;
         m_lastCameraPosition = m_cam.position;
-        //если сдвинуто больше, чем на ширину картинки - возвращает объект на минимальное расстояние от камеры
+        //if it is shifted more than the width of the image, it returns the object to the minimum distance from the camera
         if (Mathf.Abs(m_cam.position.x - transform.position.x) >= m_textureUnitSizeX)
         {
             float offsetX = (m_cam.position.x - transform.position.x) % m_textureUnitSizeX;

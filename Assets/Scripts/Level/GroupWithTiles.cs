@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,11 +20,11 @@ public class GroupWithTiles : TileGroup
         return tiles;
     }
     /// <summary>
-    /// Проходит по всем группам и подбирает тайлы, 
-    /// которые есть как в tiles, так и в группе объекта
+    /// It goes through all the groups and selects tiles,
+    /// which are in both the tiles and the object group
     /// </summary>
-    /// <param name="tiles">тайлы для совпадения</param>
-    /// <returns>лист совпавших тайлов</returns>
+    /// <param name="tiles">tiles for match</param>
+    /// <returns>matched tiles list</returns>
     public override List<TileBase> MatchesTiles(IEnumerable<TileBase> tiles)
     {
         List<TileBase> matches = new List<TileBase>();
@@ -35,11 +37,11 @@ public class GroupWithTiles : TileGroup
         return matches;
     }
     /// <summary>
-    /// Проходит по всем группам и проверяет, 
-    /// есть ли в этих группах и заданной группе совпавшие тайлы
+    /// It goes through all the groups and checks
+    /// if there are matching tiles in these groups and the specified group
     /// </summary>
-    /// <param name="tile">заданный тайл</param>
-    /// <returns>есть ли в группе</returns>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     public override bool ContainsTile(TileBase tile)
     {
         foreach (TileGroup group in tileGroups)

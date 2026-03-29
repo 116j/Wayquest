@@ -11,16 +11,16 @@ public class GridStrategy : FillStrategy
     protected int m_minTransitionHeight = 11;
     protected new int m_maxTransitionHeight = 25;
 
-    //Мин длина платформа
+    //Min platform width
     readonly int m_minWidth = 1;
-    //Макс длина платформы
+    //Max platform width
     readonly int m_maxWidth = 6;
-    //Мин расстояние между платформами
+    //Min distance between platforms
     readonly int m_minDist = 3;
 
-    //Макс количество попыток генерации чанка
+    //Max number of attempts to generate a chunk
     readonly int m_maxAttempts = 3;
-    //Макс количество попыток генерации платформы
+    //Max number of attempts to generate a platform
     readonly int m_platformMaxAttempts = 100;
 
     readonly float m_negativeChunkHeightChance = 0.7f;
@@ -29,15 +29,15 @@ public class GridStrategy : FillStrategy
     {
     }
     /// <summary>
-    /// Созддает чанк состоящий из плтформ, ведущий вверх или вниз, по которым нужно прыгать, 
-    /// добавляет ландшавт и отрисовывает
+    /// Creates a chunk consisting of pltforms leading up or down which the player needs to jump,
+    /// adds a landscape and draws tiles
     /// </summary>
-    /// <param name="prevChunk">предыдущий чанк</param>
-    /// <param name="transitionStrategy">стратегия построения перехода на следующий чанк</param>
+    /// <param name="prevChunk">previous chunk</param>
+    /// <param name="transitionStrategy">strategy for building a transition to the next chunk</param>
     /// <returns></returns>
     public override Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        //рисует тайлы перехода от предыдущего чанка к этому
+        //draws transition tiles from the previous chunk to this one
         Chunk transition = new Chunk(prevChunk.GetEndPosition(), prevChunk.GetEndPosition());
 
         int width = Random.Range(m_minChunkSize, m_maxChunkSize);
@@ -50,7 +50,7 @@ public class GridStrategy : FillStrategy
         Vector3Int end = new Vector3Int(start.x + width, start.y + height);
         Chunk chunk = new Chunk(start, end, transition);
         int attempts = 0;
-        //генерирует уровень m_maxAttempts раз, если не получаеятся, то пробует другую стратегию
+        //generates the m_maxAttempts level once, if it doesn't work, it tries a different strategy
         while (!MakeGrid(chunk))
         {
             attempts++;
@@ -63,7 +63,7 @@ public class GridStrategy : FillStrategy
         }
         prevChunk.GetNextTransition().Clear(m_editor);
 
-        //создает границы для падения игрока
+        //creates bound for the player to fall
         chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 
         CreateSideBound(chunk, height < 0);
@@ -74,7 +74,7 @@ public class GridStrategy : FillStrategy
         return chunk;
     }
     /// <summary>
-    /// Создает переход наверх из маленьких платформ
+    ///     Creates a transition to the top from small platforms
     /// </summary>
     /// <param name="chunk"></param>
     /// <returns></returns>
@@ -98,22 +98,22 @@ public class GridStrategy : FillStrategy
             posOffset = !posOffset;
         }
         while (lastPoint.y < end.y);
-        //создает границы для падения игрока
+        //creates bound for the player to fall
         transition.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 
         return transition;
     }
     /// <summary>
-    /// Создает сетку из платформ
+    /// Creates a grid of platforms
     /// </summary>
     /// <param name="chunk"></param>
-    /// <returns>удалось ли создать сетку из платформ</returns>
+    /// <returns>was it possible to create a grid of platforms</returns>
     bool MakeGrid(Chunk chunk)
     {
         Vector3Int start = chunk.GetStartPosition();
         Vector3Int end = chunk.GetEndPosition();
         Vector3Int lastPoint = start;
-        //позиция последней второй платформы
+        //position of the last second platform
         Vector3Int lastOffset = start;
         int chunkHeight = end.y - start.y;
         int attempts = 0;
@@ -123,24 +123,24 @@ public class GridStrategy : FillStrategy
 
         while (attempts < m_platformMaxAttempts)
         {
-            //проверяет не достигли ли конца чанка
+            //checks if reached the end
             if ((lastPoint.x + lastWidth >= end.x - m_minWidth) &&
                 (Mathf.Abs(lastPoint.y - end.y) <= m_playerJumpHeight))
             {
                 return true;
             }
 
-            //вериикальный отступ платформы
+            //vertical platform offset
             int offsetY = (lastPoint.y > end.y ? -1 : 1) * Random.Range(m_minDist, m_playerJumpHeight);
-            //отступ платформы по сравнению с оставшейся высотой
+            //platform offset compared to the remaining height
             float progress = Mathf.Abs(offsetY) * 1.0f / Mathf.Max(1, Mathf.Abs(end.y - lastPoint.y));
-            //возможная позиция X
+            //possible X position
             int x = lastPoint.x + lastWidth + (int)(progress * (end.x - lastPoint.x - lastWidth));
 
             //длина прыжка игрока на новую платформу в зависимости от высоты вертикального отступа
             int jumpWidth = lastPoint.y < end.y ? GetJumpWidth(offsetY) : m_playerJumpWidth;
             int offsetX = x - lastPoint.x - lastWidth;
-            //если расстояние между платформами меньше ширины прыжка
+            //if the distance between the platforms is less than the jump width
             if (offsetX < jumpWidth)
             {
                 offsetX = Random.Range(-jumpWidth, jumpWidth);
@@ -151,12 +151,12 @@ public class GridStrategy : FillStrategy
                 int maxOffset = offsetX - m_minWidth;
                 offsetX = Random.Range(minOffset, maxOffset);
             }
-            //обрезает горизонтальный отступ по границам чанка
+            //cuts off the horizontal offset along the borders of the chunk
             offsetX = Mathf.Clamp(offsetX, start.x - x + m_minWidth, end.x - x - m_minWidth * 2);
-            //проверяет окрестности на стокновение с платформами
+            //checks the surroundings for collisions with platforms
             Vector3Int pos = new Vector3Int(x + offsetX, lastPoint.y + offsetY);
 
-            //проверка платформы на жизнеспособность и подбор ширины платформы
+            //checks the platform for viability and selecting the platform width
             if (!CheckSurroundings(chunk, pos) || Mathf.Abs(lastPoint.x + lastWidth - pos.x) > GetJumpWidth(offsetY) ||
                 !AvailablePlatformWidth(chunk, pos, GetMaxWidth(chunk, pos), ref lastWidth, end) ||
                 pos.x > end.x - m_minWidth * 2 || pos.x <= start.x)
@@ -165,36 +165,36 @@ public class GridStrategy : FillStrategy
                 continue;
             }
 
-            //новая платформа
+            //second platform
             lastWidth = Mathf.Clamp(lastWidth, m_minWidth, end.x - pos.x - m_minWidth);
             lastPoint = pos;
             chunk.CreatePlatform(lastPoint, lastWidth);
 
-            //если знак горизонтального отступа платформы и знак высоты чанка совпадают
+            //if the horizontal offset sign of the platform and the height sign of the chunk match
             bool offsetDirection = offsetX * chunkHeight >= 0;
             secondaryOffsetY = (offsetDirection ? -1 : 1) * Random.Range(m_minDist - 1, m_playerJumpHeight);
 
             int secondaryOffsetX;
             if (offsetX > 0)
             {
-                //при положительном отступе больше склоняется к правому отступу
+                //with a positive offset, it more tends to be the right offset
                 int min = offsetDirection ? Mathf.Clamp(-m_minDist + 1, lastOffset.x + w1 - lastPoint.x + m_minWidth, 0) : -m_minDist + 1;
                 secondaryOffsetX = Random.Range(min, GetJumpWidth(secondaryOffsetY) + lastWidth);
             }
             else
             {
-                //при отрицательном отступе больше склоняется к левому отступу
+                //with a negative offset, it more tends to be the right offset
                 int min = offsetDirection ? Mathf.Clamp(-GetJumpWidth(secondaryOffsetY) - m_minWidth,
                                             lastOffset.x + w1 - lastPoint.x + m_minWidth, 0) :
                                             -GetJumpWidth(secondaryOffsetY) - m_minWidth;
                 secondaryOffsetX = Random.Range(min, m_minDist);
             }
-            //обрезает горизонтальный отступ по границам чанка
+            //cuts off the horizontal offset along the borders of the chunk
             secondaryOffsetX = Mathf.Clamp(secondaryOffsetX, start.x - lastPoint.x + m_minWidth, end.x - lastPoint.x - m_minWidth * 2);
             //проверяем окрестности на стокновение с платформами
             pos = new Vector3Int(lastPoint.x + secondaryOffsetX, lastPoint.y + secondaryOffsetY);
 
-            //проверка платформы на жизнеспособность и подбор ширины платформы
+            //checks the platform for viability and selecting the platform width
             if (!CheckSurroundings(chunk, pos) || !AvailablePlatformWidth(chunk, pos, GetMaxWidth(chunk, pos), ref w1, end) ||
                 pos.x > end.x - m_minWidth || pos.x <= start.x)
             {
@@ -202,38 +202,38 @@ public class GridStrategy : FillStrategy
                 continue;
             }   
 
-            //вторая платформа
+            //width of the second platform
             w1 = Mathf.Clamp(w1, m_minWidth, end.x - pos.x - m_minWidth);
             chunk.CreatePlatform(pos, w1);
             lastOffset = pos;
-            //сбрасывает попытки после успешной генерации
+            //resets attempts after successful generation
             attempts = 0;
         }
 
         return false;
     }
     /// <summary>
-    /// Проверяет, можно ли разместить платформу и подбирает для нее длину
+    /// Checks whether the platform can be placed and selects the width for it
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="currentPos">позиция начала платформы</param>
-    /// <param name="maxWidth">макс длина платформы</param>
-    /// <param name="currentWidth">переменная для длина</param>
-    /// <param name="end">конец чанка</param>
-    /// <returns>подходит ли платформа и нашлась ли для нее длина</returns>
+    /// <param name="currentPos">start of the platform</param>
+    /// <param name="maxWidth">max platform width</param>
+    /// <param name="currentWidth">variable for width</param>
+    /// <param name="end">end of the chunk</param>
+    /// <returns>is the platform suitable and has the width been found for it</returns>
     bool AvailablePlatformWidth(Chunk chunk, Vector3Int currentPos, int maxWidth, ref int currentWidth, Vector3Int end)
     {
         if (maxWidth < m_minWidth) return false;
 
         for (int i = 0; i < m_playerJumpHeight; i++)
         {
-            //если платформа будет перекрывать платфорому снизу на расстоянии прыжка - не подходит
+            //if the platform overlaps the platform from below at a jump distance - not suitable
             if (CheckVerticalCollision(chunk, currentPos, i))
                 return false;
-            //если на расстоянии нижнего отступа i находится другая платформа - подбирает длину с учетом нее
+            //if there is another platform at the distance of the lower offset - selects the width based on it.
             if (chunk.PositionIsUsed(new Vector3Int(currentPos.x, currentPos.y + i)))
                 return SelectPlatformWidthWithOffset(chunk, currentPos, maxWidth, ref currentWidth, end, i);
-            //если на расстоянии длины maxWidth и нижнего ортступа находится платформа - пробует подобрать длину с учетом нее
+            //if there is a platform at the distance of the maxWidth width and the lower offset - tries to choose the width based on it
             if (CheckHorizontalCollision(chunk, currentPos, maxWidth, i, ref currentWidth, end))
                 return true;
         }
@@ -242,15 +242,15 @@ public class GridStrategy : FillStrategy
         return true;
     }
     /// <summary>
-    /// Подбирает длину платформы, чтобы она перекрывала справа другую платформу
+    /// Selects the width of the platform so that it overlaps the other platform on the right
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
-    /// <param name="maxWidth">макс длина платформы</param>
-    /// <param name="width">переменная для записи длины</param>
-    /// <param name="end">конец чанка</param>
-    /// <param name="offset">вертикальный отступ, где находится другая платформа</param>
-    /// <returns>удалось ли побобрать длину</returns>
+    /// <param name="pos">start of the platform</param>
+    /// <param name="maxWidth">max platform width</param>
+    /// <param name="width">variable for width</param>
+    /// <param name="end">end of the chunk</param>
+    /// <param name="offset">vertical offset where the other platform is located</param>
+    /// <returns>was it possible to get the width</returns>
     bool SelectPlatformWidthWithOffset(Chunk chunk, Vector3Int pos, int maxWidth, ref int width, Vector3Int end, int offset)
     {
         for (int i = m_minWidth; i < maxWidth; i++)
@@ -269,26 +269,26 @@ public class GridStrategy : FillStrategy
         return false;
     }
     /// <summary>
-    /// Смотрит наличие платформы под отступом внизу на растоянни макс длины1
-    /// и подбирате длину в зависимости от платформы, если платформа есть
+    /// Looks for the presence of a platform under the lower offset at a distance of the max width
+    /// and selects the width depending on the platform, if there is a platform
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
-    /// <param name="maxWidth">макс длина платформы</param>
-    /// <param name="verticalOffset">вертикальный отступ</param>
-    /// <param name="width">переменная для записи длины</param>
-    /// <param name="end">конец чанка</param>
-    /// <returns>если длина определена с учетом найденной платформы</returns>
+    /// <param name="pos">start of the platform</param>
+    /// <param name="maxWidth">max platform width</param>
+    /// <param name="verticalOffset"></param>
+    /// <param name="width">variable for width</param>
+    /// <param name="end">end of the chunk</param>
+    /// <returns>if the width is determined based on the found platform</returns>
     bool CheckHorizontalCollision(Chunk chunk, Vector3Int pos, int maxWidth, int verticalOffset, ref int width, Vector3Int end)
     {
         for (int i = 0; i < maxWidth; i++)
         {
-            //если на данной длине под отступом находится платформа
+            //if there is a platform whith the offset at a given width
             if (chunk.PositionIsUsed(new Vector3Int(pos.x + i, pos.y - verticalOffset)))
             {
                 for (int j = m_minWidth; j <= maxWidth - i; j++)
                 {
-                    //смотрит когда платформа закончится
+                    //checks when the platform ends
                     if (!chunk.PositionIsUsed(new Vector3Int(pos.x + i + j, pos.y - verticalOffset)))
                     {
                         width = Random.Range(m_minWidth, Mathf.Clamp(i + j, 0, end.x - pos.x));
@@ -300,11 +300,11 @@ public class GridStrategy : FillStrategy
         return false;
     }
     /// <summary>
-    /// Проверяет, перекрывает ли платформа другую платформу с отступом offset
+    /// Checks whether a platform overlaps another platform with an offset 
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
-    /// <param name="offset">вертикальный отступ от платформы</param>
+    /// <param name="pos">start of the platform</param>
+    /// <param name="offset">platform vertical offset</param>
     /// <returns></returns>
     bool CheckVerticalCollision(Chunk chunk, Vector3Int pos, int offset)
     {
@@ -313,33 +313,33 @@ public class GridStrategy : FillStrategy
                !chunk.PositionIsUsed(new Vector3Int(pos.x + 1, pos.y - offset));
     }
     /// <summary>
-    /// Определяет максимальную длину для платформы
+    /// Defines the max width for the platform
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
+    /// <param name="pos">start of the platform</param>
     /// <returns></returns>
     int GetMaxWidth(Chunk chunk, Vector3Int pos)
     {
         for (int i = 0; i < m_maxWidth; i++)
         {
-            //если на данной длине есть пересечения - макс длина
+            //if there are intersections at a given width - max width
             if (CheckInterferingPlarforms(chunk, pos, i))
                 return i;
         }
         return m_maxWidth;
     }
     /// <summary>
-    /// Смотрит для определенной длины (offset + 1), есть ли другие платформы в радиусе
+    /// It looks for a certain width (offset + 1), whether there are other platforms in the radius
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
-    /// <param name="offset">горизонтальный отступ - предполагаемый конец платформы</param>
+    /// <param name="pos">start of the platform</param>
+    /// <param name="offset">horizontal offset - intended end of the platform</param>
     /// <returns></returns>
     bool CheckInterferingPlarforms(Chunk chunk, Vector3Int pos, int offset)
     {
         for (int i = 0; i < m_minDist; i++)
         {
-            //если для данной длины мверху, справа или снизу на расстоянии i есть платформа 
+            //if there is a platform at the top, right, or bottom of the distance i for a given width 
             if (chunk.PositionIsUsed(new Vector3Int(pos.x + offset + i, pos.y)) ||
                 chunk.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y - i)) ||
                 chunk.PositionIsUsed(new Vector3Int(pos.x + offset, pos.y + i)))
@@ -347,16 +347,16 @@ public class GridStrategy : FillStrategy
                 return true;
             }
         }
-        // если впритык к платформе в радиусе 1 справа есть другая платформа
+        //if there is another platform adjacent to the platform within a radius of 1 on the right
         return chunk.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y + 1)) ||
                chunk.PositionIsUsed(new Vector3Int(pos.x + offset + 1, pos.y - 1));
     }
     /// <summary>
-    /// Смотрит, есть ли вокруг другие платформы
+    /// Checks for another platforms around
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="pos">начало платформы</param>
-    /// <returns>true - вокруг нет других платформ</returns>
+    /// <param name="pos">start of the platform</param>
+    /// <returns>true - there are no other platforms around</returns>
     bool CheckSurroundings(Chunk chunk, Vector3Int pos)
     {
         for (int x = -m_minDist + 1; x < m_minDist; x++)

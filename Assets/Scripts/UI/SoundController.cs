@@ -15,7 +15,7 @@ public class SoundController : MonoBehaviour
         m_audio = GetComponent<AudioSource>();
     }
     /// <summary>
-    /// Включить клип один раз
+    /// Play a sound once
     /// </summary>
     /// <param name="clip"></param>
     public void PlaySound(AudioClip clip)
@@ -23,7 +23,7 @@ public class SoundController : MonoBehaviour
         m_audio.PlayOneShot(clip);
     }
     /// <summary>
-    /// Включить клип на повторе
+    /// Play a sound on loop
     /// </summary>
     /// <param name="clip"></param>
     public void PlaySoundLoop(AudioClip clip)
@@ -40,7 +40,7 @@ public class SoundController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Включить звук по имени
+    /// Play a sound by name
     /// </summary>
     /// <param name="sound"></param>
     public void PlaySound(string sound)
@@ -48,7 +48,7 @@ public class SoundController : MonoBehaviour
         m_audio.PlayOneShot(m_sounds.Find(s => s.name.Contains(sound)));
     }
     /// <summary>
-    /// Прервать воспроизведение
+    /// Stops a sound
     /// </summary>
     public void StopSound()
     {

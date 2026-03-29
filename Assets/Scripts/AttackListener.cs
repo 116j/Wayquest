@@ -9,7 +9,7 @@ public class AttackListener : MonoBehaviour
     {
         if (collision.TryGetComponent<Damagable>(out var damagable))
         {
-            //если объект не в статусе НЕУЯЗВИМ, или в статусе НЕУЯЗВИМ, но повернут к атаке спиной - проходит урон
+            //if an object is not in the INVINCIBLE status, or in the INVINCIBLE status but turned his back to the attack - damage passes
             if (!damagable.Invincible || damagable.Invincible && (Vector2.Dot(collision.transform.right, transform.right) == 1))
             {
                 damagable.ApplyDamage(m_damage);
@@ -17,7 +17,7 @@ public class AttackListener : MonoBehaviour
         }
     }
     /// <summary>
-    /// Повышает урон от данной атаки на 1
+    /// Increases damage by 1
     /// </summary>
     public void IncreaseDamage()
     {

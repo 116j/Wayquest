@@ -11,7 +11,7 @@ public class ShellScript : AttackListener
 
     void Update()
     {
-        //удаляет снаряд, если он прожил больше m_lifeTime
+        //destroys a shell if it has lived more than m_lifeTime
         m_life += Time.deltaTime;
         if (m_life >= m_lifeTime)
         {

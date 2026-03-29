@@ -12,30 +12,30 @@ public class Chunk
     Chunk m_prevTransition;
     Chunk m_nextTransition;
 
-    //Последняя позиция дополнительно добавленной ширины участка
+    //Last position of the additionally added section width
     Vector3Int m_lastExtraWidthPoint;
-    //X координата начала крайнего участка
+    //X coordinate of the start of the last section
     int m_lastSectionPoint;
-    //Самая низкая Y координата участка
+    //The lowest Y coordinate of the chunk
     int m_lowestPoint;
-    //Y координата начала границ камеры
+    //Y coordinate of the start of the camera bounds
     int m_cameraBoundsStart;
     int m_chunkHeight = 0;
 
-    //Высота левой границы перехода
+    //Height of the left transition's bound
     int m_transitionLeftBoundHeight;
-    //Высота правой границы перехода
+    //Height of the right transition's bound
     int m_transitionRightBoundHeight;
     readonly int m_minHeight = 6;
     readonly int m_minWidth = 12;
 
     bool m_tilesFilled = false;
     /// <summary>
-    /// Добавляет начальный полигон, добавляет тайлы, если нужно, чтобы не было видно конца чанка
+    /// Adds the initial polygon, adds tiles, if necessary, so that the end of the chunk is not visible.
     /// </summary>
-    /// <param name="end">конец чанка</param>
-    /// <param name="startwWidth">ширина начального прямого участка</param>
-    /// <param name="transition">переход между этим и предыдущим чанком</param>
+    /// <param name="end">end of the chunk</param>
+    /// <param name="startwWidth">width of the initial straight section</param>
+    /// <param name="transition">transition between this and the previous chunk</param>
     public Chunk(Vector3Int end, int startwWidth, Chunk transition)
     {
         m_endPosition = end;
@@ -47,7 +47,7 @@ public class Chunk
         m_cameraBoundsStart = m_lowestPoint = m_startPosition.y - m_chunkHeight;
 
         MakePolygon(startwWidth, m_startPosition);
-        //добавляет тайлы, чтобы конец чанка не был виден, если переход восходящий
+        //adds tiles so that the end of the chunk is not visible if the transition is ascending
         if (GetTransitionHeight() > 0)
         {
             m_polygons[0].AddTiles(m_prevTransition.m_transitionRightBoundHeight, Mathf.Min(startwWidth, m_minWidth), m_startPosition - Vector3Int.up * m_minHeight);
@@ -57,13 +57,13 @@ public class Chunk
         }
     }
     /// <summary>
-    /// Конструктор для перехода
-    /// Устанавливает границы, но не добавляет полигона
-    /// Также служит для создания чанка, в котором не нужно создавать полигон
+    /// The transition constructor
+    /// Sets the bounds, but does not add a polygon
+    /// It is also used to create a chunk in which you do not need to create a polygon
     /// </summary>
-    /// <param name="start">начало перехода</param>
-    /// <param name="end">конец перехода</param>
-    /// <param name="transition">при создании чанка без полигонов нужен предыдущий переход</param>
+    /// <param name="start">start of the chunk</param>
+    /// <param name="end">end of the chunk</param>
+    /// <param name="transition">when creating a chunk without polygons, the previous transition is needed</param>
     public Chunk(Vector3Int start, Vector3Int end, Chunk transition = null)
     {
         m_prevTransition = transition;
@@ -80,9 +80,9 @@ public class Chunk
 
     public Vector3Int GetStartPosition() => m_startPosition;
     /// <summary>
-    /// Если точка ниже, чем самая нижняя точка - изменить самую нижнюю точку, начало границ камеры и увеличить высоту чанка
+    /// If the point is lower than the lowest point, change the lowest point, the start of the camera bounds, and increase the height of the chunk
     /// </summary>
-    /// <param name="point">точка для сравнения</param>
+    /// <param name="point">new point</param>
     void SetLowestPoint(int point)
     {
         if (m_lowestPoint > point - m_minHeight)
@@ -97,9 +97,9 @@ public class Chunk
         }
     }
     /// <summary>
-    /// Если точка выше, чем самая высокая точка - увеличить высоту чанка
+    /// If the point is higher than the highest point, increase the height of the chunk
     /// </summary>
-    /// <param name="point">точка для сравнения</param>
+    /// <param name="point">new point</param>
     void SetHighestPoint(int point)
     {
         if (m_lowestPoint + m_chunkHeight < point)
@@ -108,22 +108,22 @@ public class Chunk
         }
     }
     /// <summary>
-    /// Высчитывает новую высоту боковой границы 
+    /// Calculates the new height of the side border    
     /// </summary>
-    /// <param name="end">нижняя точка</param>
-    /// <param name="pos">верхняя точка</param>
-    /// <param name="oldValue">предыдущее значенте</param>
-    /// <returns>новое значение</returns>
+    /// <param name="end">lower point</param>
+    /// <param name="pos">upper point</param>
+    /// <param name="oldValue">previous value</param>
+    /// <returns>new value</returns>
     int SetTransitionSideBoundHeight(Vector3Int end, Vector3Int pos, int oldValue)
     {
-        //если расстояние до конечной точки меньше минимального и не было поставлено значение - ставим высоту от точки до конца
+        //if the distance to the end point is less than the minimum and no value has been set, set the height from the point to the end
         return end.x - pos.x <= m_minWidth && oldValue == 0 ? Mathf.Abs(end.y - pos.y) :
-            //если расстояние больше минимального и было поставлено значение - сбрасываем,
-            //иначе оставляем старое значение
+            //if the distance is greater than the minimum and a value has been set, resets it,
+            //otherwise, leaves the old value
             end.x - pos.x > m_minWidth && oldValue != 0 ? 0 : oldValue;
     }
     /// <summary>
-    /// Устанавливает новый конец чанка
+    /// Sets a new end of the chunk
     /// </summary>
     /// <param name="end"></param>
     public void SetEndPosition(Vector3Int end)
@@ -136,7 +136,7 @@ public class Chunk
         SetHighestPoint(end.y);
     }
     /// <summary>
-    /// Устанавливает новое начало чанка
+    /// Sets a new start of the chunk
     /// </summary>
     /// <param name="start"></param>
     public void SetStartPosition(Vector3Int start)
@@ -152,7 +152,7 @@ public class Chunk
     public Chunk GetNextTransition() => m_nextTransition;
 
     public Chunk GetPreviousTransition() => m_prevTransition;
-    //Лист координат тайлов, по которым может ходить игрок (земля)
+    //List of coordinates of tiles that the player can walk on (ground)
     public List<Vector3Int> GetGround() => m_polygons.Count == 1 ? m_polygons[0].Ground().ToList() : m_polygons.SelectMany(p => p.Ground()).ToList();
 
     public int GetTransitionRightHeight() => m_transitionRightBoundHeight;
@@ -160,9 +160,9 @@ public class Chunk
     public int GetTransitionLeftHeight() => m_transitionLeftBoundHeight;
 
     public int GetTransitionHeight() => m_prevTransition.m_endPosition.y - m_prevTransition.m_startPosition.y;
-    //Самая высокая точка чанка
+    //The highest point of the chunk
     public int GetChunkHighestPoint() => m_lowestPoint + m_chunkHeight;
-    //Высота для установки границ камеры этого чанка
+    //Height for setting the camera bounds of the chunk
     public int GetChunkCameraHeight() => m_lowestPoint + m_chunkHeight - m_cameraBoundsStart;
 
     public void DontFillTiles()
@@ -180,7 +180,7 @@ public class Chunk
         m_prevTransition.SetCameraBounds();
     }
     /// <summary>
-    /// Удаляет тайлы и объекты в чанке
+    /// Destroys tiles and objects in the chunk
     /// </summary>
     public void Clear(TileEditor editor, bool async = false)
     {
@@ -203,7 +203,7 @@ public class Chunk
         m_polygons.Clear();
     }
     /// <summary>
-    /// Перезвпускает все объекты чанка
+    /// Restarts all objects in the chunk
     /// </summary>
     public void Restart()
     {
@@ -236,11 +236,11 @@ public class Chunk
         }
     }
     /// <summary>
-    /// Создает полигон
+    /// Creates a polygon
     /// </summary>
     /// <param name="width"></param>
     /// <param name="startPos"></param>
-    /// <param name="addGround">если нужно добавить ладшафт, по умолчанию - да</param>
+    /// <param name="addGround">if it's needed to add a landscape, yes by default</param>
     public void MakePolygon(int width, Vector3Int startPos, bool addGround = true)
     {
         Polygon polygon = new Polygon();
@@ -252,65 +252,65 @@ public class Chunk
     }
 
     /// <summary>
-    /// Добавляет тайлы в полигон для низменности или возвышенности 
+    /// Adds tiles to a polygon for lowlands or elevations 
     /// </summary>
-    /// <param name="height">высота участка</param>
-    /// <param name="width">ширина участка</param>
-    /// <param name="startPos">конец предыдущего участка</param>
-    public void CreateElevationOrLowland(int height, int width, Vector3Int startPos)
+    /// <param name="height">height of the section</param>
+    /// <param name="width">width of the section</param>
+    /// <param name="prevEnd">end of the previous section</param>
+    public void CreateElevationOrLowland(int height, int width, Vector3Int prevEnd)
     {
-        //если возвышенность
+        //if the elevation
         if (height >= 0)
         {
-            SetHighestPoint(startPos.y + height);
-            // добавляет тайлы снизу на минимальную ширину
+            SetHighestPoint(prevEnd.y + height);
+            //adds tiles from the bottom to the minimum width
             int w = Mathf.Min(m_minWidth, width);
-            m_polygons[0].AddTiles(height + m_minHeight, w, startPos + height * Vector3Int.up);
-            // добавляет оставшиеся тайлы на высоту участка
-            m_polygons[0].AddTiles(m_minHeight, Mathf.Max(width - m_minWidth, 0), new Vector3Int(startPos.x + w, startPos.y + height));
-            m_lastExtraWidthPoint = new Vector3Int(startPos.x + w, startPos.y - m_minHeight);
+            m_polygons[0].AddTiles(height + m_minHeight, w, prevEnd + height * Vector3Int.up);
+            //adds the remaining tiles to the height of the section
+            m_polygons[0].AddTiles(m_minHeight, Mathf.Max(width - m_minWidth, 0), new Vector3Int(prevEnd.x + w, prevEnd.y + height));
+            m_lastExtraWidthPoint = new Vector3Int(prevEnd.x + w, prevEnd.y - m_minHeight);
         }
-        //если низменность
+        //if the lowland
         else
         {
-            SetLowestPoint(startPos.y + height);
-            // добавлет тайлы нового участка
-            m_polygons[0].AddTiles(m_minHeight, width, new Vector3Int(startPos.x, startPos.y + height));
-            //добавляет тайлы между предыдущим участком и новым 
+            SetLowestPoint(prevEnd.y + height);
+            //adds tiles for the new section
+            m_polygons[0].AddTiles(m_minHeight, width, new Vector3Int(prevEnd.x, prevEnd.y + height));
+            //adds tiles between the previous section and the new one 
             int w;
-            //если на предыдущем участке были добавлены внизу доп. тайлы,
-            //и последняя позиция Х такого тайла совпадает с началом X нового участка -
-            //добавить тайлы под предыдущим участком
-            if (startPos.x == m_lastExtraWidthPoint.x)
+            //if additional tiles were added at the bottom of the previous section,
+            //and the last position X of such a tile coincides with the start X of a new section -
+            //adds tiles under the previous section
+            if (prevEnd.x == m_lastExtraWidthPoint.x)
             {
-                w = Mathf.Min(m_minWidth, startPos.x - m_lastSectionPoint);
+                w = Mathf.Min(m_minWidth, prevEnd.x - m_lastSectionPoint);
             }
-            //если на предыдущем участке не было добавлено доп. тайлов внизу, 
-            //или последний тайл был до конца участка -
-            //добавить тайлы сначала между доп. тайлами и концом предыдущего участка,
-            //а затем оставшуюся часть 
+            //if no additional tiles were added at the bottom of the previous section,
+            //or the last tile was before the end of the section -
+            //adds tiles first between the additional tiles and the end of the previous section,
+            //and then the rest 
             else
             {
-                //секция между доп. тайлами снизу и концом участка
-                w = Mathf.Min(m_minWidth, startPos.x - m_lastExtraWidthPoint.x);
-                m_polygons[0].AddTiles(-height, w, new Vector3Int(startPos.x - w, startPos.y - m_minHeight));
-                //оставшаяся секция
+                //the section between the additional tiles at the bottom and the end of the section
+                w = Mathf.Min(m_minWidth, prevEnd.x - m_lastExtraWidthPoint.x);
+                m_polygons[0].AddTiles(-height, w, new Vector3Int(prevEnd.x - w, prevEnd.y - m_minHeight));
+                //the rest of the section
                 w = Mathf.Min(m_minWidth - w, m_lastExtraWidthPoint.x - m_lastSectionPoint);
             }
 
-            m_polygons[0].AddTiles(m_lastExtraWidthPoint.y - startPos.y - height + m_minHeight, w, new Vector3Int(m_lastExtraWidthPoint.x - w, m_lastExtraWidthPoint.y));
+            m_polygons[0].AddTiles(m_lastExtraWidthPoint.y - prevEnd.y - height + m_minHeight, w, new Vector3Int(m_lastExtraWidthPoint.x - w, m_lastExtraWidthPoint.y));
         }
-        m_polygons[0].AddGround(width, startPos + Vector3Int.up * height);
-        m_lastSectionPoint = startPos.x;
+        m_polygons[0].AddGround(width, prevEnd + Vector3Int.up * height);
+        m_lastSectionPoint = prevEnd.x;
         m_endPosition = new Vector3Int(m_endPosition.x, m_endPosition.y + height);
     }
     /// <summary>
-    /// Добавляет тайлы
+    /// Adds tiles
     /// </summary>
-    /// <param name="height">высота участка</param>
-    /// <param name="width">ширина участка</param>
-    /// <param name="startPos"></param>
-    /// <param name="addGround">если нужно добавить ладшафт, по умолчанию - да</param>
+    /// <param name="height">height of the tile's section</param>
+    /// <param name="width">width of the tile's section</param>
+    /// <param name="startPos">start of the tile's section</param>
+    /// <param name="addGround">if it's needed to add a landscape, yes by default</param>
     public void AddTiles(int height, int width, Vector3Int startPos, bool addGround = true)
     {
         m_polygons[m_polygons.Count - 1].AddTiles(height, width, startPos, addGround);
@@ -322,14 +322,14 @@ public class Chunk
         }
     }
     /// <summary>
-    /// Создает холм
+    /// Creates a slope
     /// </summary>
-    /// <param name="height">высота холма</param>
-    /// <param name="straightSection">ширина прямого участка на вершине холма</param>
-    /// <param name="startPos">начало холма</param>
+    /// <param name="height">slope height</param>
+    /// <param name="straightSection">width of the straight section at the top of the slope</param>
+    /// <param name="startPos">start of the slope</param>
     public void CreateSlope(int height, int straightSection, Vector3Int startPos)
     {
-        //добавляет позиции холма
+        //adds slope positions
         for (int j = 1; j <= height; j++)
         {
             for (int i = startPos.x + j; i <= startPos.x + height * 2 + straightSection - j + 1; i++)
@@ -338,18 +338,18 @@ public class Chunk
             }
         }
         SetHighestPoint(startPos.y + height);
-        //стартовая позиция холма - еще не начало, обычный участок
+        //the starting position of the slope - is not the start yet, it is an ordinary section
         m_polygons[0].AddGround(1, startPos);
-        //прямой участок на вершине хома
+        //the staright section on the top of the slope
         m_polygons[0].AddGround(straightSection, new Vector3Int(startPos.x + height + 1, startPos.y + height));
         m_polygons[0].AddGround(m_minHeight, new Vector3Int(startPos.x + height * 2 + straightSection + 1, startPos.y));
-        //прямой участок после холма
+        //the straight section after the slope
         m_polygons[0].AddTiles(m_minHeight, height * 2 + straightSection + 1 + m_minHeight, startPos);
     }
     /// <summary>
-    /// Создает выступ для перехода
+    /// Creates a ledge for the transition
     /// </summary>
-    /// <param name="pos">позиция выступа</param>
+    /// <param name="pos">ledge position</param>
     public void CreateLedge(Vector3Int pos)
     {
         int height = pos.y - (m_endPosition.y > m_startPosition.y ? m_startPosition.y : m_endPosition.y) + m_minHeight;
@@ -373,10 +373,10 @@ public class Chunk
         m_polygons.Add(polygon);
     }
     /// <summary>
-    /// Создает платформу 
+    /// Creats a platform 
     /// </summary>
-    /// <param name="pos">начало платформы</param>
-    /// <param name="width">ширина платформы</param>
+    /// <param name="pos">platform start</param>
+    /// <param name="width">platform width</param>
     public void CreatePlatform(Vector3Int pos, int width)
     {
         Polygon polygon = new Polygon();
@@ -392,9 +392,9 @@ public class Chunk
         m_polygons.Add(polygon);
     }
     /// <summary>
-    /// Проверяет, нарисован ли тайл на позиции
+    /// Checks whether the tile is drawn in position
     /// </summary>
-    /// <param name="pos">позиция тайла</param>
+    /// <param name="pos">tile position</param>
     /// <returns></returns>
     public bool PositionIsUsed(Vector3Int pos)
     {
@@ -406,11 +406,11 @@ public class Chunk
         return false;
     }
     /// <summary>
-    /// Рисует тайлы чанка в игре
+    /// Draws chunk's tiles in the game
     /// </summary>
     /// <param name="editor"></param>
-    /// <param name="callback">функция, которую нужно выполнить после отрисовки тайлов</param>
-    /// <param name="isInitial">начальный чанк</param>
+    /// <param name="callback">function to execute after rendering the tiles</param>
+    /// <param name="isInitial">if it's the initial chunk </param>
     public void DrawTiles(TileEditor editor, System.Action<HashSet<Vector3Int>> callback, bool isInitial = false)
     {
         if (!m_tilesFilled)
@@ -428,9 +428,9 @@ public class Chunk
         m_enviroment.Add(obj);
     }
     /// <summary>
-    /// Добавляет переход от этого чанка к следующему и добавляет тайлы, если переход низходящий, чтобы не было видно каонца чанка
+    /// Adds a transition from this chunk to the next and adds extra tiles if the transition is descending so the end of the chunk is not visible
     /// </summary>
-    /// <param name="transition">новый переход</param>
+    /// <param name="transition">new transition</param>
     public void AddTransition(Chunk transition, bool addExtraTiles = true)
     {
         m_nextTransition = transition;

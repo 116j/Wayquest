@@ -6,30 +6,30 @@ public class Polygon
     HashSet<Vector3Int> m_tilePositions = new HashSet<Vector3Int>();
     HashSet<Vector3Int> m_ground = new HashSet<Vector3Int>();
     /// <summary>
-    /// Отрисовывает тайлы полигона
+    /// Draws tiles of the polygon
     /// </summary>
     /// <param name="editor"></param>
-    /// <param name="callback">функция, которую нужно выполнить после отрисовки тайлов</param>
-    /// <param name="isInitial">начальный чанк</param>
+    /// <param name="callback">function to execute after rendering the tiles</param>
+    /// <param name="isInitial">if it's an initial chunk</param>
     public void DrawTiles(TileEditor editor, System.Action<HashSet<Vector3Int>> callback, bool isInitial)
     {
         editor.SetTiles(m_tilePositions, () => callback?.Invoke(m_ground), isInitial);
     }
     /// <summary>
-    /// Удаляет тайлы полигона из игры
+    /// Destroys tiles of the polygon
     /// </summary>
     /// <param name="editor"></param>
-    /// <param name="async">удалять асинхронно</param>
+    /// <param name="async">destroys async</param>
     public void ClearTiles(TileEditor editor, bool async)
     {
         editor.ClearTiles(m_tilePositions, async);
     }
     /// <summary>
-    /// Добавляет тайлы от startPosition до (startPosition.x + width,startPosition.y - height)
+    /// Adds tiles from startPosition to (startPosition.x + width,startPosition.y - height)
     /// </summary>
-    /// <param name="height">высота участка тайлов вниз</param>
-    /// <param name="width">ширина участка тайлов</param>
-    /// <param name="startPosition">начало участка тайлов</param>
+    /// <param name="height">height of the tile section is down</param>
+    /// <param name="width">width of the tiles section</param>
+    /// <param name="startPosition">start of the tiles section</param>
     public void AddTiles(int height, int width, Vector3Int startPosition, bool ground = true)
     {
         for (int i = 0; i < height; i++)

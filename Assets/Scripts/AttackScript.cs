@@ -3,19 +3,18 @@
 public class AttackScript : MonoBehaviour
 {
     [SerializeField]
-    //Номер атаки в аниматоре
+    //Attack number in the animator
     string m_animAttackParameter;
     [SerializeField]
-    //Время перезарядки атаки
     float m_attackCooldownTime = 1.5f;
     [SerializeField]
     DetectZone m_groundZone;
-    //Может ли объект атаковать сейчас
+    //If an object can attack
     public bool EnableAttack { get; set; } = true;
 
     Animator m_anim;
     Rigidbody2D m_rb;
-    //Индикатор перезарядки атаки
+    //Attack recharge indicator
     bool m_canAttack = true;
     float m_attackCooldown;
 
@@ -31,7 +30,7 @@ public class AttackScript : MonoBehaviour
         {
             m_anim.SetTrigger(m_animAttackParameter);
         }
-        //перезарядка атаки
+        //attack recharge
         else if (!m_canAttack)
         {
             m_attackCooldown += Time.deltaTime;
@@ -43,7 +42,7 @@ public class AttackScript : MonoBehaviour
         }
     }
     /// <summary>
-    /// Активирует движение вперед объекта
+    /// Activates the object's forward movement
     /// </summary>
     public void AttackMoveForward()
     {
@@ -51,7 +50,7 @@ public class AttackScript : MonoBehaviour
             m_rb.velocity = transform.right * 5f;
     }
     /// <summary>
-    /// Активирует движение назад объекта
+    /// Activates the object's backward movement
     /// </summary>
     public void AttackMoveBackwards()
     {
@@ -59,7 +58,7 @@ public class AttackScript : MonoBehaviour
             transform.position -= transform.right * 3;
     }
     /// <summary>
-    /// Останавливает движение объекта
+    /// Stops the object's movement
     /// </summary>
     public void AttackStop()
     {
@@ -67,7 +66,7 @@ public class AttackScript : MonoBehaviour
             m_rb.velocity = Vector2.zero;
     }
     /// <summary>
-    /// Останавливает атаку
+    /// Stops the attack
     /// </summary>
     public void ResetAttack()
     {

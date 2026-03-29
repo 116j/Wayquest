@@ -19,7 +19,15 @@ public class SpawnManager
         m_trapsCount = trapsCount;
         m_enemiesCount = enemiesCount;
     }
-
+    /// <summary>
+    /// Determines the chance of an object instantiation and selects an object to instantiate
+    /// </summary>
+    /// <param name="jumper"></param>
+    /// <param name="catsLeft"></param>
+    /// <param name="shop"></param>
+    /// <param name="enemy"></param>
+    /// <param name="trap"></param>
+    /// <returns></returns>
     public int ChooseSpawnObject(bool jumper, int catsLeft, bool shop, bool enemy, bool trap)
     {
         float[] chances = new float[4];

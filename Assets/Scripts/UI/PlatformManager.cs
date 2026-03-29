@@ -50,7 +50,10 @@ public class PlatformManager : MonoBehaviour
             ApplySystemLanguage();
         }
     }
-
+    /// <summary>
+    /// Connect to SDK
+    /// </summary>
+    /// <returns></returns>
     bool CheckYandexPlatform()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -65,7 +68,9 @@ public class PlatformManager : MonoBehaviour
         return false;
 #endif
     }
-
+    /// <summary>
+    /// Apply language from SDK
+    /// </summary>
     void ApplyYandexLanguage()
     {
         try

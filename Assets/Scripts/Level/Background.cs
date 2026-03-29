@@ -8,12 +8,12 @@ public class Background : MonoBehaviour
     int[] m_calmThemeBG;
 
     /// <summary>
-    /// Рандомно выбирает задний фон в зависимости от темы уровня
+    /// Randomly selects the background depending on the theme of the level 
     /// </summary>
-    /// <param name="thrmrNum">номер темы уровня</param>
-    public void SetTheme(int thrmrNum)
+    /// <param name="thrmeNum">theme's number</param>
+    public void SetTheme(int thrmeNum)
     {
-        switch (thrmrNum)
+        switch (thrmeNum)
         {
             case 0:
                 if (m_darkThemeBG.Length > 0)

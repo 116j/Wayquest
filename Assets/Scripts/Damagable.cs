@@ -17,9 +17,7 @@ public class Damagable : MonoBehaviour
     float m_freezeTime = 0f;
 
     int m_health = 4;
-    //Неуязвимость
     public bool Invincible { get; set; } = false;
-    //Замирание
     public bool Freezed { get; private set; } = false;
 
     private void Start()
@@ -38,7 +36,7 @@ public class Damagable : MonoBehaviour
                 m_recoverTimer = 0f;
             }
         }
-        //замирать на время
+        //freezes for a while
         else if (Freezed)
         {
             m_freezeTime -= Time.deltaTime;
@@ -49,7 +47,7 @@ public class Damagable : MonoBehaviour
         }
     }
     /// <summary>
-    /// При получении урона замирание останавливается
+    /// Freezed stops when taking damage
     /// </summary>
     /// <param name="damage"></param>
     public void ApplyDamage(int damage)
@@ -104,9 +102,9 @@ public class Damagable : MonoBehaviour
 
     public float GetHealthPercentage() => Mathf.Max(0, m_health) / (1.0f * m_maxHealth);
     /// <summary>
-    /// Восстанавливает полное здоровье и становится неуязвимым если нужно
+    /// Restores full health and becomes invincible if necessary
     /// </summary>
-    /// <param name="invincible">неуязвим после возрождения</param>
+    /// <param name="invincible">if invincible after reborn</param>
     public void Reborn(bool invincible = false)
     {
         m_recovering = invincible;

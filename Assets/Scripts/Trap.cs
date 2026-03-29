@@ -17,15 +17,15 @@ public class Trap : MonoBehaviour, IMetrics
     [SerializeField]
     AnimationCurve[] m_spawnChances;
     [SerializeField]
-    //Серия ловушек или одиночная
+    //Series of traps or a single one
     bool m_series;
 
     protected Animator m_anim;
     [Inject]
     protected LevelBuilder m_lvlBuilder;
-    //Номер ловушки
+    //Trap number
     int m_trapNumber;
-    //Выбран ли номер ловушки
+    //Is the trap number selected
     bool m_numberSet = false;
 
     protected virtual void Awake()
@@ -42,9 +42,9 @@ public class Trap : MonoBehaviour, IMetrics
     }
 
     /// <summary>
-    /// Задает анимации для переопределнного контроллера анимации ловушек
+    /// Sets animations for the overrided trap animation controller
     /// </summary>
-    /// <param name="animNum">номер ловувшки</param>
+    /// <param name="animNum">number of the trap</param>
     void SetAnimations(int animNum)
     {
         AnimatorOverrideController aoc = new(m_anim.runtimeAnimatorController);
@@ -56,7 +56,7 @@ public class Trap : MonoBehaviour, IMetrics
         m_anim.runtimeAnimatorController = aoc;
     }
     /// <summary>
-    /// Задает рандомный номер ловушки в зависимости от их шанса появления
+    /// Sets a random trap number depending on their chance of occurrence
     /// </summary>
     public void SetTrapNum()
     {
@@ -90,7 +90,7 @@ public class Trap : MonoBehaviour, IMetrics
 
     }
     /// <summary>
-    /// Ставит определенной номер ловушки
+    /// Sets a certain trap number
     /// </summary>
     /// <param name="num"></param>
     public void SetTrap(int num)

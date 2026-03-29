@@ -13,13 +13,13 @@ public class TouchingCheck : MonoBehaviour
 
     Collider2D m_col;
 
-    //Дистанция для определения стены
+    //Distance to determine the wall
     readonly float m_wallHitDist = 0.1f;
-    //Дистанция для определения земли
+    //Distance to determine the ground
     readonly float m_groundHitDist = 0.05f;
-    //Дистанция для определения холма
+    //Distance to determine the slope
     readonly float m_slopeHitDist = 0.2f;
-    //Ширина расширения границ для определения застревания
+    //Width of the border extension to determine the jam
     readonly float m_skinWidth = 0.02f;
 
     RaycastHit2D[] m_rayHits = new RaycastHit2D[5];
@@ -29,13 +29,13 @@ public class TouchingCheck : MonoBehaviour
         m_col = GetComponent<Collider2D>();
     }
     /// <summary>
-    /// Определяет небольшое застревание вправо или влево
+    /// Detects a slight jam to the right or left
     /// </summary>
     /// <param name="dist"></param>
     /// <returns></returns>
     public float WallsStuck(float dist)
     {
-        //cоздает вокруг объекта прямоугольник для определения застревания 
+        //creates a rectangle around the object to detect the jam 
         var hit = Physics2D.BoxCast(
             transform.position,
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
@@ -46,13 +46,13 @@ public class TouchingCheck : MonoBehaviour
         return hit.collider != null ? hit.distance : 0f;
     }
     /// <summary>
-    /// Определяет небольшое застревание вниз
+    /// Detects a slight downward jam
     /// </summary>
     /// <param name="dist"></param>
     /// <returns></returns>
     public float GroundStuck(float dist)
     {
-        //cоздает вокруг объекта прямоугольник для определения застревания 
+        //creates a rectangle around the object to detect the jam 
         var hit = Physics2D.BoxCast(
             transform.position,
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
@@ -63,7 +63,7 @@ public class TouchingCheck : MonoBehaviour
         return hit.collider != null ? hit.distance : 0f;
     }
     /// <summary>
-    /// Если застрял в земле со всех сторон, кроме верха
+    /// If it is stuck in the ground from all sides except the top
     /// </summary>
     /// <returns></returns>
     public bool IsGroundStuck()
@@ -74,7 +74,7 @@ public class TouchingCheck : MonoBehaviour
             m_col.Cast(transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) == 0;
     }
     /// <summary>
-    /// Если касается земли
+    /// If it touches the ground
     /// </summary>
     /// <returns></returns>
     public bool IsGrounded()
@@ -82,7 +82,7 @@ public class TouchingCheck : MonoBehaviour
         return m_col.Cast(-transform.up, m_groundCastFilter, m_rayHits, m_groundHitDist) > 0;
     }
     /// <summary>
-    /// Если касается стены
+    /// If it touches the wall
     /// </summary>
     /// <returns></returns>
     public bool IsWalls()
@@ -90,7 +90,7 @@ public class TouchingCheck : MonoBehaviour
         return m_col.Cast(transform.right, m_wallCastFilter, m_rayHits, m_wallHitDist) > 0;
     }
     /// <summary>
-    /// Если поднимается по холму
+    /// If he goes up the slope
     /// </summary>
     /// <returns></returns>
     public bool IsSlopeUp()
@@ -99,7 +99,7 @@ public class TouchingCheck : MonoBehaviour
         m_col.Cast(-transform.up, m_groundCastFilter, m_rayHits, m_groundHitDist) > 0;
     }
     /// <summary>
-    /// Если спускается по холму
+    /// If he goes down the slope
     /// </summary>
     /// <returns></returns>
     public bool IsSlopeDown()

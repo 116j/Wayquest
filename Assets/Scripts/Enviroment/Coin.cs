@@ -24,7 +24,7 @@ public class Coin : MonoBehaviour
         m_cost = cost;
         if (destroy)
         {
-            //подбрасывает монету вверх и удаляет ее через 10 сек
+            //flips a coin up and removes it after 10 seconds
             m_rb.AddForce(new Vector2(Random.Range(-2f, 2f), 7f), ForceMode2D.Impulse);
             Destroy(gameObject, 10f);
         }

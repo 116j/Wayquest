@@ -7,19 +7,19 @@ using UnityEngine.Tilemaps;
 public class TileEditor : MonoBehaviour
 {
     [SerializeField]
-    //Чейнджеры тайлов, которые содержат информацию о окружении конкретных тайлов
+    //Tile changers that contain information about the environment of specific tiles
     TileChanger[] m_tileChangers;
     [SerializeField]
-    //Аналоги тайлов, которые подбирают аналоги тайлов в зависимости от их окружения и темы уровня
+    //Tile analogs, which select tile analogs depending on their environment and level theme
     List<TilePlaceAnalog> m_tileAnalogs;
 
     Tilemap m_ground;
     Tilemap m_slope;
     Tilemap m_walls;
     Tilemap m_notCollidable;
-    //Словарь, где каждому тайлу соответствует его чейнджер
+    //Dictionary where each tile corresponds to its changer
     Dictionary<TileBase, TileChanger> m_tileToChanger = new Dictionary<TileBase, TileChanger>();
-    //Сколько тайлов создается за один фрейм
+    //How many tiles are created in one frame
     const int TILES_PER_FRAME = 20;
 
     int m_tilePaletteIndex;
@@ -45,10 +45,10 @@ public class TileEditor : MonoBehaviour
         m_tilePaletteIndex = num;
     }
     /// <summary>
-    /// Проверяет, есть ли над тайлом тайл травы
+    /// Checks if there is a grass tile above the tile
     /// </summary>
     /// <param name="tilePos"></param>
-    /// <returns>есть ли над тайлом тайл травы</returns>
+    /// <returns></returns>
     public bool AddGrass(Vector3Int tilePos)
     {
         TileBase tile = m_ground.GetTile(tilePos);
@@ -62,7 +62,7 @@ public class TileEditor : MonoBehaviour
 
     }
     /// <summary>
-    /// Удаляет тайлы
+    /// Destroys tiles at once
     /// </summary>
     /// <param name="tilePositions"></param>
     /// <param name="async"></param>
@@ -90,8 +90,8 @@ public class TileEditor : MonoBehaviour
         }
     }
     /// <summary>
-    /// Удаляет тайлы постепенно
-    /// Каждый фрейм удаляет TILES_PER_FRAME тайлов
+    /// Deletes tiles gradually
+    /// Each frame deletes TILES_PER_FRAME tiles
     /// </summary>
     /// <param name="tilePositions"></param>
     /// <returns></returns>
@@ -115,14 +115,14 @@ public class TileEditor : MonoBehaviour
         }
     }
     /// <summary>
-    /// Создает тайлы
+    /// Sets tiles
     /// </summary>
     /// <param name="tilePositions"></param>
-    /// <param name="callback">функция, которую нужно выполнить после создания тайлов</param>
-    /// <param name="isInitial">начальный чанк</param>
+    /// <param name="callback">function to execute after creating the tiles</param>
+    /// <param name="isInitial">is the initial chunk</param>
     public void SetTiles(HashSet<Vector3Int> tilePositions, System.Action callback, bool isInitial)
     {
-        //если начальный чанк - создает тайлы сразу
+        //if the initial chunk is created - creates tiles immediately
         if (isInitial)
         {
             InstantiateTiles(tilePositions, callback);
@@ -133,11 +133,11 @@ public class TileEditor : MonoBehaviour
         }
     }
     /// <summary>
-    /// Постепенно создает тайлы
-    /// Каждый фрейм создает TILES_PER_FRAME тайлов
+    /// Creates tiles gradually
+    /// Each frame creates TILES_PER_FRAME tiles
     /// </summary>
     /// <param name="tilePositions"></param>
-    /// <param name="callback">функция, которую нужно выполнить после создания тайлов</param>
+    /// <param name="callback">function to execute after creating the tiles</param>
     /// <returns></returns>
     public IEnumerator InstantiateTilesAsync(HashSet<Vector3Int> tilePositions, System.Action callback)
     {
@@ -147,7 +147,7 @@ public class TileEditor : MonoBehaviour
 
         Dictionary<Vector3Int, TileBase> tilemap = new Dictionary<Vector3Int, TileBase>();
         int i = 0;
-        //подбирает тайлы под конуретную позицию
+        //selects tiles for a specific position
         foreach (var pos in tilePositions)
         {
             InstantiateTile(pos, tilePositionsUsage, tilemap);
@@ -156,7 +156,7 @@ public class TileEditor : MonoBehaviour
                 yield return null;
         }
         i = 0;
-        //рисует подобранные тайлы в игре
+        //draws selected tiles in the game
         foreach (var (pos, tile) in tilemap)
         {
             SetTile(m_tileToChanger[tile], tile, pos);
@@ -168,10 +168,10 @@ public class TileEditor : MonoBehaviour
         callback?.Invoke();
     }
     /// <summary>
-    /// Сразу создает все тайлы за 1 фрейм
+    /// Creates all tiles in 1 frame at once
     /// </summary>
     /// <param name="tilePositions"></param>
-    /// <param name="callback">функция, которую нужно выполнить после создания тайлов</param>
+    /// <param name="callback">function to execute after creating the tiles</param>
     public void InstantiateTiles(HashSet<Vector3Int> tilePositions, System.Action callback)
     {
         Dictionary<Vector3Int, bool> tilePositionsUsage = new Dictionary<Vector3Int, bool>(tilePositions.Count);
@@ -179,12 +179,12 @@ public class TileEditor : MonoBehaviour
             tilePositionsUsage[pos] = false;
 
         Dictionary<Vector3Int, TileBase> tilemap = new Dictionary<Vector3Int, TileBase>();
-        //подбирает тайлы под конуретную позицию
+        //selects tiles for a specific position
         foreach (var pos in tilePositions)
         {
             InstantiateTile(pos, tilePositionsUsage, tilemap);
         }
-        //рисует подобранные тайлы в игре
+        //draws selected tiles in the game
         foreach (var (pos, tile) in tilemap)
         {
             SetTile(m_tileToChanger[tile], tile, pos);
@@ -193,34 +193,34 @@ public class TileEditor : MonoBehaviour
         callback?.Invoke();
     }
     /// <summary>
-    /// Подбирает подходящий тайл для позиции в зависимости от его окружения
+    /// Selects the appropriate tile for the position depending on its environment
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="tilePositionsUsage">словарь с позициями и индикаторами их заполнения (выбран ли на позицию тайл)</param>
-    /// <param name="tilemap">словарь с позициями и подобранными к ним тайлами</param>
+    /// <param name="tilePositionsUsage">dictionary with positions and indicators of their filling (whether a tile is selected for the position)</param>
+    /// <param name="tilemap">a dictionary with positions and tiles matched to them</param>
     void InstantiateTile(Vector3Int position, Dictionary<Vector3Int, bool> tilePositionsUsage, Dictionary<Vector3Int, TileBase> tilemap)
     {
-        //находит аналог тайла в зависимости от его окружения
+        //finds an analog of a tile depending on its environment
         TilePlaceAnalog analog = GetTileAnalog(position, tilePositionsUsage);
         if (!tilePositionsUsage[position] && analog != null)
         {
             TileBase tile = null;
             Vector3Int surPosition;
-            //подбирает все возможные тайла для аналога
+            //selects all possible tiles for an analog
             List<TileBase> tiles = new List<TileBase>(GetTilesAnalog(analog));
 
             try
             {
-                //выбирает тайлы из аналоговых, которые подходят окружению
+                //selects tiles from analog ones that match the environment
                 for (int i = 0; i < analog.surroundings.Length; i++)
                 {
                     if (analog.surroundings[i])
                     {
                         surPosition = new Vector3Int(position.x + (int)Mathf.Pow(-1, i) * (3 - i) / 2, position.y + (int)Mathf.Pow(-1, i) * i / 2);
-                        //если соседний тайл уже подобран - берет группу тайлов, которая подходит для данного тайла с учетом соседнего тайла
+                        //if the neighbor tile has already been selected - takes a tile group that is suitable for this tile, taking into account the neighbor tile
                         if (tilePositionsUsage.ContainsKey(surPosition) && tilePositionsUsage[surPosition])
                         {
-                            //если есть ограничение для данного тайла из соседнего тайла - отбирает из аналогов тайлы, которые подходят для соседнего тайла
+                            //if there is a restriction for a given tile from a neighbor tile - selects tiles from analogs that are suitable for the neighbor tile
                             if (m_tileToChanger[tilemap[surPosition]].changeTiles[i + (int)Mathf.Pow(-1, i % 2)] != null)
                                 tiles = m_tileToChanger[tilemap[surPosition]].changeTiles[i + (int)Mathf.Pow(-1, i % 2)].MatchesTiles(tiles);
                         }
@@ -228,9 +228,9 @@ public class TileEditor : MonoBehaviour
                 }
                 while (tiles.Count > 0)
                 {
-                    //выбирает рандомный тайл
+                    //chooses a random tile
                     tile = tiles[Random.Range(0, tiles.Count)];
-                    //если вдруг тайла нет - удаляет тайл с тайлмепа и выдает ошибку
+                    //if suddenly there is no tile, it deletes the tile from the tilemap and throws an exception
                     if (tile == null)
                     {
                         m_ground.SetTile(position, null);
@@ -238,36 +238,36 @@ public class TileEditor : MonoBehaviour
                         m_notCollidable.SetTile(position, null);
                         throw new System.ArgumentNullException();
                     }
-                    //чейнджер тайла
+                    //tile changer
                     TileChanger newChanger = m_tileToChanger[tile];
-                    //проходит по соседним тайлам
+                    //passes through neighbor tiles
                     for (int i = 0; i < newChanger.analogTiles.surroundings.Length; i++)
                     {
                         surPosition = new Vector3Int(position.x + (int)Mathf.Pow(-1, i) * (3 - i) / 2, position.y + (int)Mathf.Pow(-1, i) * i / 2);
-                        //соседний тайл
+                        //neighbor tile
                         tilemap.TryGetValue(surPosition, out TileBase surTile);
 
                         if (newChanger.analogTiles.surroundings[i])
                         {
-                            //если соседний тайл не подходит данному тайлу и наоборот - удаляет тайл из возможных тайлов и начинает заново с другим тайлом
+                            //if the neighbor tile does not match this tile and vice versa - removes the tile from the possible tiles and starts over with another tile
                             if (tilePositionsUsage.ContainsKey(surPosition) && CheckSurrounding(tile, surPosition, i, tilePositionsUsage, tilemap))
                             {
                                 tiles.Remove(tile);
                                 break;
                             }
                         }
-                        //если соседний тайл поставлен, но нулевой, удаляет каждый тайл
+                        //if an adjacent tile is set but null -  deletes tile from the list
                         else if (tilePositionsUsage.ContainsKey(surPosition) && surTile == null)
                         {
                             tiles.Remove(tile);
                             break;
                         }
-                        //если была трава, а теперь не нужна - удалить ее
+                        //If there was grass, but now it isn't needed - removes it
                         else if (i == 2 && tilemap.ContainsKey(surPosition) && surTile != null && !newChanger.addGrass)
                         {
                             tilemap[surPosition] = null;
                         }
-                        //если нужно добавить траву
+                        //if it's needed to add grass
                         else if (i == 2 && newChanger.addGrass)
                         {
                             tilemap[surPosition] = newChanger.changeTiles[i].GetTiles()[Random.Range(0, newChanger.changeTiles[i].GetTiles().Count)];
@@ -289,48 +289,48 @@ public class TileEditor : MonoBehaviour
         }
     }
     /// <summary>
-    /// Проверяет, подходит ли данный тайл для соседнего тайла и наоборот
+    /// Checks whether a given tile is suitable for an neighbor tile and vice versa
     /// </summary>
-    /// <param name="tile">тайл для проверки</param>
-    /// <param name="surPos">позиция соседнего тайла</param>
-    /// <param name="surIndex">номер группы окружени соседнего тайла в чейнджере текущего тайла</param>
-    /// <param name="tilePositionsUsage">подобранные тайлы</param>
-    /// <param name="tilemap">словарь с позициями и подобранными к ним тайлами</param>
-    /// <returns>тайл не подходит</returns>
+    /// <param name="tile"></param>
+    /// <param name="surPos">position of the neighbor tile</param>
+    /// <param name="surIndex">the number of the neighbor tile's surrounding group in the current tile's changer</param>
+    /// <param name="tilePositionsUsage">chosen tiles</param>
+    /// <param name="tilemap">dictionary with positions and tiles matched to them</param>
+    /// <returns>tile doesn't fit</returns>
     bool CheckSurrounding(TileBase tile, Vector3Int surPos, int surIndex, Dictionary<Vector3Int, bool> tilePositionsUsage, Dictionary<Vector3Int, TileBase> tilemap)
     {
         TilePlaceAnalog surAnalog = GetTileAnalog(surPos, tilePositionsUsage);
 
         tilemap.TryGetValue(surPos, out TileBase surTile);
-        //если для данного тайла соседний тайл должен ограничиваться группой
+        //if for a given tile, the neighbor tile should be limited to a group
         if (m_tileToChanger[tile].changeTiles[surIndex] != null)
         {
-            //если соседний тайл уже подобран - проверить, есть ли он в группе окружения чейнджера
+            //if the neighbor tile has already been selected - check if it is in the surrounding group of the changer
             if (tilePositionsUsage[surPos])
-                //окружение чейнджера текущего тайла не содержит соседний тайл
+                //the surroundings of the current tile's changer does not contain the neighbor tile
                 return !m_tileToChanger[tile].changeTiles[surIndex].ContainsTile(surTile) ||
-                //окружение чейнджера соседнего тайла не содержит текущий тайл
+                //the surroundings of the neighbor tile's changer does not contain the current tile
                 (m_tileToChanger[surTile].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)] != null && !m_tileToChanger[surTile].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)].ContainsTile(tile));
             else
-                //если соседний тайл еще не подобран - проверить, есть ли варианты, подходящие для тайла
-                //аналогов соседнего тайла нет в группе окружения чейнджера
+                //if the neighbor tile has not been selected yet - checks if there are any suitable options for the tile
+                //there are no analogs of the neighbor tile in the surrounding group of the changer
                 return m_tileToChanger[tile].changeTiles[surIndex].MatchesTiles(GetTilesAnalog(surAnalog)).Count == 0 ||
                 //окружение чейнджеров всех аналогов соседнего тайла не содержит текущий тайл
                 GetTilesAnalog(surAnalog).All(a => a != null && m_tileToChanger[a].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)] != null && !m_tileToChanger[a].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)].ContainsTile(tile));
         }
         else
         {
-            //если соседний тайл подобран
+            //if the neighbor tile is chosen
             if (tilePositionsUsage[surPos])
-                //окружение чейнджера соседнего тайла не содержит текущий тайл
+                //the surroundings of the neighbor tile's changer does not contain the current tile
                 return m_tileToChanger[surTile].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)] != null && !m_tileToChanger[surTile].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)].ContainsTile(tile);
             else
-                //окружение чейнджеров всех аналогов соседнего тайла не содержит текущий тайл
+                //the surroundings of the changers of all analogs of the neighbor tile does not contain the current tile
                 return GetTilesAnalog(surAnalog).All(a => a != null && m_tileToChanger[a].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)] != null && !m_tileToChanger[a].changeTiles[surIndex + (int)Mathf.Pow(-1, surIndex % 2)].ContainsTile(tile));
         }
     }
     /// <summary>
-    /// Тайлы аналога тайла в зависимости от темы уровня
+    /// Tiles of the tile's analog, depending on the theme of the level
     /// </summary>
     /// <param name="analog"></param>
     /// <returns></returns>
@@ -344,9 +344,9 @@ public class TileEditor : MonoBehaviour
         };
     }
     /// <summary>
-    /// Берет название тайлмепа из чейнджера тайла и ставит тайл на тайлмепе
+    /// Takes the name of the tilemap from the tile changer and puts the tile on the tilemap
     /// </summary>
-    /// <param name="changer">ченджера</param>
+    /// <param name="changer"></param>
     /// <param name="tile"></param>
     /// <param name="position"></param>
     void SetTile(TileChanger changer, TileBase tile, Vector3Int position)
@@ -369,7 +369,7 @@ public class TileEditor : MonoBehaviour
         }
     }
     /// <summary>
-    /// Пытается достать тайл из каждой тайлмеп
+    /// Trys to get a tile out of each tilemap
     /// </summary>
     /// <param name="position"></param>
     /// <returns>tile</returns>
@@ -396,14 +396,14 @@ public class TileEditor : MonoBehaviour
         return null;
     }
     /// <summary>
-    /// Находит аналолг тайла в зависимости от его окружения
+    /// Finds an analog of a tile depending on its surroundings
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="tilePositionsUsage">подобранные ранее тайлы</param>
+    /// <param name="tilePositionsUsage">tiles that were selected earlier</param>
     /// <returns></returns>
     public TilePlaceAnalog GetTileAnalog(Vector3Int position, Dictionary<Vector3Int, bool> tilePositionsUsage)
     {
-        //находит аналоги, которые соответствуют окружающим подобранным тайлам
+        //finds analogs that match the surrounding selected tiles
         TilePlaceAnalog result = m_tileAnalogs.Find(a =>
         {
             for (int i = 0; i < 4; i++)
@@ -415,7 +415,7 @@ public class TileEditor : MonoBehaviour
             }
             return true;
         });
-        //если у аналога есть дубль с таким же окружением - уточняет окружение
+        //if an analog has a double with the same surroundings - clarifies the surroundings
         if (result != null && result.placeAnalog != null)
         {
             bool isSlopeConditionMet = result.tilemapTag == "slope"

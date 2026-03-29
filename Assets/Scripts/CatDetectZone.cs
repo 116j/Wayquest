@@ -11,7 +11,7 @@ public class CatDetectZone : DetectZone
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        //если в зоне кот - остановить кота
+        //if the cat in the cat zone - stops it
         if (collision.CompareTag(m_tag) && collision.TryGetComponent<Cat>(out m_cat))
         {
             if (m_cat.CanPet)
@@ -34,7 +34,7 @@ public class CatDetectZone : DetectZone
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
-        //если в зоне был кот - возобновить движение
+        //if the cat was in the cat zone - restarts walking
         if (collision.CompareTag(m_tag))
         {
             m_onTrigger.Invoke(false);
@@ -44,9 +44,9 @@ public class CatDetectZone : DetectZone
         }
     }
     /// <summary>
-    /// Начало или конец поглаживания кота
+    /// The start or the end of the petting
     /// </summary>
-    /// <param name="pet">начинает гладить или заканчивает</param>
+    /// <param name="pet">if starts the petting</param>
     public void ApplyPet(bool pet)
     {
         if (m_cat != null)

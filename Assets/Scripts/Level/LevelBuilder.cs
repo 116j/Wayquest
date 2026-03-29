@@ -38,24 +38,23 @@ public class LevelBuilder : MonoBehaviour
     PlatformManager m_platformManager;
 
     List<Chunk> m_chunks;
-    //Стратегии, использованные для чанков
+    //Used chunk strategies
     List<FillStrategy> m_usedChunksStrategies = new List<FillStrategy>();
-    //Стратегии, использованные для переходов
+    //Used transition strategies
     List<FillStrategy> m_usedTransitionStrategies = new List<FillStrategy>();
     FillStrategy[] m_strategies;
     Chunk m_currentChunk;
     bool m_changeTransposer = false;
-    //Нужно ли включить ли границы перехода
+    //Should transition camera bounds be turn on
     bool m_transitionBounds = true;
-    //Нужно ли включить границы чанка
+    //Should chunk camera bounds be turn on
     bool m_chunkBounds = true;
-    //Количество созданных чанков
+    //Number of created chunks
     int m_chunksCount = 0;
-    //Индекс текущего чанка в массиве чанков
+    //Index of the current chunk in the chunk array
     int m_chunkIndex = 0;
-    //Индекс чанка, на котором нужно уже создать новый чанк
+    //Index of the chunk that needs to be created next
     int m_newChunkIndex = 1;
-    //Создан ли финальный чанк
     bool m_isFinalChunkSpawned = false;
 
     bool m_newChunk = false;
@@ -81,7 +80,7 @@ public class LevelBuilder : MonoBehaviour
         {
             m_container.Inject(strategy);
         }
-        //создает в начале 3 чанка после начального
+        //spawns in the begining 3 chunks
         SpawnChunk();
         SpawnChunk();
         SpawnChunk();
@@ -99,20 +98,20 @@ public class LevelBuilder : MonoBehaviour
 
     void Update()
     {
-        //игрок вернулся на предыдущий чанк
+        //the player returned to the previous chunk
         if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetPreviousTransition().GetStartPosition().x)
         {
             if (m_chunkIndex > 0)
             {
-                //если чанк с пространством для падения - ставит границы камеры
-                //и чекпоинт для падения на конец предыдущего чанка
+                //if there is a chunk with space for falling - sets the camera bounds
+                //and a checkpoint for falling to the end of the previous chunk
                 if (IsChunkWithFallSpace(m_chunkIndex))
                 {
                     m_chunkBounds = true;
                     m_transitionBounds = false;
                     m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex - 1].GetEndPosition(), false);
                 }
-                //иначе ставит чекпоинт для падения на начало этого чанка
+                //otherwise, sets a checkpoint for falling at the beginning of this chunk
                 else
                 {
                     m_player.SetChunkCheckpoint(m_currentChunk.GetStartPosition(), true);
@@ -120,7 +119,7 @@ public class LevelBuilder : MonoBehaviour
 
                 m_currentChunk = m_chunks[--m_chunkIndex];
 
-                //если предыдущий чанк с пространством для падения - ставит границы камеры
+                //if the previous chunk has space for falling - sets camera bounds
                 if (IsChunkWithFallSpace(m_chunkIndex))
                 {
                     m_chunkBounds = true;
@@ -128,35 +127,35 @@ public class LevelBuilder : MonoBehaviour
                 }
             }
         }
-        //если игрок уходит с чанка вперерд
+        //if the player leaves the chunk ahead
         else if (m_currentChunk != null && m_player.transform.position.x > m_currentChunk.GetEndPosition().x)
         {
-            //если чанк с пространством для падения - ставит границы камеры
-            //и чекпоинт для падения на начало следующего чанка
+            //if there is a chunk with space for falling - sets the camera bounds
+            // and a checkpoint for falling at the beginning of the next chunk
             if (IsChunkWithFallSpace(m_chunkIndex))
             {
                 m_chunkBounds = true;
                 m_transitionBounds = false;
                 m_player.SetChunkCheckpoint(m_chunks[m_chunkIndex + 1].GetStartPosition(), true);
             }
-            //иначе ставит чекпоинт для падения на конец этого чанка
+            //otherwise puts a checkpoint for falling at the end of this chunk
             else
             {
                 m_player.SetChunkCheckpoint(m_currentChunk.GetEndPosition(), false);
             }
-            //если игрок на последнем чанке, до которого он добрался (не уходил назад) и не был создан еще финальный чанк
-            //создает новый чанк
+            //if the player is on the last chunk he reached (did not go back) and the final chunk has not been created yet
+            //creates a new chunk
             if (m_newChunkIndex == m_chunkIndex + 1 && !m_isFinalChunkSpawned)
             {
                 SpawnChunk();
                 m_newChunkIndex++;
             }
-            //убирает чанки в начале, если надо
+            //removes chunks at the beginning, if necessary
             ClearChunk();
 
             m_currentChunk = m_chunks[++m_chunkIndex];
 
-            //если следующий чанк с пространством для падения - ставит границы камеры
+            //if the next chunk has space to fall - sets the camera bounds
             if (IsChunkWithFallSpace(m_chunkIndex))
             {
                 m_chunkBounds = true;
@@ -167,7 +166,7 @@ public class LevelBuilder : MonoBehaviour
                 m_newChunk = true;
             }
         }
-        //если игрок на переходе и нужно включить границы камеры пререхода
+        //if the player is on the transition and it's needed to set the transition camera bounds
         else if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetStartPosition().x && m_transitionBounds)
         {
             //меняет сдвиг в камере выше, если перход нисходящий и сдвиг не был изменен
@@ -184,22 +183,23 @@ public class LevelBuilder : MonoBehaviour
             {
                 m_newChunk = false;
             }
-            //сигнал, что границы перехода включены 
+            //signal that the transition bounds ares set
             m_transitionBounds = false;
             m_chunkBounds = true;
-            //ставит границы камеры перехода
+            //sets transition camera bounds
             m_currentChunk.SetTransitionCameraBounds();
             m_player.SetCameraBoundsHeight(Mathf.Abs(m_currentChunk.GetTransitionHeight()));
         }
-        //если игрок на чанке и нужно включить границы камеры чанка
+        //if the player is on a chunk and and it's needed to set the chunk camera bounds
         else if (m_currentChunk != null && m_player.transform.position.x >= m_currentChunk.GetStartPosition().x && m_chunkBounds)
         {
-            //если финальный чанк - ставит точку перерождения в начале чанка
+            //if there is a final chunk - puts a reborn point at the beginning of the chunk
             if (m_chunksCount >= m_values.m_chunksCount && m_chunkIndex == m_chunks.Count - 1)
             {
                 m_player.SetRebornCheckpoint(m_currentChunk.GetStartPosition());
             }
-            //если чанк с пространством для падения, нисходящий и не было сдвига, или ничего из этого и уже был сдвиг - меняет сдвиг камеры
+            //if a chunk with space for falling is descending and there was no shift,
+            //or none of this and there was already a shift - the camera shift changes
             if (IsChunkWithFallSpace(m_chunkIndex)
                 && (m_currentChunk.GetEndPosition().y < m_currentChunk.GetStartPosition().y)
                 && !m_changeTransposer
@@ -208,31 +208,31 @@ public class LevelBuilder : MonoBehaviour
                 m_changeTransposer = !m_changeTransposer;
                 m_player.ChangeTransposerHeight(m_changeTransposer);
             }
-            //сигнал, что границы чанка включены 
+            //signal that the chunk bounds ares set 
             m_transitionBounds = true;
             m_chunkBounds = false;
-            //ставит границы камеры чанка
+            //sets chunk camera bounds
             m_currentChunk.SetCameraBounds();
             m_player.SetCameraBoundsHeight(m_currentChunk.GetChunkCameraHeight());
         }
     }
     /// <summary>
-    /// Проверяет, есть ли у чанка пространство для падения
+    /// Checks if the chunk has space for falling
     /// </summary>
-    /// <param name="index">индекс существующего чанка</param>
-    /// <returns>true - есть пространство для падения</returns>
+    /// <param name="index">index of the chunk</param>
+    /// <returns>true - has space for falling</returns>
     bool IsChunkWithFallSpace(int index)
     {
         return m_usedChunksStrategies[index] is GridStrategy
                     || m_usedChunksStrategies[index] is MovingPlatformStrategy
                     || m_usedChunksStrategies[index] is DestroyableBrickStrategy;
     }
-    //Количество созданных чанков относительно количества чанков на уровне
+    //Number of chunks created is relative to the number of chunks per level
     public float LevelProgress() => m_chunksCount * 1f / m_values.m_chunksCount;
-    //Количество чанков на уровне всего
+    //Number of created chuncks
     public int GetLevelChunksCount() => m_values.m_chunksCount;
     /// <summary>
-    /// Сообщает, что кошек погладили или они разрушены
+    /// Notifies that cats have been petted or destroyed
     /// </summary>
     /// <param name="cats"></param>
     public void CatPetted(int cats)
@@ -245,7 +245,7 @@ public class LevelBuilder : MonoBehaviour
         m_strategies[0].ShopDestroyed();
     }
     /// <summary>
-    /// Устанавливает тройной прыжок игрока для всех стратегий
+    /// Sets the player's triple jump for all strategies
     /// </summary>
     public void SetTripleJump()
     {
@@ -259,15 +259,15 @@ public class LevelBuilder : MonoBehaviour
         m_strategies[0].IncreaseBossHealth();
     }
     /// <summary>
-    /// Создает чанк из рандомной стратегии
+    /// Creates a chunk from a random strategy
     /// </summary>
     void SpawnChunk()
     {
         m_chunksCount++;
-        //начальный чанк
+        //initial chunk
         if (m_chunksCount == 1)
         {
-            //стратегия перехода от начального чанка
+            //transition strategy from the initial chunk
             FillStrategy startTransitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
             m_chunks = new List<Chunk>
             {
@@ -277,7 +277,7 @@ public class LevelBuilder : MonoBehaviour
             m_usedTransitionStrategies.Add(startTransitionStrategy);
             m_currentChunk = m_chunks[0];
         }
-        //если все чанки уровня созданы - создает финальный чанк
+        //if all the chunks of the level are created - creates the final chunk
         else if (m_chunksCount > m_values.m_chunksCount)
         {
             m_isFinalChunkSpawned = true;
@@ -288,19 +288,19 @@ public class LevelBuilder : MonoBehaviour
         else
             while (true)
             {
-                //стратегия для создания чанка
+                //chunk strategy
                 FillStrategy сhunckStrategy = m_strategies[GetWeightedIndex(m_values.m_strategyWeights)];
-                //если последний чанк был с пространством для падения, 
-                //и этот чанк тоже, то меняет стратегию, т.к. они не могут идти подряд
+                //if the last chunk had space for falling
+                // and this chunk too, then it changes strategy, because they cannot go in a row
                 if (IsChunkWithFallSpace(m_usedChunksStrategies.Count - 1) &&
                     (сhunckStrategy is GridStrategy
                     || сhunckStrategy is MovingPlatformStrategy
                     || сhunckStrategy is DestroyableBrickStrategy))
                     continue;
-                //стратегия для перехода
+                //transition strategy
                 FillStrategy transitionStrategy = m_strategies[Random.Range(0, m_strategies.Length)];
                 Chunk chunck = сhunckStrategy.FillChunk(m_chunks.Last(), transitionStrategy);
-                //если не получилось создать чанк - меняет стратегию
+                //if can't create a chunk - changes strategy.
                 if (chunck == null)
                     continue;
                 m_usedChunksStrategies.Add(сhunckStrategy);
@@ -310,7 +310,7 @@ public class LevelBuilder : MonoBehaviour
             }
     }
     /// <summary>
-    /// Выбирает номер элемента массива в зависисмости от весов
+    /// Selects the index of from the array depending on the weights
     /// </summary>
     /// <returns></returns>
     public int GetWeightedIndex(float[] weights)
@@ -327,10 +327,13 @@ public class LevelBuilder : MonoBehaviour
                 return i;
             }
         }
-        //если сумма меньше чисел, то возвращает последнее
+        //if the sum is less than the value - returns the last one.
         return weights.Length - 1;
     }
-    //Процент вероятности генерации чанков с врагами от генерацыии других чанков
+    /// <summary>
+    /// Percentage of the probability of generating chunks with enemies from generating other chunks
+    /// </summary>
+    /// <returns></returns>
     public float GetEnemySpawnChance()
     {
         float floorChunks = m_values.m_strategyWeights[0] + m_values.m_strategyWeights[1];
@@ -340,7 +343,7 @@ public class LevelBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// Удаляет первый чанк, если сзади осталось больше 3х чанков
+    /// Deletes the first chunk if there are more than 3 chunks left behind
     /// </summary>
     void ClearChunk()
     {
@@ -350,18 +353,18 @@ public class LevelBuilder : MonoBehaviour
             m_chunks.RemoveAt(0);
             m_usedChunksStrategies.RemoveAt(0);
             m_usedTransitionStrategies.RemoveAt(0);
-            //если первый чанк с пространством для падения - берет второй как начальный
+            //if the first chunk has space for falling - takes the second as the initial one
             int i = IsChunkWithFallSpace(0) ? 1 : 0;
             m_chunkIndex--;
             m_newChunkIndex--;
-            //создает вертикальную границу на 2 чанке и устанавливает там точку возрождения
+            //creates a vertical border on the 2nd chunk and sets a reborn point there
             m_chunks[i].AddEnviromentObject(m_usedChunksStrategies[i].CreateVerticalBounds(m_chunks[i].GetStartPosition()));
             m_player.SetRebornCheckpoint(m_chunks[i].GetStartPosition());
         }
     }
     /// <summary>
-    /// Перезапускает чанки (врагов, котов) при возрождении игрока, 
-    /// ставит текущим чанком первый, если подходит
+    /// Restarts chunks (enemies, cats) when the player is revived,
+    /// puts the current chunk first if it fits
     /// </summary>
     public void Restart()
     {
@@ -371,14 +374,14 @@ public class LevelBuilder : MonoBehaviour
         {
             m_chunks[i].Restart();
         }
-        //если первый чанк с пространством для падения - берет второй как начальный
+        //if the first chunk has space for falling - takes the second as the initial one
         m_chunkIndex = IsChunkWithFallSpace(0) ? 1 : 0;
         m_currentChunk = m_chunks[m_chunkIndex];
         m_transitionBounds = false;
         m_chunkBounds = true;
     }
     /// <summary>
-    /// Перезапускает кирпичи для чанка и переходов сдади и спереди, если нужно
+    /// Restarts bricks for chunk and transitions from the back and front, if necessary
     /// </summary>
     public void RestartBricks()
     {

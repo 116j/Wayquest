@@ -29,9 +29,9 @@ public class AdManager : MonoBehaviour
     private static extern void ShowRewardedAdForBonus();
 #endif
     /// <summary>
-    /// Отправляет в index.html запрос на просмотр рекламы
+    /// Sends to index.html request to view an ad
     /// </summary>
-    /// <param name="purpose">номер причины просмотра рекламы</param>
+    /// <param name="purpose">ad purpose number</param>
     public void ShowAd(int purpose)
     {
         m_currentAd = (AdPurpose)purpose;
@@ -76,11 +76,11 @@ public class AdManager : MonoBehaviour
             Debug.Log("An ad is watched.");
             switch (m_currentAd)
             {
-                //игрок возраждается с полным здоровьем
+                //The player revievs with full HP
                 case AdPurpose.Revive:
                     m_adResult = Revive;
                     break;
-                //добавляет 500 монет
+                //adds 500 coins
                 case AdPurpose.Bonus:
                     m_adResult = AdBonus;
                     break;

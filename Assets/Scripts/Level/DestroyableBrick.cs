@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//Типы разрущения кирпича
+//Types of brick destruction
 public enum BrickBehaviour
 {
     None,
@@ -18,11 +18,11 @@ public class DestroyableBrick : MonoBehaviour
     BrickBehaviour m_behaviour;
 
     Animator m_anim;
-    //Группа кирпичей
+    //Brick's group
     List<DestroyableBrick> m_group;
 
     float m_timer;
-    //Время до разрушения
+    //Brick destroy time
     readonly float m_destroyTime = 0.3f;
     Vector3 m_offset = new Vector3(0, -0.501f);
     bool m_destroyed = false;
@@ -61,12 +61,12 @@ public class DestroyableBrick : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //Тип разрушения НА ВХОДЕ - разрушает группу кирпичей, когда игрок ступает на один из них
+            //ENTER Destruction Type - destroys a group of bricks when the player steps on one of them
             if (m_behaviour == BrickBehaviour.OnEnter && !m_destroyed)
             {
                 DestroyBrick();
             }
-            //Тип разрушения ТАЙМЕР - запускает таймер, когда игрок ступает на кирпич, и после его истечения разрушаем группу кирпичей
+            //Destruction Type TIMER - starts the timer when the player steps on a brick, and after it expires, we destroy a group of bricks
             else if (m_behaviour == BrickBehaviour.Timer && !m_destroyed)
             {
                 m_timer = m_destroyTime;
@@ -78,7 +78,7 @@ public class DestroyableBrick : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //Тип разрушения НА ВЫХОДЕ - разрушает группу кирпичей, когда игрок уходит с одного из них
+            //EXIT Destruction Type - destroys a group of bricks when the player leaves one of them
             if (m_behaviour == BrickBehaviour.OnExit && !m_destroyed)
             {
                 DestroyBrick();
@@ -86,7 +86,7 @@ public class DestroyableBrick : MonoBehaviour
         }
     }
     /// <summary>
-    /// Разрушает все кирпичи в группе
+    /// Destroys all the bricks in the group
     /// </summary>
     void DestroyBrick()
     {
@@ -100,7 +100,7 @@ public class DestroyableBrick : MonoBehaviour
         }
     }
     /// <summary>
-    /// Сбрасывает таймер и возвращаем кирпич
+    /// Resets the timer and returns the brick
     /// </summary>
     public void Restart()
     {

@@ -55,9 +55,9 @@ public class UIController : MonoBehaviour
     int m_currentHeart;
     readonly Vector3 m_heratSize = new Vector3(32.5f, 27);
 
-    //Текущее здоровье
+    //Current health
     public int CurrentHearts => m_currentHeart + 1;
-    //Максимальное здоровье
+    //Max health
     public int AllHerats => m_hearts.Count;
 
     int m_money = 0;
@@ -89,7 +89,7 @@ public class UIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Добавляет сердце к макс количеству сердец
+    /// Adds a heart to the max number of hearts
     /// </summary>
     public void AddHeart()
     {
@@ -108,7 +108,7 @@ public class UIController : MonoBehaviour
         m_hearts.Add(image);
     }
     /// <summary>
-    /// Прибавляет деньги
+    /// Adds money
     /// </summary>
     /// <param name="amount"></param>
     public void AddMoney(int amount, bool playSound = false)
@@ -117,12 +117,12 @@ public class UIController : MonoBehaviour
         {
             m_moneyAudio.Play();
         }
-        //рассчитывает длительность анимации
+        //calculates the duration of the animation
         float baseDuration = Mathf.Abs(amount) * Time.deltaTime;
         float duration = Mathf.Clamp(baseDuration, 0.5f, 3f);
         m_currentMoney = m_money;
         m_money += amount;
-        //медленно пребавляет деньги, чтобы было видно игроку
+        //slowly adds money to make it visible to the player
         DOTween.To(
             () => m_currentMoney,
             x =>
@@ -137,7 +137,7 @@ public class UIController : MonoBehaviour
 
     }
     /// <summary>
-    /// Обновляет текст денег
+    /// Updates the money text
     /// </summary>
     void UpdateMoneyText()
     {
@@ -147,9 +147,9 @@ public class UIController : MonoBehaviour
     public float GetMoney() => m_money;
 
     /// <summary>
-    /// Убирает или добавляет здоровье игрока
+    /// Decreases or increases player's health
     /// </summary>
-    /// <param name="damage">урон или здоровье</param>
+    /// <param name="damage">damage or health</param>
     public void ChangeHearts(int damage)
     {
         for (int i = 0; i < Mathf.Abs(damage); i++)
@@ -167,17 +167,17 @@ public class UIController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Заполнение шкалы рывка
+    /// Filling in the dash scale
     /// </summary>
-    /// <param name="fill">насколько заполнен</param>
+    /// <param name="fill">how full is it</param>
     public void SetDashSprite(float fill)
     {
         m_dashBar.sprite = m_dashSprites[Mathf.FloorToInt(fill * (m_dashSprites.Length - 1))];
     }
     /// <summary>
-    /// Показывает или скрывает здоровье, деньги и шкалу рывка
+    /// Shows or hides health, money, and the dash scale
     /// </summary>
-    /// <param name="set">показать</param>
+    /// <param name="set"></param>
     public void SetStats(bool set)
     {
         m_healthLayout.SetActive(set);
@@ -185,7 +185,7 @@ public class UIController : MonoBehaviour
         m_moneyLayout.SetActive(set);
     }
     /// <summary>
-    /// Открывает меню магазина
+    /// Opens the shop's menu
     /// </summary>
     public void OpenShop()
     {
@@ -194,7 +194,7 @@ public class UIController : MonoBehaviour
         m_shop.Greet();
     }
     /// <summary>
-    /// Запускает текст о выигрыше и меню возвращения в меню
+    /// Launches the winning text and the return menu 
     /// </summary>
     public void Win()
     {
@@ -205,7 +205,7 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
     /// <summary>
-    /// Запускает текст о смерти и меню перезапуска
+    /// Launches the death text and the restart menu
     /// </summary>
     /// <param name="active"></param>
     public void Die(bool active)
@@ -215,7 +215,7 @@ public class UIController : MonoBehaviour
         Cursor.visible = active;
         m_input.LockInput(active);
         Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
-        //если умеер во время битвы с боссом - нельзя продожить, только перезапуск
+        //If dies during a boss battle - cannot continue, only restart 
         //m_continueButton.SetActive(!m_boss);
         //m_dieButtonsLayout.sizeDelta = m_boss ? new Vector2(m_dieButtonsLayout.sizeDelta.x, 90) : new Vector2(m_dieButtonsLayout.sizeDelta.x, 170);
     }
@@ -238,7 +238,7 @@ public class UIController : MonoBehaviour
         Time.timeScale = pause || m_ad || m_menu ? 0 : 1;
     }
     /// <summary>
-    /// Если игрок умер во время битвы с боссом
+    /// If the player died during a boss battle
     /// </summary>
     internal void Boss()
     {

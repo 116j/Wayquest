@@ -4,13 +4,13 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu]
 public class TileChanger : ScriptableObject
 {
-    //Главные тайлы
+    //Main tiles
     public TileBase[] tiles;
-    //Группа аналогов для тайлов
+    //Group of analog for tiles
     public TilePlaceAnalog analogTiles;
-    //Нужно ли добавить тайл травы сверху
+    //Does a grass need to be added
     public bool addGrass;
-    //Четыре группы соседних тайлов
-    //Если нет ограничений к окружающему тайлу - null
+    //Four groups of neighboring tiles
+    //If there are no restrictions on the surrounding tile - null
     public TileGroup[] changeTiles;
 }

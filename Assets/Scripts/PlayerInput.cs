@@ -108,20 +108,20 @@ public class PlayerInput : MonoBehaviour
         m_input.uiInputModule.cancel.action.performed += m_menu.CloseLayout;
     }
     /// <summary>
-    /// Блокирует и разблокитрует ввод
+    /// Locks and unlocks input
     /// </summary>
-    /// <param name="toLock">блокировать</param>
+    /// <param name="toLock"></param>
     public void LockInput(bool toLock)
     {
         m_inputLocked = toLock;
     }
     /// <summary>
-    /// Тип устройства ввода - клавиатура или джойстик
+    /// Input device type - keyboard or joystick
     /// </summary>
-    /// <returns>название типа</returns>
+    /// <returns>type name</returns>
     public string GetCurrentDeviceType() => m_input.currentControlScheme;
     /// <summary>
-    /// Включает и выключает возможность взаимодействия с магазином
+    /// Enables and disables the ability to interact with the shop
     /// </summary>
     public void EnableShop(bool enable)
     {
@@ -135,7 +135,7 @@ public class PlayerInput : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
     /// <summary>
-    /// Ставит и снимает с паузы игру
+    /// Pauses and unpauses the game
     /// </summary>
     public void OnPause()
     {
@@ -197,7 +197,7 @@ public class PlayerInput : MonoBehaviour
         m_pet = value.isPressed;
     }
     /// <summary>
-    /// Открывает меню магазина
+    /// Opens or closes the shop
     /// </summary>
     void OnShop()
     {

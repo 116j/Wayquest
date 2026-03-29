@@ -9,15 +9,15 @@ public class MovingPlatform : MonoBehaviour
     float m_waitTime = 0.5f;
 
     List<Vector3> m_checkpoints = new List<Vector3>();
-    //Список сигналов останововк на точках (true - остановиться)
+    //List of stop signals at checkpoints (true - stop)
     List<bool> m_stops = new List<bool>();
     int m_currentCheckpoint;
     float m_waitTimer;
 
     bool m_waiting = false;
-    //Началось ли движение
+    //If the movement has started
     bool m_start = true;
-    //Начать движение только при соприкосновении с игроком
+    //Starts the movement only when the player collides
     bool m_moveWnenStand = false;
 
     private void Start()
@@ -28,7 +28,7 @@ public class MovingPlatform : MonoBehaviour
 
     void Update()
     {
-        //ожидание перед дальнейшим движением
+        //waiting before moving on
         if (m_waiting)
         {
             m_waitTimer += Time.deltaTime;
@@ -40,7 +40,7 @@ public class MovingPlatform : MonoBehaviour
         }
         else if (m_start)
         {
-            //движется к следующей точке по кругу 
+            //moves to the next point in a circle 
             transform.position = Vector3.MoveTowards(transform.position, m_checkpoints[m_currentCheckpoint], m_speed * Time.deltaTime);
 
             if (Vector3.Distance(m_checkpoints[m_currentCheckpoint], transform.position) < 0.02f)
@@ -50,7 +50,7 @@ public class MovingPlatform : MonoBehaviour
             }
         }
     }
-    //При соприкосновении с игрком начинает движение (если m_moveWnenStand)
+    //When it collides with the player, it starts moving (if m_moveWnenStand)
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -85,7 +85,7 @@ public class MovingPlatform : MonoBehaviour
 
     public float GetSpeed() => m_speed;
     /// <summary>
-    /// Платформа начнет двигаться, когда на нее наступит игрок
+    /// The platform will start moving when the player steps on it
     /// </summary>
     public void DisableAutoMovement()
     {
@@ -105,9 +105,9 @@ public class MovingPlatform : MonoBehaviour
         m_stops.Add(stop);
     }
     /// <summary>
-    /// Возвращает платформу на начальную позицию
+    /// Returns the platform to its initial position
     /// </summary>
-    /// <param name="enemy">нужно ли ждать убийства врага</param>
+    /// <param name="enemy">if an enemy should be killed first</param>
     public void Restart(bool enemy = false)
     {
         if (m_moveWnenStand || enemy)

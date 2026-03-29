@@ -59,7 +59,7 @@ public class Cat : MonoBehaviour
 
     void Update()
     {
-        //остановиться и повернуть если нет пути дальше
+        //stops and turns around if there is no way ahead
         if (!m_groundZone.TargetDetected || m_touchings.IsWalls())
         {
             m_walkTimer = 0f;
@@ -67,17 +67,17 @@ public class Cat : MonoBehaviour
             m_speed = 0f;
             TurnAround();
         }
-        //если не гладят - ходить
+        //if is not petted - walks
         if (!m_petting && CanPet)
             Walk();
         m_anim.SetBool(m_HashWalk, m_walking && !m_petting);
-        //если нет триггера - включить
+        //if hasn't a trigger - sets
         if (!m_petting && !m_triggered)
         {
             m_anim.SetTrigger(m_triggers[Random.Range(0, m_triggers.Length)]);
             m_triggered = true;
         }
-        //если есть тригер - перезарядка триггера
+        //if has a trigger - recharge
         if (m_triggered)
         {
             m_triggerTimer += Time.deltaTime;
@@ -95,7 +95,7 @@ public class Cat : MonoBehaviour
     }
 
     /// <summary>
-    /// Ходить в течении времени ходьбы, затем остановиться
+    /// Walks during the walk time, then stops
     /// </summary>
     void Walk()
     {
@@ -122,9 +122,9 @@ public class Cat : MonoBehaviour
         m_anim.SetBool(m_HashCanMove, !stop);
     }
     /// <summary>
-    /// Остановится когда начинают гладить и заспуть, когда закончат
+    /// Signals the beginning and end of peting
     /// </summary>
-    /// <param name="pet"></param>
+    /// <param name="pet">is the petting ended</param>
     public void Pet(bool pet)
     {
         if (pet)

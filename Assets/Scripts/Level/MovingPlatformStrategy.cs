@@ -26,14 +26,14 @@ public class MovingPlatformStrategy : FillStrategy
         m_speed = speed;
     }
     /// <summary>
-    /// Создает чанк с движущимися платформами
+    /// Creats a chunk with moving platforms
     /// </summary>
-    /// <param name="prevChunk">предыдущий чанк</param>
+    /// <param name="prevChunk">previous chunk</param>
     /// <param name="transitionStrategy"></param>
     /// <returns></returns>
     public override Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        //очищает переход на этот чанк, он не нужен
+        //clears the transition to this chunk
         prevChunk.GetNextTransition().Clear(m_editor);
         Chunk transition = new Chunk(prevChunk.GetEndPosition(), prevChunk.GetEndPosition());
 
@@ -49,7 +49,7 @@ public class MovingPlatformStrategy : FillStrategy
 
         MovingPlatform movingPlatform = m_levelTheme.m_movingPlatform.GetComponent<MovingPlatform>();
         Vector3 lastPoint = start + new Vector3(m_levelTheme.m_movingPlatform.GetWidth(), 1 - m_levelTheme.m_movingPlatform.GetHeight());
-        //время, за которое предыдущая платформа дойдет до следующей
+        //time it takes for the previous platform to reach the current one
         float prev = 0;
 
         while (lastPoint.x < end.x - m_levelTheme.m_movingPlatform.GetWidth())
@@ -58,24 +58,24 @@ public class MovingPlatformStrategy : FillStrategy
             Vector3 first = lastPoint;
             Vector3 second;
             MovingPlatform platform = movingPlatform;
-            //оставшееся горизонтальное пространство
+            //remaining horizontal space
             float hSpace = end.x - lastPoint.x + m_levelTheme.m_movingPlatform.GetOffset().x;
-            //оставшееся вертикальное пространство
+            //remaining vertical space
             float vSpace = Mathf.Abs(end.y + 1 - m_levelTheme.m_movingPlatform.GetHeight() - lastPoint.y);
 
             Trajectory currentTrajectory;
-            //выбирает траекторию дивжения новой платформы
+            //chooses a trajectory for a platform
             if (vSpace > m_minVerticalDist
                 && hSpace > m_minHorizontalDist)
             {
-                //веса траекторий движения платформы
-                //горизонталь — чем шире, тем чаще
+                //weights of the platform movement paths
+                //horizontal - the wider, the more often
                 float weightH = hSpace;
-                //вертикаль  — чем выше, тем чаще
+                //vertical - the higher, the more often
                 float weightV = vSpace;
-                //диагональ — чем квадратнее, тем чаще
+                //diagonal - the squarer, the more often
                 float weightD = Mathf.Min(vSpace, hSpace);
-                //круговая — растёт с размерами чанка
+                //circular - increases with the size of the chunk
                 float weightC = (height + vSpace) * 0.5f;        
 
                 float pick = Random.value * (weightV + weightH + weightD + weightC);
@@ -96,7 +96,7 @@ public class MovingPlatformStrategy : FillStrategy
                     currentTrajectory = Trajectory.Circular;
                 }
             }
-            //если мало места - выбирает траекторию в зависимости от оставшегося пространства
+            //if there is not enough space - chooses a trajectory depending on the remaining space.
             else
             {
                 if (vSpace > m_minVerticalDist
@@ -120,27 +120,27 @@ public class MovingPlatformStrategy : FillStrategy
             switch (currentTrajectory)
             {
                 case Trajectory.Vertical:
-                    //если начальная точка предыдущей платформы  не рядом с новой
+                    //if the starting point of the previous platform is not near the new one
                     if (prev != 0)
                     {
-                        //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
+                        //how many min platform passes can be laid during the passage of the previous platform
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (m_minWidth / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
+                        //how many max passages can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, vSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
-                        //количество проходов платформы, пока она не встретиться с предыдущей
+                        //number of passes of the platform until it meets the previous one
                         int n;
                         if (Random.value > 0.5f)
                         {
                             n = Random.Range(1, minN + 1);
-                            //определяет следующую точку
-                            //время n проходов и их ожиданий должно быть равно времени прохода предыдущей платформы
+                            //defines the next point
+                            //the time of n passes and their waits should be equal to the time of the passage of the previous platform
                             second = first + Vector3.up * speed * (height < 0 ? -1 : 1) * (prev - (n - 1) * movingPlatform.GetWaitTime()) / n;
                         }
                         else
                         {
                             n = Random.Range(1, maxN + 1);
-                            //определяет следующую точку
-                            //время прохода платформы должно быть равно n проходам предыдущей платформы
+                            //defines the next point
+                            //the passage time of the platform must be equal to n passes of the previous platform
                             second = first + Vector3.up * speed * (height < 0 ? -1 : 1) * (n * prev + (n - 1) * movingPlatform.GetWaitTime());
                         }
 
@@ -148,7 +148,7 @@ public class MovingPlatformStrategy : FillStrategy
                     }
                     else
                     {
-                        //размер прохода рандомный в зависимости оставшегося пространства
+                        //size of the passage is random depending on the remaining space
                         second = first + Vector3.up * (height < 0 ? -1 : 1) * Mathf.Min(Random.Range(m_minWidth, m_maxWidth), vSpace);
                         platform = AddPlatform(movingPlatform, first, second);
                         prev = Mathf.Abs(second.y - first.y) / speed;
@@ -162,31 +162,31 @@ public class MovingPlatformStrategy : FillStrategy
 
                     if (prev != 0)
                     {
-                        //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
+                        //how many min platform passes can be laid during the passage of the previous platform
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (m_minWidth / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
+                        //how many max passages can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, hSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
-                        //количество проходов платформы, пока она не встретиться с предыдущей
+                        //number of passes of the platform until it meets the previous one
                         int n;
                         if (Random.value > 0.5f)
                         {
                             n = Random.Range(1, minN + 1);
-                            //определяет следующую точку
-                            //время n проходов и их ожиданий должно быть равно времени прохода предыдущей платформы
+                            //defines the next point
+                            //the time of n passes and their waits should be equal to the time of the passage of the previous platform
                             second = first + Vector3.right * speed * (prev - (n - 1) * movingPlatform.GetWaitTime()) / n;
                         }
                         else
                         {
                             n = Random.Range(1, maxN + 1);
-                            //определяет следующую точку
-                            //время прохода платформы должно быть равно n проходам предыдущей платформы
+                            //defines the next point
+                            //the passage time of the platform must be equal to n passes of the previous platform
                             second = first + Vector3.right * speed * (n * prev + (n - 1) * movingPlatform.GetWaitTime());
                         }
                         platform = PlacePlatform(movingPlatform, first, second, ref prev, speed, n % 2 != 0);
                     }
                     else
                     {
-                        //размер прохода рандомный в зависимости оставшегося пространства
+                        //size of the passage is random depending on the remaining space
                         second = first + Vector3.right * Mathf.Min(Random.Range(m_minWidth, m_maxWidth), hSpace);
                         platform = AddPlatform(movingPlatform, first, second);
                         prev = (second.x - first.x) / speed;
@@ -199,34 +199,34 @@ public class MovingPlatformStrategy : FillStrategy
 
                     if (prev != 0)
                     {
-                        //сколько минимальных проходов платформы можно уложить во время прохода предыдущей платформы
+                        //how many min platform passes can be laid during the passage of the previous platform
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (Mathf.Sqrt(Mathf.Pow(m_minWidth, 2) + Mathf.Pow(m_minWidth, 2)) / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных проходов можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
+                        //how many max passages can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(Mathf.Sqrt(Mathf.Pow(m_maxWidth, 2) + Mathf.Pow(m_maxWidth, 2)), Mathf.Min(vSpace, hSpace)) / speed
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
-                        //количество проходов платформы, пока она не встретиться с предыдущей
+                        //number of passes of the platform until it meets the previous one
                         int n;
                         if (Random.value > 0.5f)
                         {
                             n = Random.Range(1, minN + 1);
-                            //время прохода новой платформы - 1/n времени прохода предыдущей платформы 
+                            //passage time of the new platform - 1/n of the passage time of the previous platform 
                             prev = (prev - (n - 1) * movingPlatform.GetWaitTime()) / n;
                         }
                         else
                         {
                             n = Random.Range(1, maxN + 1);
-                            //время прохода новой платформы - время n проходов предыдущей платформы
+                            //passage time of the new platform - the time of n passes of the previous platform
                             prev = n * prev + (n - 1) * movingPlatform.GetWaitTime();
                         }
-                        //вычисляет координаты диагонали по теореме Пифагора
-                        //длина диагонали - prev * speed
-                        //величина одной координаты
+                        //calculates the coordinates of the diagonal according to the Pythagorean theorem
+                        //diagonal length - prev * speed
+                        //value of one coordinate
                         float a = Mathf.Sqrt(Random.Range(m_minWidth * m_minWidth, prev * prev * speed * speed));
-                        //величина другой координаты
+                        //value of another coordinate
                         float b = Mathf.Sqrt(prev * prev * speed * speed - a);
-                        //расставляет рандомно координаты
+                        //randomly assigns coordinates
                         second = first + (Random.value > 0.5f ? new Vector3(a, b * (height < 0 ? -1 : 1)) : new Vector3(b, a * (height < 0 ? -1 : 1)));
-                        //в зависимости от количества проходов определяется начало платформы
+                        //depending on the number of passages, the beginning of the platform is determined
                         if (n % 2 == 0)
                         {
                             platform = AddPlatform(movingPlatform, first, second);
@@ -239,7 +239,7 @@ public class MovingPlatformStrategy : FillStrategy
                     }
                     else
                     {
-                        //размер прохода рандомный в зависимости оставшегося пространства
+                        //size of the passage is random depending on the remaining space
                         second = first +
                         new Vector3(Mathf.Min(Random.Range(m_minWidth / 2, m_maxWidth / 2), hSpace), (height < 0 ? -1 : 1) * Mathf.Min(Random.Range(m_minWidth / 2, m_maxWidth / 2), vSpace));
                         platform = AddPlatform(movingPlatform, first, second);
@@ -250,43 +250,43 @@ public class MovingPlatformStrategy : FillStrategy
                     break;
 
                 case Trajectory.Circular:
-                    //длина полукруга траектории
+                    //length of the semicircle of the trajectory
                     float d;
                     Vector3 fifth;
-                    //движение по часовой или против часовой
+                    //clockwise or counterclockwise movement
                     bool reverse = false;
                     if (prev != 0)
                     {
-                        //сколько минимальных полукругов траектории можно уложить во время прохода предыдущей платформы
+                        //how many min semicircles of the trajectory can be laid during the passage of the previous platform
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (Mathf.Sqrt(Mathf.Pow(m_minWidth, 2) + Mathf.Pow(m_minWidth, 2)) / speed + movingPlatform.GetWaitTime()));
-                        //сколько максимальных полукругов траектории можно уложить в пространство и чтобы совпадало со временем прохода предыдущей платформы
+                        //how many max semicircles of the trajectory can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(Mathf.Sqrt(Mathf.Pow(m_maxWidth, 2) + Mathf.Pow(m_maxWidth, 2)), Mathf.Min(vSpace, hSpace)) / speed
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
-                        //количество проходов платформы, пока она не встретиться с предыдущей
+                        //number of passes of the platform until it meets the previous one
                         int n;
                         if (Random.value > 0.5f)
                         {
                             n = Random.Range(1, minN + 1);
-                            //время прохождения полукруга траектории - 1/n времени прохода предыдущей платформы 
-                            //вычитсляется длина полукруга
+                            //time of passage of the semicircle of the trajectory - 1/n the time of passage of the previous platform 
+                            //length of the semicircle is calculated
                             d = (prev - (n - 1) * movingPlatform.GetWaitTime()) / n * speed;
                         }
                         else
                         {
                             n = Random.Range(1, maxN + 1);
-                            //время прохождения полукруга траектории - время n проходов предыдущей платформы
-                            //вычитсляется длина полукруга
+                            //time of passage of the semicircle of the trajectory - the time of n passes of the previous platform
+                            //length of the semicircle is calculated
                             d = n * prev * speed + (n - 1) * movingPlatform.GetWaitTime() * speed;
                         }
-                        //направление движения зависит от n 
+                        //direction of movement depends on n 
                         reverse = n % 2 != 0;
                     }
                     else
                     {
-                        //длинна полукруга траектории рандомная в зависимости оставшегося пространства
+                        //length of the semicircle of the trajectory is random depending on the remaining space
                         d = Mathf.Min(Random.Range(m_minWidth, m_maxWidth), Mathf.Min(vSpace, hSpace));
                     }
-                    //точки движения платформы
+                    //points of movement of the platform
                     second = first + new Vector3(1, 1) * d / 4;
                     Vector3 third = first + new Vector3(1, 1) * d / 2;
                     Vector3 fourth = first + new Vector3(d * 3, d) / 4;
@@ -294,7 +294,7 @@ public class MovingPlatformStrategy : FillStrategy
                     Vector3 sixth = first + new Vector3(d * 3, -d) / 4;
                     Vector3 seventh = first + new Vector3(d, -d) / 2;
                     Vector3 eighth = first + new Vector3(d, -d) / 4;
-                    //распологает точки для платформы в зависимости от направления движения
+                    //places points for the platform depending on the direction of movement
                     if (reverse)
                     {
                         platform = Object.Instantiate(movingPlatform, fifth, Quaternion.identity);
@@ -329,12 +329,12 @@ public class MovingPlatformStrategy : FillStrategy
             chunk.CreatePlatform(Vector3Int.CeilToInt(lastPoint) - Vector3Int.right, 2);
             lastPoint += Vector3.right * (m_levelTheme.m_movingPlatform.GetWidth() + 1);
         }
-        //подгоняет конец чанка под конец последней платформы
+        //adjusts the end of the chunk to the end of the last platform
         end = new Vector3Int(Mathf.CeilToInt(lastPoint.x) - 1, Mathf.CeilToInt(lastPoint.y) - 1);
         chunk.SetEndPosition(end);
-        //создает границу для падения игрока
+        //creates a bound for the player to fall
         chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, end.x - start.x, height));
-        //создает боковые границы под предыдущим и следующим чанками
+        //creates side borders under the previous and next chunks
         CreateSideBound(chunk, height < 0);
 
         chunk.AddTransition(new Chunk(end, end));
@@ -343,12 +343,12 @@ public class MovingPlatformStrategy : FillStrategy
         return chunk;
     }
     /// <summary>
-    /// Создает платформу и добавляет ей чекпоинт
+    /// Creates a platform and adds an checkpoint to it
     /// </summary>
-    /// <param name="prefab">префаб платформы</param>
-    /// <param name="first">первая точка платформы</param>
-    /// <param name="second">вторая точка платформы</param>
-    /// <returns>созданная платформа</returns>
+    /// <param name="prefab">platform prefab</param>
+    /// <param name="first">first platform point</param>
+    /// <param name="second">second platform point</param>
+    /// <returns>created platform</returns>
     MovingPlatform AddPlatform(MovingPlatform prefab, Vector3 first, Vector3 second)
     {
         MovingPlatform platform = Object.Instantiate(prefab, first, Quaternion.identity);
@@ -356,33 +356,33 @@ public class MovingPlatformStrategy : FillStrategy
         return platform;
     }
     /// <summary>
-    /// Создает и размещает платформу, задает ее характеристики
+    /// Creates and hosts the platform, sets its characteristics
     /// </summary>
-    /// <param name="prefab">префаб платформы</param>
-    /// <param name="first">первая точка платформы</param>
-    /// <param name="second">вторая точка платформы</param>
-    /// <param name="prev"></param>
-    /// <param name="speed">скорость платформы</param>
-    /// <param name="isStrat">стоит ли платформа в начале</param>
-    /// <returns>созданная платформа</returns>
-    MovingPlatform PlacePlatform(MovingPlatform prefab, Vector3 first, Vector3 second, ref float prev, float speed, bool isStrat)
+    /// <param name="prefab">platform prefab</param>
+    /// <param name="first">first platform point</param>
+    /// <param name="second">second platform point</param>
+    /// <param name="prev">time it takes for the previous platform to reach the current one</param>
+    /// <param name="speed">platform speed</param>
+    /// <param name="isStart">is the platform at the first point</param>
+    /// <returns>created platform</returns>
+    MovingPlatform PlacePlatform(MovingPlatform prefab, Vector3 first, Vector3 second, ref float prev, float speed, bool isStart)
     {
-        MovingPlatform platform = AddPlatform(prefab, isStrat ? second : first, isStrat ? first : second);
+        MovingPlatform platform = AddPlatform(prefab, isStart ? second : first, isStart ? first : second);
         platform.SetSpeed(speed);
 
-        //добавляет чекпоинт в нужном порядке
-        if (isStrat)
+        //adds a checkpoint in the required order
+        if (isStart)
             platform.AddCheckpoint(first);
         else
             platform.AddCheckpoint(second);
 
-        //если платформа в начале - ставит время прохода, ингаче обнуляет
-        prev = isStrat ? 0f : Vector3.Distance(first, second) / speed;
+        //if the platform is at the beginning - sets the passage time, otherwise it resets it
+        prev = isStart ? 0f : Vector3.Distance(first, second) / speed;
         return platform;
     }
     /// <summary>
-    /// Создает переход между чанками, состоящий из движущейся платформаы,
-    /// которая начинает двигаться, когда игрок на нее ступит
+    /// Creates a transition between chunks consisting of a moving platform,
+    /// which starts moving when the player steps on it
     /// </summary>
     /// <param name="chunk"></param>
     /// <returns></returns>
@@ -403,7 +403,7 @@ public class MovingPlatformStrategy : FillStrategy
         platform.AddCheckpoint(platform.transform.position + Vector3.up * height);
         transition.AddEnviromentObject(platform.gameObject);
 
-        //создает границу для падения игрока
+        //creates a bound for the player to fall
         transition.AddEnviromentObject(CreateHorizontalBounds(transition.GetStartPosition(), end, width, height));
 
         return transition;

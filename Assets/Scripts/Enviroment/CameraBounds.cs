@@ -30,11 +30,11 @@ public class CameraBounds : MonoBehaviour
         m_cameraPreviousX = Camera.main.transform.position.x;
     }
     /// <summary>
-    /// Ставит границы для камеры в зависимости от высоты чанка
+    /// Sets the camera bounds depending on the chunk's height
     /// </summary>
-    /// <param name="pos">начало чанка</param>
-    /// <param name="height">высота чанка</param>
-    /// <param name="enable">включить границы</param>
+    /// <param name="pos">chunk's start</param>
+    /// <param name="height">chunk's height</param>
+    /// <param name="enable">enable bounds</param>
     public void SetHeight(Vector3 pos, int height, bool enable = true)
     {
         m_confiner.enabled = enable;

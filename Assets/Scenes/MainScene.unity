@@ -51693,9 +51693,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6226799942729865244, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+      propertyPath: m_onTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226799942729865244, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+      propertyPath: m_onTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1881270443428698843}
+    - target: {fileID: 6226799942729865244, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
       propertyPath: m_onTrigger.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 283284310}
+    - target: {fileID: 6226799942729865244, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+      propertyPath: m_onTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EnablePet
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226799942729865244, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+      propertyPath: m_onTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6230351899595666638, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
       propertyPath: m_receiver.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -51709,6 +51725,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+--- !u!114 &1881270443428698843 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8174218926635030679, guid: 0630491ee6c9713429d3e6b516734eb8, type: 3}
+  m_PrefabInstance: {fileID: 1881270443428698842}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d4ac700b6d9164a8428efab9358350, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1914754679570500425
 Transform:
   m_ObjectHideFlags: 0

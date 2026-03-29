@@ -10,10 +10,10 @@ public class DefendingEnemy : WalkEnemy
     readonly int m_HashProtect = Animator.StringToHash("Protect");
 
     bool m_protecting = false;
-    //Время действия защиты
+    //Protecting time
     readonly float m_protectCooldownTime = 3f;
     float m_protectCooldown;
-    //Время перезагрузки защиты
+    //Protect recharge time
     readonly float m_protectDelay = 2f;
     float m_protectDelayCooldown;
 
@@ -28,7 +28,7 @@ public class DefendingEnemy : WalkEnemy
         if (m_protecting)
         {
             m_protectCooldown += Time.deltaTime;
-            //отменить защиту, если закончилось время, игрок вошел в зону атаки или объект вышел из зоны атаки игрока
+            //cancels protection if time has run out, the player has entered the attack zone, or the enemy has left the player's attack zone
             if (m_protectCooldown >= m_protectCooldownTime || !m_playerAttackZone.TargetDetected || m_attackZone.TargetDetected)
             {
                 DisableProtection();
@@ -37,9 +37,7 @@ public class DefendingEnemy : WalkEnemy
 
         base.Update();
     }
-    /// <summary>
-    ///  Отключает защиту
-    /// </summary>
+
     void DisableProtection()
     {
         m_anim.SetBool(m_HashProtect, false);
@@ -48,9 +46,7 @@ public class DefendingEnemy : WalkEnemy
         m_damagable.Invincible = false;
         m_protectDelayCooldown = m_protectDelay;
     }
-    /// <summary>
-    /// Включает защиту
-    /// </summary>
+
     void EnableProtection()
     {
         m_attackScript.EnableAttack = false;
@@ -66,8 +62,8 @@ public class DefendingEnemy : WalkEnemy
     {
         if (!m_protecting&&!m_dead)
         {
-            // если игрок вне зоны атаки и объект в зоне атаки игрока - перезарядка защиты и ее активация,
-            // иначе - сбросить 
+            // if the player is out of the attack zone and the enemy is in the player's attack zone, the protection is recharged and activated,
+            // otherwise - reset 
             if (m_playerAttackZone.TargetDetected && !m_attackZone.TargetDetected)
             {
                 m_protectDelayCooldown -= Time.fixedDeltaTime;
@@ -88,7 +84,7 @@ public class DefendingEnemy : WalkEnemy
         }
     }
     /// <summary>
-    /// При получении урона активировать защиту
+    /// Activates protection when receiving damage
     /// </summary>
     /// <param name="damage"></param>
     public override void ReceiveDamage(int damage)

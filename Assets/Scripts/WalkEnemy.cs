@@ -6,7 +6,7 @@ public class WalkEnemy : MonoBehaviour
     [SerializeField]
     float m_turnOffset;
     [SerializeField]
-    //Коэффициент стоимости награды, зависит от сложности врага
+    //Coefficient of the reward value depends on the difficulty of the enemy
     float m_costCoeff;
     [SerializeField]
     float m_walkSpeed = 1.5f;
@@ -43,8 +43,7 @@ public class WalkEnemy : MonoBehaviour
     [Inject]
     DiContainer m_container;
 
-    //Хеши анимаций
-
+    //Animation hashes
     readonly int m_HashHorizontal = Animator.StringToHash("Horizontal");
     readonly int m_HashHit = Animator.StringToHash("Hit");
     readonly int m_HashDie = Animator.StringToHash("Die");
@@ -59,9 +58,9 @@ public class WalkEnemy : MonoBehaviour
     bool m_coinsSpawned = false;
 
     readonly float m_waitTime = 3f;
-    //Количество видов атак
+    //Number of attack types
     int m_attackCount = 3;
-    //Награда за убийство врага
+    //Reward for killing an enemy
     int m_cost;
 
     protected Vector3 m_startPos;
@@ -70,7 +69,7 @@ public class WalkEnemy : MonoBehaviour
     float m_waitTimer;
 
     /// <summary>
-    /// Устанавливает количество атак врага
+    /// Sets the number of enemy attacks
     /// </summary>
     /// <param name="count"></param>
     public void SetAttacksCount(int count)
@@ -88,7 +87,7 @@ public class WalkEnemy : MonoBehaviour
         m_values = GetComponent<SpawnValues>();
 
         m_startPos = transform.position;
-        //награда за убийство зависит от макс количстыва чанков и сложности врага
+        //The reward for killing depends on the max number of chunks and the difficulty of the enemy
         m_cost = Mathf.CeilToInt(Mathf.Min(m_shop.AllPrices * m_costCoeff / (m_lvlBuilder.GetLevelChunksCount() * m_lvlBuilder.GetEnemySpawnChance()), 1000f));
     }
 
@@ -108,7 +107,7 @@ public class WalkEnemy : MonoBehaviour
             {
                 m_rb.velocity = Vector2.zero;
             }
-            //если цель в зоне атаки - включить атаку и прекратить движение
+            //if the player is in the attack zone - enables the attack and stops moving
             if (m_attackZone.TargetDetected)
             {
                 if (!m_attackScript.EnableAttack)
@@ -121,12 +120,12 @@ public class WalkEnemy : MonoBehaviour
                 m_anim.SetInteger(m_HashAttackNum, Random.Range(0, m_attackCount));
                 return;
             }
-            //если цель в зоне обнаружения, враг может пройти дальше и может двигаться - гнаться за целью
+            //if the player is in the detection zone, the enemy can go further and can move - chase after the player
             else if (m_detectZone.TargetDetected && m_groundZone.TargetDetected && !m_touchings.IsWalls() && m_canMove)
             {
                 Chase();
             }
-            //если цель вне зоны или враг не можеть пройти дальше - патрулировать
+            //if the player is out of the zone or the enemy cannot go further - patrol
             else if (m_canMove)
             {
                 Potrol();
@@ -136,17 +135,17 @@ public class WalkEnemy : MonoBehaviour
         }
     }
     /// <summary>
-    /// Патрулирует участок туда - обратно
+    /// Patrolling the area back and forth
     /// </summary>
     protected void Potrol()
     {
-        //выключить отаку
+        //disables an attack
         m_attackScript.EnableAttack = false;
 
         if (!m_waiting)
         {
             m_speed = m_walkSpeed;
-            //если дальше нет земли или стенва - остановиться и ждать
+            //if there is no land or wall further away - stops and waits
             if (!m_groundZone.TargetDetected || m_touchings.IsWalls())
             {
                 m_speed = 0f;
@@ -157,7 +156,7 @@ public class WalkEnemy : MonoBehaviour
         else
         {
             m_waitTimer += Time.deltaTime;
-            //если время ожидания закончилось - повернуться и двигаться дальше
+            //if the waiting time is over - turns around and moves on
             if (m_waitTimer >= m_waitTime)
             {
                 TurnAround();
@@ -166,23 +165,23 @@ public class WalkEnemy : MonoBehaviour
         }
     }
     /// <summary>
-    /// Гнаться за целью
+    /// Chases the player
     /// </summary>
     protected void Chase()
     {
-        //если цель сзади - повернуться
+        //if the player is from behind - turns around
         if ((m_detectZone.TargetLocation.x - transform.position.x) * m_currentDir < 0f)
         {
             TurnAround();
         }
-        //выключить атаку
+        //enables an attack
         m_attackScript.EnableAttack = false;
         m_waiting = false;
-        //если игрок близко - идти, далеко - бежать
+        //if the player is close - walks, far away - runs
         m_speed = m_canRun && GetDistance() > m_col.size.x ? Mathf.Lerp(m_speed, m_runSpeed, 0.5f) : Mathf.Lerp(m_speed, m_walkSpeed, 0.5f);
     }
     /// <summary>
-    /// Дистанция между игроком и началом зоны атаки
+    /// Distance between the player and the start of the attack zone
     /// </summary>
     /// <returns></returns>
     protected float GetDistance()
@@ -191,9 +190,7 @@ public class WalkEnemy : MonoBehaviour
                 (m_detectZone.TargetLocation.x - m_attackZone.RightBorder.x) :
                 (m_attackZone.LeftBorder.x - m_detectZone.TargetLocation.x);
     }
-    /// <summary>
-    /// Повернуться
-    /// </summary>
+
     virtual protected void TurnAround()
     {
         m_currentDir *= -1;
@@ -201,25 +198,25 @@ public class WalkEnemy : MonoBehaviour
         transform.position += Vector3.right * m_currentDir * m_turnOffset;
     }
     /// <summary>
-    /// Получить урон
+    /// Takes damage
     /// </summary>
     /// <param name="damage"></param>
     public virtual void ReceiveDamage(int damage)
     {
-        //остановиться
+        //stops
         m_rb.velocity = Vector2.zero;
         m_speed = 0f;
-        //епсли урон 0 - враг умер
+        //if the damage is 0 - the enemy is dead
         if (damage == 0)
         {
             m_dead = true;
             m_col.isTrigger = true;
-            //если к врагу была прикреплена платформа - запустить движение
+            //if a platform was attached to the enemy - starts its movement
             if (m_platform != null)
             {
                 m_platform.StartMovement();
             }
-            //создать монеты в качестве награды за убийство
+            //creates coins as a reward for killing
             if (!m_coinsSpawned && m_coin != null)
             {
                 m_coinsSpawned = true;
@@ -240,8 +237,8 @@ public class WalkEnemy : MonoBehaviour
         }
     }
     /// <summary>
-    /// Прикрепить платформу ко врагу
-    /// После смепрти врага платформа намчнет движение
+    /// Attachs the platform to the enemy
+    /// After the enemy's death, the platform will start moving
     /// </summary>
     /// <param name="platform"></param>
     public void ConnectPlatform(MovingPlatform platform)
@@ -250,7 +247,7 @@ public class WalkEnemy : MonoBehaviour
         platform.DisableAutoMovement();
     }
     /// <summary>
-    /// Шанс появления конкретного типа врагак в зависимости от количества созданных чанков
+    /// Chance of a specific type of enemy appearing, depending on the number of chunks created
     /// </summary>
     /// <returns></returns>
     public float GetSpawnChance()
@@ -258,7 +255,7 @@ public class WalkEnemy : MonoBehaviour
         return m_spawnChance.Evaluate(m_lvlBuilder.LevelProgress());
     }
     /// <summary>
-    /// Возрождает врага
+    /// Revives the enemy
     /// </summary>
     public virtual void Reset()
     {

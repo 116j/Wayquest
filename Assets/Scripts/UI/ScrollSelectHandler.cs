@@ -20,7 +20,7 @@ public class ScrollSelectHandler : MonoBehaviour, ISelectHandler, IPointerClickH
         m_shop.ShowItemText(ind);
     }
 
-    //Показывает текст про предмет и регулирует границы ScrollView для конкретного элемента
+    //Shows the text about the subject and adjusts the ScrollView borders for a specific element
     public void OnSelect(BaseEventData eventData)
     {
         m_shop.ShowItemText(ind);

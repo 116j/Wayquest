@@ -11,14 +11,13 @@ public class AutoScrollOnSelect : MonoBehaviour
         m_scroll = GetComponent<ScrollRect>();
     }
 
-    //Функция для ScrollView
     public void OnElementSelected(RectTransform selected)
     {
         Canvas.ForceUpdateCanvases();
 
-        //углы выбранного элемента списка
+        //element's corners
         Vector3[] itemCorners = new Vector3[4];
-        //углы области видимости списка
+        //scrollview's visible area corners
         Vector3[] viewCorners = new Vector3[4];
         selected.GetWorldCorners(itemCorners);
         m_scroll.viewport.GetWorldCorners(viewCorners);
@@ -31,13 +30,13 @@ public class AutoScrollOnSelect : MonoBehaviour
 
         float norm = m_scroll.verticalNormalizedPosition;
 
-        //если элемент вылез сверху — прокручивает вверх
+        //if the element comes out from above - scrolls up
         if (itemTop > viewTop)
         {
             float delta = itemTop - viewTop;
             norm += delta / (m_scroll.content.rect.height - m_scroll.viewport.rect.height);
         }
-        //если вылез снизу — прокручивает вниз
+        //if the element comes out from below - scrolls down
         else if (itemBottom < viewBottom)
         {
             float delta = viewBottom - itemBottom;

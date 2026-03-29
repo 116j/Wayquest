@@ -12,7 +12,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //при входе в зону магазина включает взаимодействие с ним
+        //when entering the shop area, it enables interaction with it
         if (collision.CompareTag("Player"))
         {
             m_text.ShowShopText(true, transform.position);
@@ -22,7 +22,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        //при выходе из зоны магазина выключает взаимодействие с ним
+        //when leaving the shop area, it disables interaction with it
         if (collision.CompareTag("Player"))
         {
             m_text.ShowShopText(false, Vector3.zero);
@@ -30,7 +30,7 @@ public class Shop : MonoBehaviour
         }
     }
     /// <summary>
-    /// Сигнализирует, что магазина больше нет
+    /// Indicates that the shop is no longer there
     /// </summary>
     private void OnDestroy()
     {

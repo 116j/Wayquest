@@ -26,16 +26,16 @@ public class DestroyableBrickStrategy : FillStrategy
         m_brick = destroyableBrick;
     }
     /// <summary>
-    /// Создает чанк с разрушающимся потолком и отрисовывет тайлы
+    /// Creates a chunk with a collapsing floor
     /// </summary>
-    /// <param name="prevChunk">предыдущий чанк</param>
-    /// <param name="transitionStrategy"></param>
+    /// <param name="prevChunk">previous chunk</param>
+    /// <param name="transitionStrategy">strategy for building a transition to the next chunk</param>
     /// <returns></returns>
     public override Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        //очищает переход на этот чанк, он не нужен
+        //clears the transition to this chunk
         prevChunk.GetNextTransition().Clear(m_editor);
-        //пустой перход для предыдущего чанка
+        //empty transition for the previous chunk
         Chunk transition = new Chunk(prevChunk.GetEndPosition(), prevChunk.GetEndPosition());
 
         Vector3Int start = prevChunk.GetEndPosition();
@@ -44,7 +44,7 @@ public class DestroyableBrickStrategy : FillStrategy
 
         Vector3Int end = new Vector3Int(start.x + width, start.y + height);
         Chunk chunk = new Chunk(start, end, transition);
-        //рандомный тип разрушающегося пола
+        //random type of collapsing floor
         int fillType = Random.Range(0, 4);
 
         switch (fillType)
@@ -74,20 +74,20 @@ public class DestroyableBrickStrategy : FillStrategy
 
         end = chunk.GetEndPosition();
         start = chunk.GetStartPosition();
-        //создает границу для падения игрока
+        //creates a bound for the player to fall
         chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, end.x - start.x, end.y - start.y));
-        //пустой перход
+        //empty transition
         chunk.AddTransition(new Chunk(end, end));
-        //заменяет пререход от предыдущего чанка к этому пустым
+        //replaces the transition from the previous chunk to this one with an empty one
         prevChunk.AddTransition(transition);
 
         return chunk;
     }
     /// <summary>
-    /// Создает лесенку из кирпичей, состоящую из групп разрушающихся по таймеру кирпичей и обычных кирпичей между группами
+    /// Creates a ladder of bricks consisting of groups of timer-collapsing bricks and regular bricks between the groups
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="chunkHeight">Вверх лестница или вниз</param>
+    /// <param name="chunkHeight">descending or ascending</param>
     void WaveOfCollapse(Chunk chunk, int chunkHeight)
     {
         Vector3Int currentPos = chunk.GetStartPosition() + Vector3Int.left;
@@ -97,9 +97,9 @@ public class DestroyableBrickStrategy : FillStrategy
         while (currentPos.x < end.x)
         {
             int maxWidth = GetMaxWidthGapForJump(currentPos, end);
-            //количество кирпичей в группе
+            //number of bricks in a group
             int tilesCount = Random.Range(1, maxWidth + 1);
-            //высота участка группы
+            //height of the group section
             int height = Mathf.Min(Random.Range(GetGapHeightInDiagonalWidth(currentPos, end, tilesCount + 1), GetGapHeightInDiagonalWidth(currentPos, end, maxWidth)), tilesCount + 1);
             group = new List<DestroyableBrick>(tilesCount);
             Vector3Int offset = Vector3Int.zero;
@@ -114,30 +114,30 @@ public class DestroyableBrickStrategy : FillStrategy
                 CreateBrick(chunk, currentPos, BrickBehaviour.None);
             }
         }
-        //обновляет конеци чанка
+        //updates the end of the chunk
         chunk.SetEndPosition(currentPos);
     }
     /// <summary>
-    /// Создает две лесенки, состоящие из кирпичей, стоящих через один
-    /// верхняя состоит из кирпичей, которые разрушаются при уходе с кирпича,
-    /// нижняя состоит из кирпичей, которые разрушаются по таймеру после насткпания на кирпич
+    /// Creates two ladders consisting of bricks standing through one
+    /// the upper one consists of bricks that collapse when leaving the brick,
+    /// the lower one consists of bricks, which are destroyed by a timer after hitting the brick
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="chunkHeight">Вверх лестница или вниз</param>
+    /// <param name="chunkHeight">descending or ascending</param>
     void ResonanceCorridor(Chunk chunk, int chunkHeight)
     {
         Vector3Int currentPos = chunk.GetStartPosition();
         Vector3Int end = chunk.GetEndPosition();
-        //отступ нижней лестницы
+        //the lower ladder offset
         int lineOffset = GetJumpHeight(2);
 
         while (currentPos.x < end.x)
         {
-            //верхний кирпич
+            //upper brick
             CreateBrick(chunk, currentPos, BrickBehaviour.OnExit, new List<DestroyableBrick>(1));
-            //сдвигаем на следующую клетку
+            //moves to the next cell
             currentPos += new Vector3Int(1, Mathf.Min(GetGapHeightInDiagonalWidth(currentPos, end, 1), 1) * (chunkHeight > 0 ? 1 : -1));
-            //нижний кирпич, сдвинут на 1 вправо по сравнению с верхним
+            //lower brick is shifted 1 to the right compared to the upper one
             CreateBrick(chunk, currentPos + Vector3Int.down * lineOffset, BrickBehaviour.Timer, new List<DestroyableBrick>(1));
             if (currentPos.x != end.x)
             {
@@ -148,12 +148,12 @@ public class DestroyableBrickStrategy : FillStrategy
                 currentPos += new Vector3Int(1, 0);
             }
         }
-        //обновляет начало и конец чанка
+        //updates the end and the start of the chunk
         chunk.SetStartPosition(chunk.GetStartPosition() + Vector3Int.down * lineOffset);
         chunk.SetEndPosition(currentPos);
     }
     /// <summary>
-    /// Создает платформы из групп кирпичей 3х типов на 3х уровнях высоты, по которым нужно прыгать
+    /// Creates platforms from groups of 3 types of bricks at 3 height levels to jump on
     /// </summary>
     /// <param name="chunk"></param>
     void CollapseStaircase(Chunk chunk)
@@ -163,11 +163,11 @@ public class DestroyableBrickStrategy : FillStrategy
         List<DestroyableBrick> group;
 
         int verticalGap = GetJumpHeight(3);
-        //ширина платформы
+        //width of the platform
         int platformWidth = Random.Range(m_minStepWidth, m_maxStepWidth);
         int offsetX = Random.Range(m_minStarirsOffset, m_maxStarirsOffsetX);
         int offsetY = Random.Range(m_minStarirsOffset, GetJumpHeight(offsetX));
-        //уровень платформы
+        //level of the platform
         int level = 0;
 
         while (currentPos.x < end.x)
@@ -200,11 +200,11 @@ public class DestroyableBrickStrategy : FillStrategy
 
             level = (level + 1) % 3;
         }
-        //обновляет конеци чанка
+        //updates the end of the chunk
         chunk.SetEndPosition(currentPos);
     }
     /// <summary>
-    /// Создает ровную прямую кирпичей, чередующую группы простых кирпичей и разрушающихся по таймеру
+    /// Creates a straight line of bricks alternating between groups of simple bricks and collapsing ones by timer
     /// </summary>
     /// <param name="chunk"></param>
     void CollapseTunnel(Chunk chunk)
@@ -215,7 +215,7 @@ public class DestroyableBrickStrategy : FillStrategy
 
         while (currentPos.x < end.x)
         {
-            //ширина группы таймер кирпичей
+            //width of the timer brick group
             int timerZone = Random.Range(m_tunnelMinZone, m_tunnelTimerZone);
             group = new List<DestroyableBrick>(timerZone);
             for (int i = 0; i < timerZone; i++)
@@ -225,7 +225,7 @@ public class DestroyableBrickStrategy : FillStrategy
             currentPos += Vector3Int.right * timerZone;
             if (currentPos.x < end.x)
             {
-                //ширина группы простых кирпичей
+                //width of the simple brick group
                 int safeZone = Random.Range(m_tunnelSafeZone, m_tunnelMinZone);
                 for (int i = 0; i < safeZone; i++)
                 {
@@ -234,7 +234,7 @@ public class DestroyableBrickStrategy : FillStrategy
                 currentPos += Vector3Int.right * safeZone;
             }
         }
-        //обновляет конеци чанка
+        //updates the end of the chunk
         chunk.SetEndPosition(currentPos);
     }
 
@@ -246,7 +246,7 @@ public class DestroyableBrickStrategy : FillStrategy
         chunk.AddEnviromentObject(brick.gameObject);
     }
     /// <summary>
-    /// Создает переход из разрушающихся по таймеру кирпичей, по которым нужно прыгать наверх
+    /// Creates a transition of timer-collapsing bricks that you need to jump up
     /// </summary>
     /// <param name="chunk"></param>
     /// <returns></returns>
@@ -257,7 +257,7 @@ public class DestroyableBrickStrategy : FillStrategy
         Vector3Int start = chunk.GetEndPosition();
         Vector3Int end = new Vector3Int(start.x + width, start.y + height);
         Chunk transition = new Chunk(start, end);
-        //не отрисовывает тайлы, т.к. создаем их тут
+        //does not render tiles
         transition.DontFillTiles();
 
         Vector3Int lastPoint = start + Vector3Int.right;
@@ -270,7 +270,7 @@ public class DestroyableBrickStrategy : FillStrategy
             posOffset = !posOffset;
         }
         while (lastPoint.y < end.y);
-        //создает границу для падения игрока
+        //creates a bound for the player to fall
         transition.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
         return transition;
     }

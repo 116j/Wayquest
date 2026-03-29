@@ -62,11 +62,11 @@ public class SettingsMenu : MonoBehaviour
     int m_currentLanguageInd = 0;
 
     bool m_fullScreen = true;
-    //Количество чанков по умолчанию
+    //Ddefault number of chunks
     readonly int m_defaultChunksCount = 50;
-    //Значения весов стратегий по умолчанию
+    //Default strategy weights
     readonly float[] m_defaultStrategyWeights = { 0.6f, 0.15f, 0.3f, 0.15f, 0.3f };
-    //Названия разделов меню
+    //Menu section names
     string[][] m_layoutNames =
     {
         new string[]
@@ -326,7 +326,7 @@ public class SettingsMenu : MonoBehaviour
         m_chunkStrategyWeightTexts[4].text = value.ToString("F3", CultureInfo.InvariantCulture);
     }
     /// <summary>
-    /// Обновляет значения слайдеров в соотвествии с глобальной переменной
+    /// Updates slider values according to the global variable
     /// </summary>
     void SetSliders()
     {
@@ -337,7 +337,7 @@ public class SettingsMenu : MonoBehaviour
         m_chunksCountSlider.value = m_values.m_chunksCount;
     }
     /// <summary>
-    /// Устанавливает веса и количество комнат в глобальную переменную
+    /// Sets the weights and number of rooms to a global variable
     /// </summary>
     public void SaveLevelBuilder()
     {
@@ -348,7 +348,7 @@ public class SettingsMenu : MonoBehaviour
         m_values.m_chunksCount = (int)m_chunksCountSlider.value;
     }
     /// <summary>
-    /// Сбрасыввет значения количества комнат и весов стратегий по умолчанию
+    /// Resets the default values for the number of rooms and strategy weights
     /// </summary>
     public void SetDefault()
     {

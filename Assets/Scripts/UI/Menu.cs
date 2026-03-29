@@ -22,9 +22,9 @@ public class Menu : MonoBehaviour
     UIController m_UI;
 
     Animator m_pauseLayoutAnim;
-    //Затемнение экрана
+    //Screen dimming
     Image m_backgroundTint;
-    //Выбранный UI компонент
+    //Selected UI component
     GameObject m_selected;
 
     void Awake()
@@ -32,16 +32,16 @@ public class Menu : MonoBehaviour
         m_pauseLayoutAnim = GetComponent<Animator>();
         m_backgroundTint = GetComponent<Image>();
 
-        //начальные статы меню игры
         Time.timeScale = 1;
+        //hides the game stats
         m_UI.SetStats(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
     /// <summary>
-    /// Открывает или скрывает меню паузы
+    /// Opens or closes the pause menu
     /// </summary>
-    /// <param name="show">true - открыть</param>
+    /// <param name="show">true - open</param>
     public void Pause(bool show)
     {
         m_backgroundTint.enabled = show;
@@ -61,7 +61,7 @@ public class Menu : MonoBehaviour
         m_input.OnPause();
     }
     /// <summary>
-    /// Перезагружает с цену на начальное меню
+    /// Reloads the scene
     /// </summary>
     public void MainMenu()
     {
@@ -91,7 +91,7 @@ public class Menu : MonoBehaviour
             m_pauseLayoutAnim.SetTrigger("CloseLayout");
     }
     /// <summary>
-    /// Закрывает меню и начинает игру
+    /// Closes menu and start the game
     /// </summary>
     public void Play()
     {
@@ -124,7 +124,7 @@ public class Menu : MonoBehaviour
     {
         m_resumeButton.Select();
     }
-    //Возвращает фокус выбранному ранее эоементу UI
+    //Returns the focus to the previously selected UI element
     private void OnApplicationFocus(bool focus)
     {
         if (focus)

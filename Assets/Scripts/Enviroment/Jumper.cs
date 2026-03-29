@@ -35,7 +35,7 @@ public class Jumper : Trap
         }
     }
     /// <summary>
-    /// Устанавливает высоту стены, на которую нужно запрыгнуть
+    /// Sets the height of the wall to jump on
     /// </summary>
     /// <param name="height"></param>
     public void SetWallHeight(int height)

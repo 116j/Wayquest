@@ -7,7 +7,7 @@ public class FillStrategy
 {
     protected int m_maxChunkWidth = 60;
     protected int m_minChunkWidth = 12;
-    //Стандартная высота прямого участка
+    //Standard height of the straight section
     protected int m_chunkHeight = 6;
     protected int m_finalChunkHeight = 15;
     protected int m_finalChunkWidth = 45;
@@ -18,25 +18,25 @@ public class FillStrategy
 
     protected int m_minElevationHeight = 2;
     protected int m_maxElevationHeight = 20;
-    //Минимальная ширина прямого участка
+    //Minimum width of a straight section
     protected readonly int m_minStraightSection = 6;
-    //Минимальная ширина участка, по которому может ходить враг
+    //Minimum width of the area on which the enemy can walk
     protected readonly int m_minEnemyWidth = 6;
     protected readonly int m_maxSlopeHeight = 7;
 
-    //Макс количество врагов на чанке
+    //Max number of enemies per chunk
     int m_enemiesPerChunk;
-    //Макс количество ловушек на чанке
+    //Max number of traps per chunk
     int m_trapsPerChunk;
-    //Сколько кошек нужно создать в данный момент, чтобы полностью восполнить здоровье игрока
+    //How many cats it's needed to create at the moment to fully replenish the player's health
     int m_catsLeft;
-    //Сколько кошек сейчас создано в игре
+    //How many cats are currently created in the game
     int m_catsSpawned;
     int m_trapsNum;
     bool m_jumper = false;
-    //Отступ для создания ловушек, когда есть батут или платформа
+    //Offset for creating traps when there is a jumper or platform
     protected float m_rightOffset;
-    //Отступ для создания ловушек для приземления игрока
+    //Offset to create traps for the player to land
     protected float m_leftOffset;
 
     protected readonly LevelTheme m_levelTheme;
@@ -56,18 +56,16 @@ public class FillStrategy
     protected AnimationCurve m_enemiesCount;
     protected AnimationCurve m_trapsCount;
 
-    //Вероятность генерации холма
+    //Probability of slope generation
     protected float m_slopeChance = 0.7f;
-    //Вероятность генерации батута
+    //Probability of jumper generation
     protected float m_jumperChance = 0.4f;
-    //Вероятность создания магазина
-    protected float m_shopChance = 0.6f;
 
-    //Длина прыжка игрока на одной высоте
+    //Width of the player's jump at the same height
     protected int m_playerJumpWidth = 9;
-    //Высота прыжка игрока
+    //Height of the player's jump at the same width
     protected int m_playerJumpHeight = 6;
-    //Ширина модели игрока
+    //Width od the player
     protected readonly float m_playerWidth = 1f;
 
     bool m_shopSpawned = false;
@@ -102,7 +100,7 @@ public class FillStrategy
         m_shopSpawned = false;
     }
     /// <summary>
-    /// Устанавливает для игрока тройной прыжок
+    /// Sets the triple jump
     /// </summary>
     public void SetTripleJump()
     {
@@ -114,28 +112,28 @@ public class FillStrategy
         m_increaseBossHealth = true;
     }
     /// <summary>
-    /// Создает возвышенности и низменности для чанка, добавляет ландшавт и отрисовывает тайлы
+    /// Creates elevations and lowlands for the chunk, adds a landscape and draws tiles
     /// </summary>
-    /// <param name="prevChunk">предыдущий чанк</param>
-    /// <param name="transitionStrategy">стратегия построения перехода на следующий чанк</param>
+    /// <param name="prevChunk">previous chunk</param>
+    /// <param name="transitionStrategy">strategy for building a transition to the next chunk</param>
     /// <returns>filled chunk</returns>
     public virtual Chunk FillChunk(Chunk prevChunk, FillStrategy transitionStrategy)
     {
-        //рисует тайлы перехода от предыдущего чанка к этому
+        //draws transition tiles from the previous chunk to this one
         prevChunk.GetNextTransition().DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(prevChunk.GetNextTransition(), groundTiles, int.MaxValue, false));
 
         Vector3Int start = prevChunk.GetNextTransition().GetEndPosition();
         Vector3Int end = new Vector3Int(start.x + Random.Range(m_minChunkWidth, m_maxChunkWidth), start.y);
-        //ширина начпльного прямого участка
+        //width of the initial straight section
         int startWidth = Random.Range(m_minStraightSection, end.x - start.x);
         Chunk chunk = new Chunk(end, startWidth, prevChunk.GetNextTransition());
 
         m_enemiesPerChunk = (int)m_enemiesCount.Evaluate(m_lvlBuilder.LevelProgress());
         m_trapsPerChunk = (int)m_trapsCount.Evaluate(m_lvlBuilder.LevelProgress());
-        //сколько создать кошек в зависимости от потерянного здоровья игрока и существующих кошек
+        //how many cats to create, depending on the player's lost health and existing cats
         m_catsLeft = m_UI.AllHerats - m_UI.CurrentHearts - m_catsSpawned;
 
-        //высота следующего участка
+        //height of the next section
         int height = Random.Range(m_minElevationHeight, m_maxElevationHeight) * (Random.value > 0.5f ? -1 : 1);
         SetRightOffset(height);
         m_leftOffset = m_playerWidth * 1.5f;
@@ -146,7 +144,7 @@ public class FillStrategy
         return chunk;
     }
     /// <summary>
-    /// Создает переход для чанка
+    /// Creats the chunk transition
     /// </summary>
     /// <param name="chunk"></param>
     public virtual Chunk FillTransition(Chunk chunk)
@@ -156,18 +154,18 @@ public class FillStrategy
         Vector3Int end = new Vector3Int(chunk.GetEndPosition().x + width, chunk.GetEndPosition().y + height);
         Chunk transition = new Chunk(chunk.GetEndPosition(), end);
 
-        //если ширина и высота перехода слишком большие для прыжка игрока - создает выступы
+        //if the width and height of the transition are too large for the player to jump - creates protrusions
         if (width > m_playerJumpWidth || height > m_playerJumpHeight || Mathf.Abs(height) > GetJumpHeight(width))
         {
             int gapHeight, gapWidth;
             Vector3Int lastPoint = transition.GetStartPosition();
             while (lastPoint.x < end.x - 3)
             {
-                //макс ширина для промежутка между предыдущей точкой и концом перехода 
+                //max width for the gap between the previous point and the end of the transition 
                 int maxGapWidth = GetMaxWidthGapForJump(lastPoint, end);
-                //ширина промежутка
+                //the width of the gap
                 gapWidth = Random.Range(m_minTransitionWidth, Mathf.Clamp(maxGapWidth, m_minTransitionWidth, Mathf.Min(m_playerJumpWidth, end.x - lastPoint.x - 2)));
-                //высота промежутка между высотой от ширины промежутка и высотой от макс ширины промежутка
+                //height of the gap is between the height from the width of the gap and the height from the max width of the gap
                 gapHeight = Random.Range(GetGapHeightInDiagonalWidth(lastPoint, end, gapWidth), GetGapHeightInDiagonalWidth(lastPoint, end, maxGapWidth));
                 if (height < 0)
                 {
@@ -177,13 +175,13 @@ public class FillStrategy
                 transition.CreateLedge(lastPoint);
             }
         }
-        //создает границу для падения игрока
+        //creates a bound for the player to fall
         transition.AddEnviromentObject(CreateHorizontalBounds(transition.GetStartPosition(), end, width, height));
 
         return transition;
     }
     /// <summary>
-    /// Макс ширина промежутка, на который может прыгнуть игрок от текущей точки до конечной
+    /// Max width of the gap that the player can jump from the current point to the end point
     /// </summary>
     /// <param name="currentPos"></param>
     /// <param name="end"></param>
@@ -193,7 +191,7 @@ public class FillStrategy
         return (int)(m_playerJumpHeight * 1.0f / (Mathf.Abs(end.y - currentPos.y) * 1.0f / (end.x - currentPos.x) + m_playerJumpHeight * 1.0f / m_playerJumpWidth));
     }
     /// <summary>
-    /// Высота промежутка для конкретной ширины на диагонали между текущей позицией и концом
+    /// Height of the gap for a specific width on the diagonal between the current position and the end
     /// </summary>
     /// <param name="currentPos"></param>
     /// <param name="end"></param>
@@ -204,7 +202,7 @@ public class FillStrategy
         return (int)Mathf.Clamp(Mathf.Abs(end.y - currentPos.y) * 1.0f / (end.x - currentPos.x) * width, 0, Mathf.Abs(end.y - currentPos.y));
     }
     /// <summary>
-    /// Ширина прыжка игрока в зависимости от высоты прыжка
+    /// The width of the player's jump depends on the height of the jump
     /// </summary>
     /// <param name="height"></param>
     /// <returns></returns>
@@ -213,7 +211,7 @@ public class FillStrategy
         return Mathf.CeilToInt(-(Mathf.Abs(height) - m_playerJumpHeight) * 1.0f / m_playerJumpHeight * m_playerJumpWidth);
     }
     /// <summary>
-    /// Высота прыжка игрока в зависимости от ширины прыжка
+    /// The height of the player's jump depends on the width of the jump
     /// </summary>
     /// <param name="width"></param>
     /// <returns></returns>
@@ -223,38 +221,38 @@ public class FillStrategy
     }
 
     /// <summary>
-    /// Создает стратовый чанк мз начальной позиции
+    /// Creates a start chunk for the initial position
     /// </summary>
-    /// <param name="start">начало чанка</param>
-    /// <param name="transitionStrategy">стратегия для создания перехода между этим и след чанками</param>
+    /// <param name="start">start of the chunk</param>
+    /// <param name="transitionStrategy">strategy for creating a transition between this and the next chunks</param>
     /// <returns>filled chunk</returns>
     public Chunk FillStartChunk(Vector3Int start, FillStrategy transitionStrategy)
     {
         m_container.Inject(m_spawnManager);
         Vector3Int end = new Vector3Int(start.x + Random.Range(m_minChunkWidth, m_maxChunkWidth), start.y);
         Chunk chunk = new Chunk(start, end, new Chunk(start, start));
-        //ширина начального прямого участка
+        //width of the initial straight section
         int startWidth = Random.Range(m_minStraightSection, end.x - start.x);
-        //создаем полигон с шириной начального прямого участка
+        //creats a polygon with the width of the initial straight section
         chunk.MakePolygon(startWidth, start);
-        //высота следующего участка
+        //height of the initial straight section
         int height = Random.Range(m_minElevationHeight, m_maxElevationHeight) * (Random.value > 0.5f ? -1 : 1);
         SetRightOffset(height);
         CreateElevationsAndLowlands(chunk, start + startWidth * Vector3Int.right, startWidth, height, false);
         chunk.AddTransition(transitionStrategy.FillTransition(chunk));
-        //граница слева, чтобы нельзя было пройти, т.к. там ничего нет
+        //border is on the left, so that it cannot be passed, because there is nothing there
         chunk.AddEnviromentObject(CreateVerticalBounds(start));
         chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(chunk, groundTiles, int.MaxValue, true), isInitial: true);
 
         return chunk;
     }
     /// <summary>
-    /// Создает горизантальную границу для падения игрока, которая переносит его в начало или конец чанка
+    /// Creates a horizontal bound for the player to fall, which takes him to the start or end of the chunk
     /// </summary>
-    /// <param name="start">начало границы</param>
-    /// <param name="end">конец границы</param>
-    /// <param name="width">ширина чанка или перехода</param>
-    /// <param name="height">высота чанка или переходв</param>
+    /// <param name="start">start of the bound</param>
+    /// <param name="end">end of the bound</param>
+    /// <param name="width">width of the chunk or transition</param>
+    /// <param name="height">height of the chunk or transition</param>
     /// <returns></returns>
     protected GameObject CreateHorizontalBounds(Vector3 start, Vector3 end, int width, int height)
     {
@@ -267,10 +265,10 @@ public class FillStrategy
         return bounds.gameObject;
     }
     /// <summary>
-    /// Создает вертикальную границу, через которую нельзя пройти, 
-    /// обычно в начале чанка
+    /// Creates a vertical border that cannot be passed through,
+    /// usually at the beginning of the chunk
     /// </summary>
-    /// <param name="pos">расположение границцы</param>
+    /// <param name="pos"></param>
     /// <returns></returns>
     public GameObject CreateVerticalBounds(Vector3 pos)
     {
@@ -282,10 +280,10 @@ public class FillStrategy
         return bounds.gameObject;
     }
     /// <summary>
-    /// Создает боковые границы под чанками для падения игрока, которая переносит его в начало или конец чанка
+    /// Creates side bounds under the chunks for the player to fall, which takes him to the start or end of the chunk
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="isLeft">если граница слева</param>
+    /// <param name="isLeft"></param>
     protected void CreateSideBound(Chunk chunk, bool isLeft)
     {
         Vector3 pos = (isLeft ?
@@ -301,7 +299,7 @@ public class FillStrategy
         chunk.AddEnviromentObject(bounds.gameObject);
     }
     /// <summary>
-    /// Создает последний чанк с боссом
+    /// Creates the final chunk with the boss
     /// </summary>
     /// <param name="prevChunk"></param>
     /// <returns></returns>
@@ -313,11 +311,10 @@ public class FillStrategy
         Vector3Int end = new Vector3Int(start.x + m_minStraightSection * 2 + m_finalChunkWidth, start.y);
         Chunk chunk = new Chunk(end, m_minStraightSection, prevChunk.GetNextTransition());
 
-        //начало чанка
+        //start of the chunk
         chunk.CreateElevationOrLowland(-m_finalChunkHeight, m_finalChunkWidth, start + m_minStraightSection * Vector3Int.right);
-        //низменность, где ходит босс
-        chunk.CreateElevationOrLowland(m_finalChunkHeight, m_minStraightSection, start + new Vector3Int(m_minStraightSection + m_finalChunkWidth, -m_finalChunkHeight));
-        //создает босса
+        //lowland where the boss is walking
+        chunk.CreateElevationOrLowland(m_finalChunkHeight, m_minStraightSection, start + new Vector3Int(m_minStraightSection + m_finalChunkWidth, -m_finalChunkHeight));      
         BossScript boss = m_container.InstantiatePrefab(m_levelTheme.m_boss, new Vector3(start.x + (m_minStraightSection + m_finalChunkWidth - m_levelTheme.m_boss.GetWidth()) / 2, start.y - m_finalChunkHeight), Quaternion.identity, null).GetComponent<BossScript>();
         if (m_increaseBossHealth)
         {
@@ -328,50 +325,50 @@ public class FillStrategy
         return chunk;
     }
     /// <summary>
-    /// Создает низменности, возвышенности и холмы для чанк, добавляет врагов и ловушки
+    /// Creates lowlands, uplands and slopes for chunks, adds enemies and traps
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="lastPoint">последняя точка прямого участка</param>
-    /// <param name="spawnEnemyOrTrap">создавать ли ловушки и врагов</param>
+    /// <param name="lastPoint">last point of the straight section</param>
+    /// <param name="spawnEnemyOrTrap"></param>
     protected void CreateElevationsAndLowlands(Chunk chunk, Vector3Int lastPoint, int startWidth, int height, bool spawnEnemyOrTrap)
     {
-        //ширина участка
+        //width of the section
         int width = startWidth;
-        //враг на участке
+        //enemy in the last section
         WalkEnemy lastEnemy = null;
         while (chunk.GetEndPosition().x - lastPoint.x > m_minStraightSection)
         {
-            //если slopeChance и оставшаяся дистанция достаточна для генерации холма
+            //if slopeChance and the remaining distance are enough to generate a slope
             if (Random.value > m_slopeChance && m_minElevationHeight * 2 + m_minStraightSection + lastPoint.x <= chunk.GetEndPosition().x - m_minStraightSection)
             {
-                //сбрасывает правый отступ, т.к. нет изменения высоты
+                //resets the right offset because there is no height change
                 m_rightOffset = 0f;
                 m_jumper = false;
-                //создает врагов и ловушки на предыдущем участке, если надо
+                //creates enemies and traps in the previous section, if necessary
                 if (spawnEnemyOrTrap)
-                    SpawnEnemyOrTrap(chunk, width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
-                //сбрасывает левый отступ, т.к. нет изменения высоты и предыдущий участок заполнен
+                    SpawnObjectInTheSection(chunk, width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
+                //resets the left offset because there is no height change and the previous section is filled in
                 m_leftOffset = 0f;
                 int slopeHeight = Random.Range(m_minElevationHeight, Mathf.Clamp((chunk.GetEndPosition().x - m_minStraightSection * 2 - lastPoint.x - 1) / 2, m_minElevationHeight, m_maxSlopeHeight));
                 width = Random.Range(m_minStraightSection, chunk.GetEndPosition().x - m_minStraightSection - slopeHeight * 2 - lastPoint.x - 1);
                 chunk.CreateSlope(slopeHeight, width, lastPoint);
-                // создает ловушки и врагов на холме если надо
+                //creates enemies and traps on the slope, if necessary
                 if (spawnEnemyOrTrap)
-                    SpawnEnemyOrTrap(chunk, width, int.MaxValue, new Vector3(lastPoint.x + slopeHeight + 1, lastPoint.y + slopeHeight), ref lastEnemy);
-                //точка после холма
+                    SpawnObjectInTheSection(chunk, width, int.MaxValue, new Vector3(lastPoint.x + slopeHeight + 1, lastPoint.y + slopeHeight), ref lastEnemy);
+                //point after the slope
                 lastPoint = new Vector3Int(lastPoint.x + slopeHeight * 2 + width + m_minStraightSection + 1, lastPoint.y);
-                //ширина участка после холма
+                //width of the section after the slope
                 width = m_minStraightSection;
             }
             else
             {
-                //создает врагов и ловушки на предыдущем участке, если надо
+                //creates enemies and traps in the previous section, if necessary
                 if (spawnEnemyOrTrap)
-                    SpawnEnemyOrTrap(chunk, width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
-                //ширина нового участка
+                    SpawnObjectInTheSection(chunk, width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
+                //width of the new section
                 width = Random.Range(m_minStraightSection, chunk.GetEndPosition().x - lastPoint.x);
                 chunk.CreateElevationOrLowland(height, width, lastPoint);
-                //создает платформу или батут в конце предыдущего участка, если высота нового участка выше прыжка игрока
+                //creates a platform or jumper at the end of the previous section if the height of the new section is higher than the player's jump
                 if (height > m_playerJumpHeight)
                 {
                     if (!m_jumper)
@@ -393,31 +390,31 @@ public class FillStrategy
                         chunk.AddEnviromentObject(jumper.gameObject);
                     }
                 }
-                //отступ в начале для игрока
+                //offset at the beginning for the player
                 m_leftOffset = m_playerWidth * 1.5f;
-                //обновляем позицию на начало нового участка
+                //updates the position to the beginning of a new section
                 lastPoint = new Vector3Int(lastPoint.x + width, lastPoint.y + height);
             }
-            //сбрасывает врага на участке
+            //resrts the last enemy
             lastEnemy = null;
-            //высота следующего нового участка
+            //height of the next section
             height = Random.Range(m_minElevationHeight, m_maxElevationHeight) * (Random.value > 0.5f ? -1 : 1);
-            //устанавливает отступ в конце участка в зависимости от высоты нового
+            //sets the offset at the end of the section depending on the height of the new one
             SetRightOffset(height);
         }
-        //добавляет оставшиеся тапйлы
+        //adds remaining tiles
         chunk.AddTiles(m_chunkHeight, chunk.GetEndPosition().x - lastPoint.x, lastPoint);
         m_rightOffset = -m_playerWidth;
         m_jumper = false;
-        //добавляет врагов и ловушки на оставшиеся тайлы, если надо
+        //adds enemies and traps to the remaining tiles, if necessary
         if (spawnEnemyOrTrap)
-            SpawnEnemyOrTrap(chunk, chunk.GetEndPosition().x - lastPoint.x + width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
+            SpawnObjectInTheSection(chunk, chunk.GetEndPosition().x - lastPoint.x + width, int.MaxValue, lastPoint - Vector3Int.right * width, ref lastEnemy);
     }
     /// <summary>
-    /// Определяет отступ справа на участке в зависимости от высототы следующего участка
-    /// Если следующий участок - возвышенность, то решает, будет ли платформа или батут
+    /// Defines the right offset of the section depending on the height of the next section
+    /// If the next section is an elevation, it decides whether there will be a platform or a jumper
     /// </summary>
-    /// <param name="height">высота следующего участка</param>
+    /// <param name="height">height of the next section</param>
     protected void SetRightOffset(int height)
     {
         if (height > m_playerJumpHeight)
@@ -441,22 +438,22 @@ public class FillStrategy
     }
 
     /// <summary>
-    /// Добавляет ландшафт на землю чанка
+    /// Adds a landscape on the ground
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="height">макс высота растительности</param>
-    /// <param name="addTrees">добавлять ли деревья</param>
+    /// <param name="height">max height of the vegetation</param>
+    /// <param name="addTrees"></param>
     protected void AddLandscape(Chunk chunk, HashSet<Vector3Int> groundTiles, int height, bool addTrees)
     {
         int width = 0;
-        //
+        //the width of the grass section
         int grassWidth = 0;
         Vector3Int start = groundTiles.FirstOrDefault();
         Vector3Int grassStart = start;
         foreach (var ground in groundTiles)
         {
-            //если добавлен тайл с травой - не добавлять траву
-            //идет по прямому участку земли и считаем количество тайлов
+            //if a tile with grass has been added - do not add grass
+            //walking on a straight section of the ground and counting the number of tiles
             if (!m_editor.AddGrass(ground) && ground.y == start.y && ground.x == start.x + width)
             {
                 if (grassWidth == 0)
@@ -466,12 +463,12 @@ public class FillStrategy
                 width++;
                 grassWidth++;
             }
-            //если прямой участок земли закончился - добавить растительность
+            //if a straight section of the ground or grass has ended - add vegetation
             else if (grassWidth > 0 || ground.y != start.y || ground.x != start.x + width)
             {
-                //добавляем траву
+                //adds grass
                 AddEnvObjects(chunk, grassWidth, height, grassStart, m_levelTheme.m_grass);
-                //если закончился прямой участок - добавляет деревья, камни и кусты
+                //If a straight section has ended - adds trees, rocks, and bushes.
                 if (ground.y != start.y || ground.x != start.x + width)
                 {
                     AddEnvObjects(chunk, width, height, start, m_levelTheme.m_bushes, addTrees ? m_levelTheme.m_trees : null);
@@ -479,7 +476,7 @@ public class FillStrategy
                     start = grassStart = ground;
                     width = grassWidth = 1;
                 }
-                //если оборвался участок с травой - обнуляет траву и продолжаем
+                //if a section of grass has ended - resets the grass and continues
                 else
                 {
                     width++;
@@ -487,13 +484,13 @@ public class FillStrategy
                 }
             }
         }
-        //добавляет растительность на последний прямой участок
+        //adds vegetation to the last straight section
         AddEnvObjects(chunk, grassWidth, height, grassStart, m_levelTheme.m_grass);
         AddEnvObjects(chunk, width, height, start, m_levelTheme.m_bushes, addTrees ? m_levelTheme.m_trees : null);
     }
 
     /// <summary>
-    /// Добавляет кусты и опционально деревья в объектыы чанка
+    /// Adds bushes and optionally trees to the objects of the chunk
     /// </summary>
     private void AddEnvObjects(Chunk chunk, int width, int height, Vector3Int start,
         EnviromentObject[] bushes, EnviromentObject[] trees = null)
@@ -506,41 +503,41 @@ public class FillStrategy
                 chunk.AddEnviromentObject(obj.gameObject);
     }
     /// <summary>
-    /// Добавляет растительность на прямой участок земли
+    /// Adds vegetation to a straight piece of the ground
     /// </summary>
-    /// <param name="width">ширина прямого участка</param>
-    /// <param name="height">макс высота растительности</param>
-    /// <param name="start">начало прямого участка</param>
-    /// <param name="vegs">массив объектов растительности</param>
+    /// <param name="width">width of the straight section</param>
+    /// <param name="height">max height of the vegetation</param>
+    /// <param name="start">start of the straight section</param>
+    /// <param name="vegs">array of vegetation objects</param>
     /// <returns></returns>
     protected List<EnviromentObject> AddVegetation(int width, int height, Vector3Int start, EnviromentObject[] vegs)
     {
-        //лист созданных растений
+        //list of creatd plants
         List<EnviromentObject> objs = new List<EnviromentObject>();
         if (width == 0)
             return objs;
-        // попытки генерации
+        //tries of generation
         int tries = width + 2;
-        //общая ширина всех созданных растений на участке
+        //total width of all created plants on the section
         float length = 0;
         while (tries >= 0)
         {
-            //создает рандомное растение из массива
+            //creates a random plant from an array
             EnviromentObject obj = Object.Instantiate(vegs[Random.Range(0, vegs.Length)], start, Quaternion.identity).GetComponent<EnviromentObject>();
-            //рандомная позиция на участке
+            //random position in the section
             Vector3 pos = new Vector3(Random.Range(start.x + obj.GetRightBorder(), start.x + width + obj.GetLeftBorder()), start.y);
             obj.transform.position = pos + obj.GetOffset();
-            // если obj пересекается с другим созданным объектом больше, чем на 1/3 своей ширины
+            // if an obj intersects with another created object by more than 1/3 of its width
             bool collides = objs.Any(o => o.transform.position.x > obj.transform.position.x &&
                 obj.transform.position.x + obj.GetRightBorder() - o.transform.position.x - o.GetLeftBorder() > obj.GetWidth() / 3 ||
                 o.transform.position.x < obj.transform.position.x &&
                 o.transform.position.x + o.GetRightBorder() - obj.transform.position.x - obj.GetLeftBorder() > obj.GetWidth() / 3);
-            //если растение:
-            //- растение выше макс высоты 
-            //- пересекается с другим созданным объектом больше, чем на 1/3 своей ширины
-            //- с вероятностью 35% общая ширина всех созданных растений на участке больше половины ширины участка
-            //- растение выходит за рамки участка
-            //тогда запускает генераци. заново и удаляемсозданный объект, так как он не подходит
+            //if the plant:
+            //- the plant is higher than the maximum height
+            //- intersects with another created object by more than 1/3 of its width
+            //- with a probability of 35%, the total width of all created plants on the section is more than half the width of the section
+            //- the plant goes beyond the section
+            //then it starts generation anew and deletes the created object, as it does not fit
             if (obj.GetHeight() > height || collides || (Random.value > 0.65f && length > width * 1.0f / 2) || pos.x + obj.GetRightBorder() > start.x + width || pos.x + obj.GetLeftBorder() < start.x)
             {
                 tries--;
@@ -555,13 +552,13 @@ public class FillStrategy
     }
 
     /// <summary>
-    /// Номер рандомного врага в зависимости от его шанса создания
+    /// The number of a random enemy, depending on its chance of creation
     /// </summary>
-    /// <returns>номер врага в списке возможных врагов</returns>
+    /// <returns></returns>
     int GetEnemyNum()
     {
         float[] chances = new float[m_levelTheme.m_enemies.Length];
-        //добавляет шанс создания каждого врага в список
+        //adds the chance of spawnig each enemy to the list
         for (int i = 0; i < m_levelTheme.m_enemies.Length; i++)
         {
             WalkEnemy enemy = m_levelTheme.m_enemies[i].gameObject.GetComponent<WalkEnemy>();
@@ -572,14 +569,14 @@ public class FillStrategy
         return m_lvlBuilder.GetWeightedIndex(chances);
     }
     /// <summary>
-    /// Создает врага или ловушку
+    /// Creats an object in the section
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="sectionWidth">ширина прямого участка</param>
-    /// <param name="height">макс высота ловушки</param>
-    /// <param name="startPos">начало участка</param>
-    /// <param name="lastEnemy">последний созданный враг на участке</param>
-    protected void SpawnEnemyOrTrap(Chunk chunk, int sectionWidth, int height, Vector3 startPos, ref WalkEnemy lastEnemy)
+    /// <param name="sectionWidth">width of the section</param>
+    /// <param name="height">max height of traps</param>
+    /// <param name="startPos">start of the section</param>
+    /// <param name="lastEnemy">last enemy created on the section</param>
+    protected void SpawnObjectInTheSection(Chunk chunk, int sectionWidth, int height, Vector3 startPos, ref WalkEnemy lastEnemy)
     {
         if (sectionWidth <= 0)
             return;
@@ -589,15 +586,18 @@ public class FillStrategy
             sectionWidth > m_minEnemyWidth && m_enemiesPerChunk > 0,
             m_trapsPerChunk > 0))
         {
+            //spawn a cat
             case 0:
                 chunk.AddEnviromentObject(m_container.InstantiatePrefab(m_levelTheme.m_cat, new Vector3(startPos.x + (sectionWidth - m_levelTheme.m_cat.GetWidth()) / 2, startPos.y), Quaternion.identity, null));
                 m_catsLeft--;
                 m_catsSpawned++;
                 break;
+            //spawn the shop
             case 1:
                 chunk.AddEnviromentObject(m_container.InstantiatePrefab(m_levelTheme.m_shop, new Vector3(Random.Range(startPos.x, startPos.x + sectionWidth + m_rightOffset - m_levelTheme.m_shop.GetWidth() + 1), startPos.y), Quaternion.identity, null));
                 m_shopSpawned = true;
                 break;
+            //spawn an enemy
             case 2:
                 SpawnValues enemy = m_levelTheme.m_enemies[GetEnemyNum()];
                 Vector3 pos = new Vector3(startPos.x + (sectionWidth - enemy.GetWidth()) / 2, startPos.y);
@@ -605,6 +605,7 @@ public class FillStrategy
                 chunk.AddEnviromentObject(lastEnemy.gameObject);
                 m_enemiesPerChunk--;
                 break;
+            //spawn traps
             case 3:
                 List<Trap> traps = new List<Trap>();
                 while (traps.Count == 0)
@@ -612,15 +613,15 @@ public class FillStrategy
                     Trap trap = m_levelTheme.m_floorTraps[Random.Range(0, m_levelTheme.m_floorTraps.Length)];
                     m_container.Inject(trap);
                     trap.SetTrapNum();
-                    //если ловушка слишком высокая или широкая - пробует заново
+                    //if the trap is too high or wide - tries again
                     if (trap.GetWidth() > sectionWidth || trap.GetHeight() > height)
                     {
                         continue;
                     }
-                    //границы участка для создания ловушки
+                    //borders of the section to create traps
                     float rightBorder = startPos.x + sectionWidth + m_rightOffset;
                     float leftBorder = startPos.x + m_leftOffset;
-                    //количество ловушек на участке
+                    //number of traps in the section
                     m_trapsNum = Random.Range(1, (int)((rightBorder - leftBorder) / (trap.GetWidth() + m_playerWidth)) + 1);
 
 
@@ -630,7 +631,7 @@ public class FillStrategy
                         {
                             m_trapsNum = 1;
                         }
-                        // если ловушка стреляет - обрезать границу
+                        // if the trap is shooting - crop the border
                         if (trap.GetAttackDirection() == Vector3.forward)
                         {
                             rightBorder -= sectionWidth / 2;
@@ -641,10 +642,10 @@ public class FillStrategy
                             leftBorder += sectionWidth / 2;
                         }
                     }
-                    //если ловушка серийная - сделать серию подряд ловушек
+                    //if the trap is serial, make a series of traps in a row
                     if (trap.IsSeries())
                     {
-                        //пересчитывает возможное количество ловушек
+                        //recalculates the possible number of traps
                         m_trapsNum = Random.Range(1, (int)Mathf.Clamp(-(trap.GetHeight() - m_playerJumpHeight) * m_playerJumpWidth * 1.0f / m_playerJumpHeight, 1, (rightBorder - trap.GetRightBorder() - leftBorder + trap.GetLeftBorder()) / trap.GetWidth()));
                         pos = new Vector3(Random.Range(leftBorder - trap.GetLeftBorder(), rightBorder - trap.GetRightBorder() - m_trapsNum * trap.GetWidth()), startPos.y);
                         for (int i = 0; i < m_trapsNum; i++)
@@ -670,23 +671,23 @@ public class FillStrategy
         }
     }
     /// <summary>
-    /// Создает ловушку в пределах границ и запускает создание справа и слева от себя
+    /// Creates a trap within the borders and triggers a creation to the right and left of itself
     /// </summary>
-    /// <param name="leftBorder">левая граница</param>
-    /// <param name="rightBorder">правая граница</param>
+    /// <param name="leftBorder"></param>
+    /// <param name="rightBorder"></param>
     /// <param name="posY"></param>
-    /// <param name="trap">титп ловушки</param>
-    /// <param name="traps">лист всех ловушек</param>
+    /// <param name="trap">trap type</param>
+    /// <param name="traps">all traps</param>
     void SpawnTrap(float leftBorder, float rightBorder, float posY, Trap trap, List<Trap> traps)
     {
-        //если все ловушки созданы или учвасток слишком мал - выход
+        //if all traps are instantiated or the section is too small - exit
         if (m_trapsNum == 0 || trap.GetWidth() >= rightBorder - leftBorder)
             return;
-        //рандомная позиция на участке
+        //random position on the section
         float posX = Random.Range(leftBorder - trap.GetLeftBorder(), rightBorder - trap.GetRightBorder());
         m_trapsNum--;
         traps.Add(m_container.InstantiatePrefabForComponent<Trap>(trap, new Vector3(posX, posY), Quaternion.identity, null));
-        //запускает создание справа и слева
+        //starts creation on the right and left
         SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trap, traps);
         SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trap, traps);
     }
