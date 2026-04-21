@@ -25,15 +25,6 @@ public class PlatformManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
     private static extern string GetYandexLanguage();
-
-    [DllImport("__Internal")]
-    private static extern void SetGameReady();
-
-    [DllImport("__Internal")]
-    private static extern void SetGameStart();
-
-    [DllImport("__Internal")]
-    private static extern void SetGameStop();
 #endif
 
     IEnumerator Start()
@@ -114,26 +105,5 @@ public class PlatformManager : MonoBehaviour
         }
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
         m_UI.CurrentLanguage = 0;
-    }
-
-    public void SetGameReadyForAPI()
-    {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        SetGameReady();
-#endif
-    }
-
-    public void SetGameGameplay(bool start)
-    {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        if(start)
-        {
-            SetGameStart();
-        }
-        else 
-        {
-            SetGameStop();
-        }
-#endif
     }
 }

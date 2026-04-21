@@ -19,6 +19,8 @@ public class DestroyableBrickStrategy : FillStrategy
     readonly int m_maxStarirsOffsetX = 4;
     readonly int m_minStarirsOffset = 1;
 
+    readonly float m_chunkRespawnTime = 5f;
+
     readonly DestroyableBrick m_brick;
 
     public DestroyableBrickStrategy(LevelTheme levelTheme, DestroyableBrick destroyableBrick) : base(levelTheme)
@@ -51,15 +53,15 @@ public class DestroyableBrickStrategy : FillStrategy
         {
             case 0:
                 CollapseStaircase(chunk);
-                if (height != 0)
-                {
-                    CreateSideBound(chunk, true);
-                    CreateSideBound(chunk, false);
-                }
+                //if (height != 0)
+                //{
+                //    CreateSideBound(chunk, true);
+                //    CreateSideBound(chunk, false);
+                //}
                 break;
             case 1:
                 ResonanceCorridor(chunk, height);
-                CreateSideBound(chunk, height < 0);
+                //CreateSideBound(chunk, height < 0);
                 break;
 
             case 2:
@@ -68,7 +70,7 @@ public class DestroyableBrickStrategy : FillStrategy
 
             case 3:
                 WaveOfCollapse(chunk, height);
-                CreateSideBound(chunk, height < 0);
+                //CreateSideBound(chunk, height < 0);
                 break;
         }
 
@@ -106,7 +108,7 @@ public class DestroyableBrickStrategy : FillStrategy
             for (int i = 1; i <= tilesCount; i++)
             {
                 offset += new Vector3Int(1, ((height - offset.y) * chunkHeight > 0 ? 1 : -1) / (tilesCount + 1 - i));
-                CreateBrick(chunk, currentPos + offset, BrickBehaviour.Timer, group);
+                CreateBrick(chunk, currentPos + offset, BrickBehaviour.Timer, group, true, m_chunkRespawnTime);
             }
             currentPos += new Vector3Int(tilesCount + 1, height * chunkHeight > 0 ? 1 : -1);
             if (currentPos.x < end.x)
@@ -134,11 +136,11 @@ public class DestroyableBrickStrategy : FillStrategy
         while (currentPos.x < end.x)
         {
             //upper brick
-            CreateBrick(chunk, currentPos, BrickBehaviour.OnExit, new List<DestroyableBrick>(1));
+            CreateBrick(chunk, currentPos, BrickBehaviour.OnExit, new List<DestroyableBrick>(1), true, m_chunkRespawnTime);
             //moves to the next cell
             currentPos += new Vector3Int(1, Mathf.Min(GetGapHeightInDiagonalWidth(currentPos, end, 1), 1) * (chunkHeight > 0 ? 1 : -1));
             //lower brick is shifted 1 to the right compared to the upper one
-            CreateBrick(chunk, currentPos + Vector3Int.down * lineOffset, BrickBehaviour.Timer, new List<DestroyableBrick>(1));
+            CreateBrick(chunk, currentPos + Vector3Int.down * lineOffset, BrickBehaviour.Timer, new List<DestroyableBrick>(1), true, m_chunkRespawnTime);
             if (currentPos.x != end.x)
             {
                 currentPos += new Vector3Int(1, Mathf.Min(GetGapHeightInDiagonalWidth(currentPos, end, 1), 1) * (chunkHeight > 0 ? 1 : -1));
@@ -177,7 +179,7 @@ public class DestroyableBrickStrategy : FillStrategy
                 case 0:
                     for (int i = 0; i < platformWidth; i++)
                     {
-                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.OnExit, new List<DestroyableBrick>(1));
+                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.OnExit, new List<DestroyableBrick>(1), true, m_chunkRespawnTime);
                     }
                     currentPos += new Vector3Int(platformWidth + offsetX, verticalGap + offsetY);
                     break;
@@ -185,14 +187,14 @@ public class DestroyableBrickStrategy : FillStrategy
                     group = new List<DestroyableBrick>(platformWidth);
                     for (int i = 0; i < platformWidth; i++)
                     {
-                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.Timer, group);
+                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.Timer, group, true, m_chunkRespawnTime);
                     }
                     currentPos += new Vector3Int(platformWidth + offsetX, -verticalGap);
                     break;
                 case 2:
                     for (int i = 0; i < platformWidth; i++)
                     {
-                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.OnEnter, new List<DestroyableBrick>(1));
+                        CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.OnEnter, new List<DestroyableBrick>(1), true, m_chunkRespawnTime);
                     }
                     currentPos += new Vector3Int(platformWidth + offsetX, -offsetY);
                     break;
@@ -220,7 +222,7 @@ public class DestroyableBrickStrategy : FillStrategy
             group = new List<DestroyableBrick>(timerZone);
             for (int i = 0; i < timerZone; i++)
             {
-                CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.Timer, group);
+                CreateBrick(chunk, currentPos + Vector3Int.right * i, BrickBehaviour.Timer, group, true, m_chunkRespawnTime);
             }
             currentPos += Vector3Int.right * timerZone;
             if (currentPos.x < end.x)
@@ -238,10 +240,10 @@ public class DestroyableBrickStrategy : FillStrategy
         chunk.SetEndPosition(currentPos);
     }
 
-    void CreateBrick(Chunk chunk, Vector3Int pos, BrickBehaviour behaviour, List<DestroyableBrick> group = null)
+    void CreateBrick(Chunk chunk, Vector3Int pos, BrickBehaviour behaviour, List<DestroyableBrick> group = null, bool respawn = false, float respawnTime = 2.5f)
     {
         DestroyableBrick brick = Object.Instantiate(m_brick, pos, Quaternion.identity);
-        brick.SetBrickBehaviour(behaviour, m_levelTheme.m_themeNum, group);
+        brick.SetBrickBehaviour(behaviour, m_levelTheme.m_themeNum, group, respawn, respawnTime);
         chunk.CreatePlatform(pos, 1);
         chunk.AddEnviromentObject(brick.gameObject);
     }
@@ -265,7 +267,7 @@ public class DestroyableBrickStrategy : FillStrategy
         bool posOffset = true;
         do
         {
-            CreateBrick(transition, lastPoint, BrickBehaviour.Timer, new List<DestroyableBrick>(1));
+            CreateBrick(transition, lastPoint, BrickBehaviour.Timer, new List<DestroyableBrick>(1), true);
             lastPoint += new Vector3Int((posOffset ? 1 : -1), vertOffset);
             posOffset = !posOffset;
         }

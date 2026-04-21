@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2309508001319135171}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 126471751119900537}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &9059413557874187744
 PrefabInstance:
@@ -42,6 +42,22 @@ PrefabInstance:
     - target: {fileID: 112275457800205985, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_Name
       value: ArrowTrap Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.08627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.1254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.1882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0006
       objectReference: {fileID: 0}
     - target: {fileID: 4851061651080796284, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_Layer
@@ -60,15 +76,15 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[0]
+      propertyPath: 'm_attacks.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: 150841e0040654f4694031810abe49ea, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[1]
+      propertyPath: 'm_attacks.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: 9cca886ec75232f4bb70734770658f6a, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[2]
+      propertyPath: 'm_attacks.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: d9bf09b021ebcab4584acebc2581e1c3, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -132,31 +148,87 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[0]
+      propertyPath: m_outlineColors.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: 'm_transitions.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: 10495c5f54c66f54aab32294fcbbbd81, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[1]
+      propertyPath: 'm_transitions.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: 3e10d565c378c4c4abf304c73496134e, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[2]
+      propertyPath: 'm_transitions.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: 17a3d2fc2a0b25d40b3830f59eb7a666, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_spawnOffsets.Array.data[0]
+      propertyPath: 'm_spawnOffsets.Array.data[0]'
       value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_spawnOffsets.Array.data[1]
+      propertyPath: 'm_spawnOffsets.Array.data[1]'
       value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_spawnOffsets.Array.data[2]
+      propertyPath: 'm_spawnOffsets.Array.data[2]'
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_attackDirections.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[0].b
+      value: 0.11764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[0].g
+      value: 0.105882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[0].r
+      value: 0.16862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[1].b
+      value: 0.11764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[1].g
+      value: 0.105882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[1].r
+      value: 0.16862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[2].b
+      value: 0.11764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[2].g
+      value: 0.105882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineColors.Array.data[2].r
+      value: 0.16862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineThicknesses.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -170,6 +242,18 @@ PrefabInstance:
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_attackDirections.Array.data[2].x
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: 'm_outlineThicknesses.Array.data[0]'
+      value: 0.0006
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: 'm_outlineThicknesses.Array.data[1]'
+      value: 0.0004
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: 'm_outlineThicknesses.Array.data[2]'
+      value: 0.00035
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_spawnChances.Array.data[1].m_PreInfinity

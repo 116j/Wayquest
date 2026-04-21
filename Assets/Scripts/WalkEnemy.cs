@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using Zenject;
 
 public class WalkEnemy : MonoBehaviour
@@ -29,6 +30,7 @@ public class WalkEnemy : MonoBehaviour
 
     protected Animator m_anim;
     protected Rigidbody2D m_rb;
+    protected SpriteRenderer m_renderer;
     protected TouchingCheck m_touchings;
     protected BoxCollider2D m_col;
     protected MovingPlatform m_platform;
@@ -67,6 +69,7 @@ public class WalkEnemy : MonoBehaviour
     protected int m_currentDir = 1;
     protected float m_speed = 0f;
     float m_waitTimer;
+    Tween m_hitTween;
 
     /// <summary>
     /// Sets the number of enemy attacks
@@ -81,6 +84,7 @@ public class WalkEnemy : MonoBehaviour
     {
         m_anim = GetComponent<Animator>();
         m_rb = GetComponent<Rigidbody2D>();
+        m_renderer = GetComponent<SpriteRenderer>();
         m_touchings = GetComponent<TouchingCheck>();
         m_col = GetComponent<BoxCollider2D>();
         m_damageable = GetComponent<Damagable>();
@@ -234,6 +238,8 @@ public class WalkEnemy : MonoBehaviour
                 TurnAround();
             }
             m_anim.SetTrigger(m_HashHit);
+            m_hitTween = m_renderer.DOFade(0.75f, 0.1f)
+           .SetLoops(6, LoopType.Yoyo);
         }
     }
     /// <summary>
@@ -265,5 +271,10 @@ public class WalkEnemy : MonoBehaviour
         m_dead = false;
         m_damageable.Reborn();
         m_platform?.Restart(true);
+    }
+
+    private void OnDestroy()
+    {
+        m_hitTween.Kill();
     }
 }

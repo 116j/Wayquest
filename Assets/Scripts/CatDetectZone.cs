@@ -6,6 +6,8 @@ public class CatDetectZone : DetectZone
     [SerializeField]
     UnityEvent<bool> m_onTrigger;
 
+    public bool CatMoving => m_cat.IsMoving;
+
     Cat m_cat;
 
     protected override void OnTriggerEnter2D(Collider2D collision)

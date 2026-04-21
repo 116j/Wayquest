@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_setOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.13333334
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.14901961
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.16078432
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0007
+      objectReference: {fileID: 0}
     - target: {fileID: 548330582605977599, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_Name
       value: HeavySwordSkeleton Variant
@@ -146,7 +170,7 @@ PrefabInstance:
       objectReference: {fileID: 7422445880199841341}
     - target: {fileID: 5901932265902264129, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_attackCooldownTime
-      value: 0.8
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 6030628016457017003, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_LocalPosition.x
@@ -235,6 +259,10 @@ PrefabInstance:
     - target: {fileID: 8183254454711484530, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_spawnOffset.y
       value: 2.465
+      objectReference: {fileID: 0}
+    - target: {fileID: 8493135385743088861, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_recoverTime
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8630340042612713785, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_Name

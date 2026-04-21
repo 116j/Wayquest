@@ -12,6 +12,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: LightningTrap Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_setOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.20784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.16078432
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.14509805
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0007
+      objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_attacks.Array.size
       value: 3
@@ -21,15 +41,15 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[0]
+      propertyPath: 'm_attacks.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: faabb8e75f3fc7c4081b84f62ddc59bf, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[1]
+      propertyPath: 'm_attacks.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: 14bc312935fb98841adc190a0d3bb3cb, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[2]
+      propertyPath: 'm_attacks.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: 48c8cdd144303cf499476710170666cf, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -89,15 +109,15 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[0]
+      propertyPath: 'm_transitions.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: e1cace2d1aeec114883a2c1218cdb206, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[1]
+      propertyPath: 'm_transitions.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: 8a04fe48eb41a74429b5ac2b15ce2a97, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[2]
+      propertyPath: 'm_transitions.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: b2731581fa63e9643a9b42c715821329, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}

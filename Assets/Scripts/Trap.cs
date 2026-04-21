@@ -13,14 +13,21 @@ public class Trap : MonoBehaviour, IMetrics
     Vector3[] m_metrics;
     [SerializeField]
     Vector3[] m_attackDirections;
-
     [SerializeField]
     AnimationCurve[] m_spawnChances;
     [SerializeField]
     //Series of traps or a single one
     bool m_series;
+    [Header("Outlines")]
+    [SerializeField]
+    Color[] m_outlineColors;
+    [SerializeField]
+    float[] m_outlineThicknesses;
+
+    public int TrapNumber => m_trapNumber;
 
     protected Animator m_anim;
+    Outline m_outline;
     [Inject]
     protected LevelBuilder m_lvlBuilder;
     //Trap number
@@ -31,6 +38,7 @@ public class Trap : MonoBehaviour, IMetrics
     protected virtual void Awake()
     {
         m_anim = GetComponent<Animator>();
+        m_outline = GetComponent<Outline>();
     }
 
     private void Start()
@@ -39,13 +47,25 @@ public class Trap : MonoBehaviour, IMetrics
             SetTrapNum();
         SetAnimations(m_trapNumber);
         SetOffset();
+        SetOutline();
+    }
+
+    void SetOutline()
+    {
+        if (m_outline != null)
+        {
+            if (m_outlineColors.Length > 0)
+            {
+                m_outline.SetOutline(m_outlineColors[m_trapNumber], m_outlineThicknesses[m_trapNumber]);
+            }
+        }
     }
 
     /// <summary>
     /// Sets animations for the overrided trap animation controller
     /// </summary>
     /// <param name="animNum">number of the trap</param>
-    void SetAnimations(int animNum)
+    protected void SetAnimations(int animNum)
     {
         AnimatorOverrideController aoc = new(m_anim.runtimeAnimatorController);
         var anims = new List<KeyValuePair<AnimationClip, AnimationClip>>(1)

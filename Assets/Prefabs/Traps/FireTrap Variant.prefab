@@ -16,6 +16,26 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.28
       objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_setOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.13333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0025
+      objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_series
       value: 1

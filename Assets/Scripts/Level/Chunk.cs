@@ -170,14 +170,14 @@ public class Chunk
         m_tilesFilled = true;
     }
 
-    public void SetCameraBounds()
+    public void SetCameraBounds(CameraBounds bounds)
     {
-        CameraBounds.Instance.SetHeight(new Vector3(m_startPosition.x, GetChunkHighestPoint()), GetChunkCameraHeight());
+        bounds.SetHeight(new Vector3(m_startPosition.x, GetChunkHighestPoint()), GetChunkCameraHeight());
     }
 
-    public void SetTransitionCameraBounds()
+    public void SetTransitionCameraBounds(CameraBounds bounds)
     {
-        m_prevTransition.SetCameraBounds();
+        m_prevTransition.SetCameraBounds(bounds);
     }
     /// <summary>
     /// Destroys tiles and objects in the chunk

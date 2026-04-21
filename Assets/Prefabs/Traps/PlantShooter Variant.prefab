@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6090333619381062546}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.071, y: 0.545, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2912099164177393914}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6057635069465213539
 PrefabInstance:
@@ -42,6 +42,26 @@ PrefabInstance:
     - target: {fileID: 112275457800205985, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_Name
       value: PlantShooter Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_setOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.05882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.14901961
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.003921569
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045457802956469287, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0007
       objectReference: {fileID: 0}
     - target: {fileID: 4851061651080796284, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
       propertyPath: m_TagString
@@ -60,19 +80,19 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[0]
+      propertyPath: 'm_attacks.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: b60ba55207ad0ca4ca8841f3807f1f23, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[1]
+      propertyPath: 'm_attacks.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: e52fde00f66dd7d4f85025e95f6676cc, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[2]
+      propertyPath: 'm_attacks.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: 19655cb6495bdf240bb758d34a9c4469, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_attacks.Array.data[3]
+      propertyPath: 'm_attacks.Array.data[3]'
       value: 
       objectReference: {fileID: 7400000, guid: 59c4379cb259229458e97421a1ffe7b7, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
@@ -124,19 +144,19 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[0]
+      propertyPath: 'm_transitions.Array.data[0]'
       value: 
       objectReference: {fileID: 7400000, guid: ed6d7779ad88d46499561c748093acf8, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[1]
+      propertyPath: 'm_transitions.Array.data[1]'
       value: 
       objectReference: {fileID: 7400000, guid: ed6d7779ad88d46499561c748093acf8, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[2]
+      propertyPath: 'm_transitions.Array.data[2]'
       value: 
       objectReference: {fileID: 7400000, guid: ed6d7779ad88d46499561c748093acf8, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}
-      propertyPath: m_transitions.Array.data[3]
+      propertyPath: 'm_transitions.Array.data[3]'
       value: 
       objectReference: {fileID: 7400000, guid: ed6d7779ad88d46499561c748093acf8, type: 2}
     - target: {fileID: 5068443204209693425, guid: 5261515ee55bf7b49a01299ca2bc0009, type: 3}

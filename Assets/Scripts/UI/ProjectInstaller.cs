@@ -9,6 +9,10 @@ public class ProjectInstaller : MonoInstaller
             .FromComponentInHierarchy()
             .AsSingle();
         Container
+            .Bind<CameraBounds>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+        Container
             .Bind<AdManager>()
             .FromComponentInHierarchy()
             .AsSingle();
@@ -42,6 +46,10 @@ public class ProjectInstaller : MonoInstaller
             .AsSingle();
         Container
             .Bind<PlayerController>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+        Container
+            .Bind<LeavesPool>()
             .FromComponentInHierarchy()
             .AsSingle();
     }

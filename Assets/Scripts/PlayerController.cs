@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     readonly float m_jumpTime = 0.4f;
     readonly float m_blockCooldownTime = 0.4f;
     readonly float m_blockDuration = 0.15f;
-    readonly float m_cameraSpeed = 6f;
+    readonly float m_cameraSpeed = 5f;
     readonly float m_dashTime = 0.35f;
 
 
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         m_touchings = GetComponent<TouchingCheck>();
         m_sound = GetComponent<SoundController>();
         m_values = GetComponent<SpawnValues>();
-
+            
         m_gravityScale = m_rb.gravityScale;
         m_gravity = new Vector2(0f, -Physics2D.gravity.y);
         m_transposer = m_playerCam.GetCinemachineComponent<CinemachineFramingTransposer>();
@@ -228,6 +228,12 @@ public class PlayerController : MonoBehaviour
             {
                 m_catZone.ApplyPet(true);
                 m_pet = true;
+                m_rb.velocity = Vector2.zero;
+            }
+
+            if (m_pet&&(!m_catZone.TargetDetected || m_onSlope))
+            {
+                m_pet = false;
             }
 
             m_anim.SetBool(m_HashHeavyAttack, m_input.HeavyAttack);
@@ -249,7 +255,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            targetY = Mathf.MoveTowards(m_transposer.m_TrackedObjectOffset.y, m_baseTransposer, m_cameraSpeed * Time.fixedDeltaTime);
+            targetY = Mathf.MoveTowards(m_transposer.m_TrackedObjectOffset.y, m_baseTransposer, (m_cameraSpeed - 2f) * Time.fixedDeltaTime);
         }
         m_transposer.m_TrackedObjectOffset = new Vector3(m_transposer.m_TrackedObjectOffset.x, targetY, m_transposer.m_TrackedObjectOffset.z);
 
@@ -258,7 +264,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //if the player falls for a long time and does not meet the limits for the fall - returns to the fall checkpoint
-        if (m_falling && (m_fallCheckpoint.y - transform.position.y > 100))
+        if (m_falling && (m_fallCheckpoint.y - transform.position.y > 70))
         {
             FallReset();
         }
@@ -278,13 +284,13 @@ public class PlayerController : MonoBehaviour
         if (!m_dead)
         {
             //pet the cat
-            if (m_pet)
+            if (m_pet && !m_catZone.CatMoving)
             {
                 //aproaching the cat
                 Vector2 dir = m_catZone.TargetLocation - transform.position;
                 m_rb.velocity = new Vector2(dir.normalized.x * m_runSpeed, 0f);
                 //If has reached it - turns on a petting animation.
-                if (Mathf.Abs(dir.x) <= 0.01f)
+                if (Mathf.Abs(dir.x) <= 0.05f)
                 {
                     m_pet = false;
                     m_rb.velocity = Vector2.zero;
@@ -297,7 +303,9 @@ public class PlayerController : MonoBehaviour
             if (m_currentDir * m_input.Move < 0 && m_canMove)
             {
                 m_currentDir *= -1;
-                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y + m_currentDir * 180f, 0f);
+                float targetY = m_currentDir == 1 ? 0f : 180f;
+                transform.rotation = Quaternion.Euler(0f, targetY, 0f);
+
             }
             //If touches the walls during the jump - stop moving horizontally
             if (m_touchings.IsWalls() && (m_jumping || m_falling))

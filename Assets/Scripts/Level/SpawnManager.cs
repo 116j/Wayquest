@@ -11,7 +11,7 @@ public class SpawnManager
     [Inject]
     UIController m_UI;
 
-    readonly float m_shopChance = 0.8f;
+    readonly float m_shopChance = 0.85f;
     bool m_catSpawned;
 
     public SpawnManager(AnimationCurve trapsCount, AnimationCurve enemiesCount)

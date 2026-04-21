@@ -676,20 +676,22 @@ public class FillStrategy
     /// <param name="leftBorder"></param>
     /// <param name="rightBorder"></param>
     /// <param name="posY"></param>
-    /// <param name="trap">trap type</param>
+    /// <param name="trapType">trap type</param>
     /// <param name="traps">all traps</param>
-    void SpawnTrap(float leftBorder, float rightBorder, float posY, Trap trap, List<Trap> traps)
+    void SpawnTrap(float leftBorder, float rightBorder, float posY, Trap trapType, List<Trap> traps)
     {
         //if all traps are instantiated or the section is too small - exit
-        if (m_trapsNum == 0 || trap.GetWidth() >= rightBorder - leftBorder)
+        if (m_trapsNum == 0 || trapType.GetWidth() >= rightBorder - leftBorder)
             return;
         //random position on the section
-        float posX = Random.Range(leftBorder - trap.GetLeftBorder(), rightBorder - trap.GetRightBorder());
+        float posX = Random.Range(leftBorder - trapType.GetLeftBorder(), rightBorder - trapType.GetRightBorder());
         m_trapsNum--;
-        traps.Add(m_container.InstantiatePrefabForComponent<Trap>(trap, new Vector3(posX, posY), Quaternion.identity, null));
+        Trap trap = m_container.InstantiatePrefabForComponent<Trap>(trapType, new Vector3(posX, posY), Quaternion.identity, null);
+        trap.SetTrap(trapType.TrapNumber);
+        traps.Add(trap);
         //starts creation on the right and left
-        SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trap, traps);
-        SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trap, traps);
+        SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trapType, traps);
+        SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trapType, traps);
     }
 
 }

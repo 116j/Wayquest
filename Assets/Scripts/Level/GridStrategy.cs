@@ -66,7 +66,7 @@ public class GridStrategy : FillStrategy
         //creates bound for the player to fall
         chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, width + 1, height));
 
-        CreateSideBound(chunk, height < 0);
+        // CreateSideBound(chunk, height < 0);
 
         prevChunk.AddTransition(transition);
         chunk.AddTransition(new Chunk(end, end));

@@ -12,9 +12,11 @@ public class Damagable : MonoBehaviour
 
     bool m_dead = false;
     bool m_recovering = false;
+    bool m_afterDeathRecovering = false;
 
     float m_recoverTimer = 0f;
     float m_freezeTime = 0f;
+    float m_afterDeathRecoverTimer = 0f;
 
     int m_health = 4;
     public bool Invincible { get; set; } = false;
@@ -34,6 +36,16 @@ public class Damagable : MonoBehaviour
             {
                 m_recovering = false;
                 m_recoverTimer = 0f;
+            }
+        }
+        if (m_afterDeathRecovering)
+        {
+            m_afterDeathRecoverTimer+= Time.deltaTime;
+            if (m_afterDeathRecoverTimer >= m_recoverTime)
+            {
+                m_afterDeathRecovering = false;
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+                m_afterDeathRecoverTimer = 0f;
             }
         }
         //freezes for a while
@@ -109,6 +121,8 @@ public class Damagable : MonoBehaviour
     {
         m_recovering = invincible;
         Freezed = false;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), invincible);
+        m_afterDeathRecovering = invincible;
         ApplyHealth(m_maxHealth - m_health);
         m_dead = false;
     }

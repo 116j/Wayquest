@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,8 @@ using Zenject;
 
 public class Menu : MonoBehaviour
 {
+    [SerializeField]
+    AudioMixer m_mixer;
     [SerializeField]
     Button m_playButton;
     [SerializeField]
@@ -26,6 +29,7 @@ public class Menu : MonoBehaviour
     Image m_backgroundTint;
     //Selected UI component
     GameObject m_selected;
+    float m_SFXVolume;
 
     void Awake()
     {
@@ -47,11 +51,14 @@ public class Menu : MonoBehaviour
         m_backgroundTint.enabled = show;
         if (show)
         {
+            m_mixer.GetFloat("SFXVolume", out m_SFXVolume);
+            m_mixer.SetFloat("SFXVolume", -80);
             m_maimMenuTitle.SetActive(false);
             m_pauseLayoutAnim.SetBool("OpenOptions", true);
         }
         else
         {
+            m_mixer.SetFloat("SFXVolume", m_SFXVolume);
             m_pauseLayoutAnim.SetBool("Close", true);
         }
     }

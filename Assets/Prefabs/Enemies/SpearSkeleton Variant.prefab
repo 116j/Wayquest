@@ -8,6 +8,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_setOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.b
+      value: 0.13333334
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.g
+      value: 0.11764706
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlibeColor.r
+      value: 0.105882354
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738910944237340964, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
+      propertyPath: m_outlineThickness
+      value: 0.0007
+      objectReference: {fileID: 0}
     - target: {fileID: 548330582605977599, guid: 7589c4885b0e16045bc336705bf112db, type: 3}
       propertyPath: m_Name
       value: SpearSkeleton Variant

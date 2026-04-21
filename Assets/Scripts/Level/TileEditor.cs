@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.Tilemaps;
 
 public class TileEditor : MonoBehaviour
@@ -19,6 +20,7 @@ public class TileEditor : MonoBehaviour
     Tilemap m_notCollidable;
     //Dictionary where each tile corresponds to its changer
     Dictionary<TileBase, TileChanger> m_tileToChanger = new Dictionary<TileBase, TileChanger>();
+
     //How many tiles are created in one frame
     const int TILES_PER_FRAME = 20;
 
@@ -141,7 +143,7 @@ public class TileEditor : MonoBehaviour
     /// <returns></returns>
     public IEnumerator InstantiateTilesAsync(HashSet<Vector3Int> tilePositions, System.Action callback)
     {
-        Dictionary<Vector3Int, bool> tilePositionsUsage = new Dictionary<Vector3Int, bool>(tilePositions.Count);
+        Dictionary<Vector3Int, bool> tilePositionsUsage = DictionaryPool<Vector3Int, bool>.Get();
         foreach (var pos in tilePositions)
             tilePositionsUsage[pos] = false;
 
@@ -156,6 +158,7 @@ public class TileEditor : MonoBehaviour
                 yield return null;
         }
         i = 0;
+        DictionaryPool<Vector3Int, bool>.Release(tilePositionsUsage);
         //draws selected tiles in the game
         foreach (var (pos, tile) in tilemap)
         {
@@ -164,6 +167,7 @@ public class TileEditor : MonoBehaviour
             if (i % TILES_PER_FRAME == 0)
                 yield return null;
         }
+        DictionaryPool<Vector3Int, TileBase>.Release(tilemap);
 
         callback?.Invoke();
     }
@@ -174,22 +178,23 @@ public class TileEditor : MonoBehaviour
     /// <param name="callback">function to execute after creating the tiles</param>
     public void InstantiateTiles(HashSet<Vector3Int> tilePositions, System.Action callback)
     {
-        Dictionary<Vector3Int, bool> tilePositionsUsage = new Dictionary<Vector3Int, bool>(tilePositions.Count);
+        Dictionary<Vector3Int, bool> tilePositionsUsage = DictionaryPool<Vector3Int, bool>.Get();
         foreach (var pos in tilePositions)
             tilePositionsUsage[pos] = false;
 
-        Dictionary<Vector3Int, TileBase> tilemap = new Dictionary<Vector3Int, TileBase>();
+        Dictionary<Vector3Int, TileBase> tilemap = DictionaryPool<Vector3Int, TileBase>.Get();
         //selects tiles for a specific position
         foreach (var pos in tilePositions)
         {
             InstantiateTile(pos, tilePositionsUsage, tilemap);
         }
+        DictionaryPool<Vector3Int, bool>.Release(tilePositionsUsage);
         //draws selected tiles in the game
         foreach (var (pos, tile) in tilemap)
         {
             SetTile(m_tileToChanger[tile], tile, pos);
         }
-
+        DictionaryPool<Vector3Int, TileBase>.Release(tilemap);
         callback?.Invoke();
     }
     /// <summary>

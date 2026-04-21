@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 8183254454711484530}
   - component: {fileID: 2306069385823091734}
   - component: {fileID: 1818020100778903183}
+  - component: {fileID: -7738910944237340964}
   m_Layer: 8
   m_Name: WalkEnemy
   m_TagString: Enemy
@@ -68,7 +69,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 174202315f35df84bb2d23e724c7265a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -460,6 +461,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-7738910944237340964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548330582605977599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3452c1df2084ffd46b622128bacae8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_outlibeColor: {r: 0, g: 0, b: 0, a: 1}
+  m_outlineThickness: 0
 --- !u!1 &2723400605716207923
 GameObject:
   m_ObjectHideFlags: 0

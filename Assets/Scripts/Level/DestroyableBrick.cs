@@ -21,11 +21,15 @@ public class DestroyableBrick : MonoBehaviour
     //Brick's group
     List<DestroyableBrick> m_group;
 
-    float m_timer;
+    
     //Brick destroy time
     readonly float m_destroyTime = 0.3f;
-    Vector3 m_offset = new Vector3(0, -0.501f);
+    float m_respawnTime = 0.1f;
+    readonly Vector3 m_offset = new Vector3(0, -0.501f);
+
+    float m_timer;
     bool m_destroyed = false;
+    bool m_respawn = false;
 
     readonly int m_HashDestroyed = Animator.StringToHash("Destroyed");
 
@@ -34,18 +38,28 @@ public class DestroyableBrick : MonoBehaviour
         m_anim = GetComponent<Animator>();
     }
 
-    public void SetBrickBehaviour(BrickBehaviour b, int tileNum, List<DestroyableBrick> group)
+    public void SetBrickBehaviour(BrickBehaviour b, int tileNum, List<DestroyableBrick> group, bool respawn, float respawnTime)
     {
         m_behaviour = b;
         m_group = group;
         m_anim.runtimeAnimatorController = m_anims[tileNum];
         transform.position += m_offset;
-
+        m_respawn = respawn;
+        m_respawnTime += respawnTime;
         m_group?.Add(this);
     }
 
     private void Update()
     {
+        if(m_destroyed && m_respawn)
+        {
+            m_timer -= Time.deltaTime;
+            if (m_timer <= 0)
+            {
+                Restart();
+            }
+        }
+
         if (m_behaviour == BrickBehaviour.Timer && m_timer > 0 && !m_destroyed)
         {
             m_timer -= Time.deltaTime;
@@ -56,8 +70,7 @@ public class DestroyableBrick : MonoBehaviour
             }
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -74,7 +87,7 @@ public class DestroyableBrick : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -85,6 +98,7 @@ public class DestroyableBrick : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Destroys all the bricks in the group
     /// </summary>
@@ -96,6 +110,10 @@ public class DestroyableBrick : MonoBehaviour
             {
                 brick.m_destroyed = true;
                 brick.m_anim.SetBool(m_HashDestroyed, m_destroyed);
+                if (brick.m_respawn)
+                {
+                    brick.m_timer = brick.m_respawnTime;
+                }
             }
         }
     }

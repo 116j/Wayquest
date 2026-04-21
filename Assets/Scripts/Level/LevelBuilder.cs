@@ -35,7 +35,9 @@ public class LevelBuilder : MonoBehaviour
     [Inject]
     PlayerController m_player;
     [Inject]
-    PlatformManager m_platformManager;
+    LeavesPool m_leavesPool;
+    [Inject]
+    CameraBounds m_cameraBounds;
 
     List<Chunk> m_chunks;
     //Used chunk strategies
@@ -62,8 +64,7 @@ public class LevelBuilder : MonoBehaviour
 
     void Start()
     {
-        int m_currentThemeNum = Random.Range(0, m_themes.Length);
-        m_currentTheme = m_themes[m_currentThemeNum];
+        SetTheme();
         m_editor.SetTheme(m_currentTheme.m_themeNum);
         Instantiate(m_currentTheme.m_backgrounds[Random.Range(0, m_currentTheme.m_backgrounds.Length)], Camera.main.transform);
 
@@ -85,8 +86,22 @@ public class LevelBuilder : MonoBehaviour
         SpawnChunk();
         SpawnChunk();
 
-        m_platformManager.SetGameReadyForAPI();
         PlayBackgroundMusic();
+    }
+
+    void SetTheme()
+    {
+        if (m_currentTheme == null)
+        {
+            int m_currentThemeNum = Random.Range(0, m_themes.Length);
+            m_currentTheme = m_themes[m_currentThemeNum];
+        }
+    }
+
+    public void SetLeavesColor(GameObject leafPrefab)
+    {
+        SetTheme();
+        leafPrefab.GetComponent<SpriteRenderer>().color = m_currentTheme.m_leafColor;
     }
 
     public void PlayBackgroundMusic()
@@ -187,7 +202,7 @@ public class LevelBuilder : MonoBehaviour
             m_transitionBounds = false;
             m_chunkBounds = true;
             //sets transition camera bounds
-            m_currentChunk.SetTransitionCameraBounds();
+            m_currentChunk.SetTransitionCameraBounds(m_cameraBounds);
             m_player.SetCameraBoundsHeight(Mathf.Abs(m_currentChunk.GetTransitionHeight()));
         }
         //if the player is on a chunk and and it's needed to set the chunk camera bounds
@@ -212,7 +227,7 @@ public class LevelBuilder : MonoBehaviour
             m_transitionBounds = true;
             m_chunkBounds = false;
             //sets chunk camera bounds
-            m_currentChunk.SetCameraBounds();
+            m_currentChunk.SetCameraBounds(m_cameraBounds);
             m_player.SetCameraBoundsHeight(m_currentChunk.GetChunkCameraHeight());
         }
     }

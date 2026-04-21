@@ -12,6 +12,8 @@ public class MovingPlatformStrategy : FillStrategy
 
     readonly float m_minWidth = 5;
     readonly float m_maxWidth = 15;
+    readonly int m_maxAllowedN = 4;
+    readonly float m_maxPrev = 2f;
 
     readonly float m_minVerticalDist = 1;
     readonly float m_minHorizontalDist = 5;
@@ -76,7 +78,7 @@ public class MovingPlatformStrategy : FillStrategy
                 //diagonal - the squarer, the more often
                 float weightD = Mathf.Min(vSpace, hSpace);
                 //circular - increases with the size of the chunk
-                float weightC = (height + vSpace) * 0.5f;        
+                float weightC = (height + vSpace) * 0.5f;
 
                 float pick = Random.value * (weightV + weightH + weightD + weightC);
                 if (pick < weightH)
@@ -128,8 +130,10 @@ public class MovingPlatformStrategy : FillStrategy
                         //how many max passages can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, vSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //number of passes of the platform until it meets the previous one
+                        minN = Mathf.Min(minN, m_maxAllowedN);
+                        maxN = Mathf.Min(maxN, m_maxAllowedN);
                         int n;
-                        if (Random.value > 0.5f)
+                        if (prev > m_maxPrev)
                         {
                             n = Random.Range(1, minN + 1);
                             //defines the next point
@@ -167,8 +171,10 @@ public class MovingPlatformStrategy : FillStrategy
                         //how many max passages can be placed in the space and so that it coincides with the passage time of the previous platform
                         int maxN = Mathf.FloorToInt((Mathf.Min(m_maxWidth, hSpace) / speed + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //number of passes of the platform until it meets the previous one
+                        minN = Mathf.Min(minN, m_maxAllowedN);
+                        maxN = Mathf.Min(maxN, m_maxAllowedN);
                         int n;
-                        if (Random.value > 0.5f)
+                        if (prev > m_maxPrev)
                         {
                             n = Random.Range(1, minN + 1);
                             //defines the next point
@@ -205,8 +211,10 @@ public class MovingPlatformStrategy : FillStrategy
                         int maxN = Mathf.FloorToInt((Mathf.Min(Mathf.Sqrt(Mathf.Pow(m_maxWidth, 2) + Mathf.Pow(m_maxWidth, 2)), Mathf.Min(vSpace, hSpace)) / speed
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //number of passes of the platform until it meets the previous one
+                        minN = Mathf.Min(minN, m_maxAllowedN);
+                        maxN = Mathf.Min(maxN, m_maxAllowedN);
                         int n;
-                        if (Random.value > 0.5f)
+                        if (prev > m_maxPrev)
                         {
                             n = Random.Range(1, minN + 1);
                             //passage time of the new platform - 1/n of the passage time of the previous platform 
@@ -264,7 +272,9 @@ public class MovingPlatformStrategy : FillStrategy
                             + movingPlatform.GetWaitTime()) / (prev + movingPlatform.GetWaitTime()));
                         //number of passes of the platform until it meets the previous one
                         int n;
-                        if (Random.value > 0.5f)
+                        minN = Mathf.Min(minN, m_maxAllowedN);
+                        maxN = Mathf.Min(maxN, m_maxAllowedN);
+                        if (prev > m_maxPrev)
                         {
                             n = Random.Range(1, minN + 1);
                             //time of passage of the semicircle of the trajectory - 1/n the time of passage of the previous platform 
@@ -335,7 +345,7 @@ public class MovingPlatformStrategy : FillStrategy
         //creates a bound for the player to fall
         chunk.AddEnviromentObject(CreateHorizontalBounds(start, end, end.x - start.x, height));
         //creates side borders under the previous and next chunks
-        CreateSideBound(chunk, height < 0);
+        //CreateSideBound(chunk, height < 0);
 
         chunk.AddTransition(new Chunk(end, end));
         prevChunk.AddTransition(transition);

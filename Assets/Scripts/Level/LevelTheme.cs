@@ -4,6 +4,7 @@
 public class LevelTheme : ScriptableObject
 {
     public GameObject[] m_backgrounds;
+    public Color m_leafColor;
 
     public EnviromentObject[] m_grass;
     public EnviromentObject[] m_bushes;

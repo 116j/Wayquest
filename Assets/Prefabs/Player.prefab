@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 8212309826062894424}
   - component: {fileID: 349729031436747073}
   - component: {fileID: 725559614674730786}
-  - component: {fileID: 1921623980975281193}
+  - component: {fileID: 5695105823302830507}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 174202315f35df84bb2d23e724c7265a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -391,8 +391,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_sounds:
-  - {fileID: 8300000, guid: da731f4ed35532b4a9b657632f628cec, type: 3}
-  - {fileID: 8300000, guid: 47b9eb58ed6267a49a4348d58d632738, type: 3}
+  - {fileID: 8300000, guid: 2c4c5cb53f73c1541a634d24fbfd1f76, type: 3}
+  - {fileID: 8300000, guid: 57f3c94848f6a204ab9786d78369deea, type: 3}
 --- !u!82 &725559614674730786
 AudioSource:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.28
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -490,14 +490,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!81 &1921623980975281193
-AudioListener:
+--- !u!114 &5695105823302830507
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880834243166009998}
-  m_Enabled: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3452c1df2084ffd46b622128bacae8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setOutline: 1
+  m_outlibeColor: {r: 0.17254902, g: 0.09411765, b: 0.08235294, a: 1}
+  m_outlineThickness: 0.0007
 --- !u!1 &2747755632101265252
 GameObject:
   m_ObjectHideFlags: 0

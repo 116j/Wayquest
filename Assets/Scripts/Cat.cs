@@ -9,6 +9,7 @@ public class Cat : MonoBehaviour
 
     public Transform PetPlayerLocation;
     public bool CanPet { get; private set; } = true;
+    public bool IsMoving => m_walking;
 
     Animator m_anim;
     TouchingCheck m_touchings;

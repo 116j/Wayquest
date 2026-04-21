@@ -13,6 +13,7 @@ public class DefendingEnemy : WalkEnemy
     //Protecting time
     readonly float m_protectCooldownTime = 3f;
     float m_protectCooldown;
+    bool m_inDelayCooldown;
     //Protect recharge time
     readonly float m_protectDelay = 2f;
     float m_protectDelayCooldown;
@@ -45,6 +46,7 @@ public class DefendingEnemy : WalkEnemy
         m_protecting = false;
         m_damagable.Invincible = false;
         m_protectDelayCooldown = m_protectDelay;
+        m_inDelayCooldown = true;
     }
 
     void EnableProtection()
@@ -55,19 +57,26 @@ public class DefendingEnemy : WalkEnemy
         m_protecting = true;
         m_anim.SetBool(m_HashProtect, true);
         m_damagable.Invincible = true;
-        m_waiting = false;
+        m_waiting = m_inDelayCooldown = false;
     }
 
     protected override void FixedUpdate()
     {
         if (!m_protecting&&!m_dead)
         {
+            if (m_inDelayCooldown)
+            {
+                m_protectDelayCooldown -= Time.fixedDeltaTime;
+                if(m_protectDelayCooldown <= 0)
+                {
+                    m_inDelayCooldown = false;
+                }
+            }
             // if the player is out of the attack zone and the enemy is in the player's attack zone, the protection is recharged and activated,
             // otherwise - reset 
             if (m_playerAttackZone.TargetDetected && !m_attackZone.TargetDetected)
             {
-                m_protectDelayCooldown -= Time.fixedDeltaTime;
-                if (m_protectDelayCooldown <= 0)
+                if (!m_inDelayCooldown)
                 {
                     EnableProtection();
                 }
@@ -78,7 +87,6 @@ public class DefendingEnemy : WalkEnemy
             }
             else
             {
-                m_protectDelayCooldown = 0;
                 base.FixedUpdate();
             }
         }

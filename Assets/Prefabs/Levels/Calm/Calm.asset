@@ -16,6 +16,7 @@ MonoBehaviour:
   - {fileID: 690443527865695347, guid: c3721f93554f6134986c176a2470a528, type: 3}
   - {fileID: 8018852346387894888, guid: 86e983c223e1a8445b084829c5ea0c92, type: 3}
   - {fileID: 6157689074110423916, guid: e17b15a6944ee9040b44581b811221e5, type: 3}
+  m_leafColor: {r: 0.2443376, g: 0.4433962, b: 0.11921501, a: 1}
   m_grass:
   - {fileID: 1857256962371960164, guid: 50c2304556c342a48975c88abcea4e9b, type: 3}
   - {fileID: 8841186356204727045, guid: a0bc9b8df07d6a041b73f38c8412378f, type: 3}
@@ -55,7 +56,6 @@ MonoBehaviour:
   - {fileID: -3547706010446205356, guid: fbe579f64607cd14e9fa6a653e31f001, type: 3}
   - {fileID: -4250489317935541011, guid: 4915db069d32a17458d4910803c66daa, type: 3}
   - {fileID: -6808080707356621749, guid: faef335a7eea7bb4a8404ed70ac565b0, type: 3}
-  m_destroyableTile: {fileID: -284937130, guid: e8ea6fdd6cfd0ff4aae522d4eb3b9e06, type: 3}
   m_enemies:
   - {fileID: 842174996233164507, guid: c8069ca9e9c6f7f43b4c2ab5d936c474, type: 3}
   - {fileID: 5941363652571959847, guid: 4e6f793879d0b884ba7c8aecd87a302f, type: 3}

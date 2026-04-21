@@ -72,10 +72,9 @@ public class UIController : MonoBehaviour
     PlayerInput m_input;
     [Inject]
     ShopLayout m_shop;
-    [Inject]
-    PlatformManager m_platform;
 
     AudioSource m_moneyAudio;
+    Tween m_moneyTween;
 
     private void Awake()
     {
@@ -123,7 +122,7 @@ public class UIController : MonoBehaviour
         m_currentMoney = m_money;
         m_money += amount;
         //slowly adds money to make it visible to the player
-        DOTween.To(
+        m_moneyTween = DOTween.To(
             () => m_currentMoney,
             x =>
             {
@@ -215,9 +214,9 @@ public class UIController : MonoBehaviour
         Cursor.visible = active;
         m_input.LockInput(active);
         Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
-        //If dies during a boss battle - cannot continue, only restart 
-        //m_continueButton.SetActive(!m_boss);
-        //m_dieButtonsLayout.sizeDelta = m_boss ? new Vector2(m_dieButtonsLayout.sizeDelta.x, 90) : new Vector2(m_dieButtonsLayout.sizeDelta.x, 170);
+        //if dies during a boss battle - cannot continue, only restart 
+        m_continueButton.SetActive(!m_boss);
+        m_dieButtonsLayout.sizeDelta = m_boss ? new Vector2(m_dieButtonsLayout.sizeDelta.x, 90) : new Vector2(m_dieButtonsLayout.sizeDelta.x, 170);
     }
 
 
@@ -234,7 +233,6 @@ public class UIController : MonoBehaviour
     public void Pause(bool pause)
     {
         AudioListener.pause = pause || m_ad;
-        m_platform.SetGameGameplay(!pause || !m_ad || !m_menu);
         Time.timeScale = pause || m_ad || m_menu ? 0 : 1;
     }
     /// <summary>
@@ -253,5 +251,10 @@ public class UIController : MonoBehaviour
     public void SetMenuPause(bool menu)
     {
         m_menu = menu;
+    }
+
+    private void OnDestroy()
+    {
+        m_moneyTween?.Kill();
     }
 }
