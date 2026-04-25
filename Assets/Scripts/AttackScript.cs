@@ -33,11 +33,11 @@ public class AttackScript : MonoBehaviour
         //attack recharge
         else if (!m_canAttack)
         {
-            m_attackCooldown += Time.deltaTime;
-            if (m_attackCooldown >= m_attackCooldownTime)
+            m_attackCooldown -= Time.deltaTime;
+            if (m_attackCooldown <= 0)
             {
-                m_attackCooldown = 0;
                 m_canAttack = true;
+                m_attackCooldown = m_attackCooldownTime;
             }
         }
     }
@@ -72,5 +72,11 @@ public class AttackScript : MonoBehaviour
     {
         m_canAttack = false;
         m_anim.ResetTrigger(m_animAttackParameter);
+    }
+
+    public void SetAttackCooldown(float time)
+    {
+        m_attackCooldown = time;
+        m_canAttack = false;
     }
 }

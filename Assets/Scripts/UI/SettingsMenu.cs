@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Zenject;
 
@@ -221,7 +222,8 @@ public class SettingsMenu : MonoBehaviour
         {
             m_gameVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        m_mixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20);
+        float dB = Mathf.Lerp(-80f, 5f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
+        m_mixer.SetFloat("MasterVolume", dB);
     }
 
     public void ChangeMusicVolume(float value)
@@ -236,7 +238,8 @@ public class SettingsMenu : MonoBehaviour
         {
             m_musicVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        m_mixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+        float dB = Mathf.Lerp(-80f, -7f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
+        m_mixer.SetFloat("MusicVolume", dB);
     }
     public void ChangeEffectsVolume(float value)
     {
@@ -250,7 +253,8 @@ public class SettingsMenu : MonoBehaviour
         {
             m_sfxVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        m_mixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
+        float dB = Mathf.Lerp(-80f, -4f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
+        m_mixer.SetFloat("SFXVolume", dB);
     }
 
     public void Mute(bool mute)

@@ -203,7 +203,7 @@ public class DestroyableBrickStrategy : FillStrategy
             level = (level + 1) % 3;
         }
         //updates the end of the chunk
-        chunk.SetEndPosition(currentPos);
+        chunk.SetEndPosition(new Vector3Int(currentPos.x, chunk.GetStartPosition().y));
     }
     /// <summary>
     /// Creates a straight line of bricks alternating between groups of simple bricks and collapsing ones by timer

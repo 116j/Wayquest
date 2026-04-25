@@ -78,7 +78,7 @@ public class MovingPlatformStrategy : FillStrategy
                 //diagonal - the squarer, the more often
                 float weightD = Mathf.Min(vSpace, hSpace);
                 //circular - increases with the size of the chunk
-                float weightC = (height + vSpace) * 0.5f;
+                float weightC = Mathf.Abs(lastPoint.y - start.y) < m_minWidth / 2 ? 0 : (height + vSpace) * 0.5f;
 
                 float pick = Random.value * (weightV + weightH + weightD + weightC);
                 if (pick < weightH)
@@ -89,7 +89,7 @@ public class MovingPlatformStrategy : FillStrategy
                 {
                     currentTrajectory = Trajectory.Vertical;
                 }
-                else if (pick < weightV + weightH + weightD)
+                else if (weightC == 0 || pick < weightV + weightH + weightD)
                 {
                     currentTrajectory = Trajectory.Diagonal;
                 }
@@ -265,6 +265,7 @@ public class MovingPlatformStrategy : FillStrategy
                     bool reverse = false;
                     if (prev != 0)
                     {
+                        vSpace = Mathf.Min(Mathf.Abs(start.y + 1 - m_levelTheme.m_movingPlatform.GetHeight() - lastPoint.y), vSpace);
                         //how many min semicircles of the trajectory can be laid during the passage of the previous platform
                         int minN = Mathf.FloorToInt((prev + movingPlatform.GetWaitTime()) / (Mathf.Sqrt(Mathf.Pow(m_minWidth, 2) + Mathf.Pow(m_minWidth, 2)) / speed + movingPlatform.GetWaitTime()));
                         //how many max semicircles of the trajectory can be placed in the space and so that it coincides with the passage time of the previous platform

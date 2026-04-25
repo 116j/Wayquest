@@ -235,20 +235,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  m_stuckCastFilter:
-    useTriggers: 0
-    useLayerMask: 1
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 64
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
+  m_wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &6230351899595666638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,7 +493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setOutline: 1
   m_outlibeColor: {r: 0.17254902, g: 0.09411765, b: 0.08235294, a: 1}
-  m_outlineThickness: 0.0007
+  m_outlineThickness: 0.0005
 --- !u!1 &2747755632101265252
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +543,7 @@ BoxCollider2D:
     m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3839
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -956,7 +945,7 @@ BoxCollider2D:
     m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3839
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

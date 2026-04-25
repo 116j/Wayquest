@@ -8,6 +8,8 @@ public class SoundController : MonoBehaviour
     [SerializeField]
     List<AudioClip> m_sounds;
 
+    public float SoundLength => m_audio.clip.length;
+
     protected AudioSource m_audio;
 
     private void Start()

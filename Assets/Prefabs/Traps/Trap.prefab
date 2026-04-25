@@ -159,6 +159,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_series: 0
+  m_outlineColors: []
+  m_outlineThicknesses: []
 --- !u!114 &5654566351847324843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,6 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3452c1df2084ffd46b622128bacae8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_setOutline: 1
   m_outlibeColor: {r: 0, g: 0, b: 0, a: 1}
   m_outlineThickness: 0
 --- !u!1 &4851061651080796284
@@ -344,10 +347,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3583
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

@@ -21,9 +21,9 @@ public class ShellScript : AttackListener
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision);
         if (m_collideLayers == (m_collideLayers | (1 << collision.gameObject.layer)))
         {
+            base.OnTriggerEnter2D(collision);
             GetComponent<SoundController>().PlaySound(gameObject.name + "Hit");
             Destroy(gameObject);
         }

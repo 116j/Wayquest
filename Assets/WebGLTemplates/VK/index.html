@@ -9,7 +9,7 @@
   </head>
   <body>
   <div id="loading-screen">
-      <div class="character-container">           <!-- новый блок -->
+      <div class="character-container">          
           <img src="TemplateData/character.gif" 
                class="running-character" 
                alt="Загрузка...">
@@ -45,6 +45,24 @@
     }
     showBanner();
 
+        function exitFullscreen() {
+        if (document.exitFullscreen) {
+            return document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            return document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            return document.msExitFullscreen();
+        }
+        return Promise.resolve();
+    }
+
+    function isFullscreenActive() {
+        return !!(document.fullscreenElement || 
+                  document.webkitFullscreenElement || 
+                  document.msFullscreenElement);
+    }
+
+
     // Функция проверки доступности рекламы
     function checkAdsAvailable() {
       return vkBridge.send('VKWebAppCheckNativeAds', { ad_format: 'reward' })
@@ -57,13 +75,18 @@
         });
     }
 
-    // Глобальные функции для вызова из Unity
     function ShowRewardedAdForRevive() {
       checkAdsAvailable().then(available => {
         if (available) {
+          if(isFullscreenActive()){
+	    exitFullscreen();
+	  }
 	  unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_opened');
           vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
             .then(data => {
+              if(fullscreen){
+	        enterFullscreen();
+	      }
               if (data.result) {
                 unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'reward_success');
 		unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_closed');
@@ -85,6 +108,9 @@
     function ShowRewardedAdForBonus() {
       checkAdsAvailable().then(available => {
         if (available) {
+          if(isFullscreenActive()){
+	    exitFullscreen();
+	  }
 	  unityInstance.SendMessage('PlatformBridge', 'OnAdResult', 'ad_opened');
           vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
             .then(data => {

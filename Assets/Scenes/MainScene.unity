@@ -2301,7 +2301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &111011077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3818,7 +3818,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0.8595186
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6427,6 +6427,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 49448478096978231}
+        m_TargetAssemblyTypeName: LevelBuilder, Assembly-CSharp
+        m_MethodName: IncreaseBossHealth
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &306505477
 Animator:
   serializedVersion: 7
@@ -8245,6 +8257,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 49448478096978231}
+        m_TargetAssemblyTypeName: LevelBuilder, Assembly-CSharp
+        m_MethodName: IncreaseBossHealth
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &369537787
 Animator:
   serializedVersion: 7
@@ -8711,7 +8735,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &372674653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10928,7 +10952,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -12764,7 +12788,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -20.260006, y: 16.759989, z: -10}
+  m_LocalPosition: {x: -20.26982, y: 16.759989, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18964,8 +18988,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -125.7692}
-  m_SizeDelta: {x: 80, y: 31.538412}
+  m_AnchoredPosition: {x: 100, y: -112.451904}
+  m_SizeDelta: {x: 80, y: 24.903809}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &811203744
 MonoBehaviour:
@@ -19360,7 +19384,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -20890,8 +20914,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -218.84602}
-  m_SizeDelta: {x: 80, y: 31.538412}
+  m_AnchoredPosition: {x: 100, y: -232.16333}
+  m_SizeDelta: {x: 80, y: 24.903809}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &848634633
 MonoBehaviour:
@@ -24431,7 +24455,7 @@ RectTransform:
   m_Father: {fileID: 788669858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.44491714, y: 1}
+  m_AnchorMax: {x: 0.44648454, y: 1}
   m_AnchoredPosition: {x: -2.7757034, y: 0}
   m_SizeDelta: {x: -5.5513, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -27632,7 +27656,7 @@ RectTransform:
   m_GameObject: {fileID: 1129657679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 0.01, y: 0.007, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 283284309}
@@ -28653,8 +28677,8 @@ MonoBehaviour:
   m_Padding:
     m_Left: 60
     m_Right: 60
-    m_Top: 110
-    m_Bottom: 65
+    m_Top: 100
+    m_Bottom: 55
   m_ChildAlignment: 1
   m_Spacing: 15
   m_ChildForceExpandWidth: 0
@@ -31907,7 +31931,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -33142,24 +33166,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TrackedObjectOffset: {x: 2, y: 2.5, z: 0}
-  m_LookaheadTime: 1
-  m_LookaheadSmoothing: 21
+  m_LookaheadTime: 0.4
+  m_LookaheadSmoothing: 15.3
   m_LookaheadIgnoreY: 1
-  m_XDamping: 5
-  m_YDamping: 1.2
+  m_XDamping: 2
+  m_YDamping: 2
   m_ZDamping: 1
   m_TargetMovementOnly: 1
-  m_ScreenX: 0.5
-  m_ScreenY: 0.368
+  m_ScreenX: 0.5005208
+  m_ScreenY: 0.395
   m_CameraDistance: 10
-  m_DeadZoneWidth: 0.181
-  m_DeadZoneHeight: 0.199
+  m_DeadZoneWidth: 0
+  m_DeadZoneHeight: 0.01
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 0.465
-  m_SoftZoneHeight: 0.85
+  m_SoftZoneWidth: 0.455
+  m_SoftZoneHeight: 0.3000001
   m_BiasX: 0
-  m_BiasY: 0.032
+  m_BiasY: 0.1500001
   m_CenterOnActivate: 0
   m_GroupFramingMode: 2
   m_AdjustmentMode: 0
@@ -35286,7 +35310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_leafPrefab: {fileID: 2344999847579421702, guid: 18069c377f894dd4a9b38d37b9717e44, type: 3}
-  m_leafCount: 25
+  m_leafCount: 30
   m_fallSpeed: 2
   m_windPower: 10
   m_windDirection: -1
@@ -39699,7 +39723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1663104469
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41516,6 +41540,7 @@ GameObject:
   - component: {fileID: 1733449832}
   - component: {fileID: 1733449833}
   - component: {fileID: 1733449834}
+  - component: {fileID: 1733449835}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -41532,7 +41557,7 @@ Transform:
   m_GameObject: {fileID: 1733449831}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000005722046, y: -14.604488, z: 0}
+  m_LocalPosition: {x: 0.0000038146973, y: -15.425989, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -41593,6 +41618,31 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 2098737867}
   m_Damping: 1
   m_MaxWindowSize: -1
+--- !u!114 &1733449835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733449831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 319e04645ac68d84d94a1096170189fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_upDeadZone: 0.01
+  m_upSoftZone: 0.75
+  m_upBiasY: -0.3
+  m_upDamping: 4
+  m_downDeadZone: 0.01
+  m_downSoftZone: 0.6
+  m_downBiasY: 0.2
+  m_downDamping: 0
+  m_stayDeadZone: 0.01
+  m_staySoftZone: 0.3
+  m_stayBiasY: 0.15
+  m_stayDamping: 2
+  m_transitionSpeed: 3
 --- !u!1 &1738421883
 GameObject:
   m_ObjectHideFlags: 0
@@ -42013,7 +42063,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -43735,8 +43785,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -172.30762}
-  m_SizeDelta: {x: 80, y: 31.538412}
+  m_AnchoredPosition: {x: 100, y: -192.25952}
+  m_SizeDelta: {x: 80, y: 24.903809}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1813643159
 MonoBehaviour:
@@ -45204,8 +45254,8 @@ RectTransform:
   - {fileID: 1340322296}
   m_Father: {fileID: 659591006}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.44491714, y: 0}
-  m_AnchorMax: {x: 0.44491714, y: 1}
+  m_AnchorMin: {x: 0.44648454, y: 0}
+  m_AnchorMax: {x: 0.44648454, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -48476,6 +48526,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 49448478096978231}
+        m_TargetAssemblyTypeName: LevelBuilder, Assembly-CSharp
+        m_MethodName: IncreaseBossHealth
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &2032469676
 Animator:
   serializedVersion: 7
@@ -50700,7 +50762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2130275867
 RectTransform:
   m_ObjectHideFlags: 0

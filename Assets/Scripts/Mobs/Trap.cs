@@ -24,8 +24,6 @@ public class Trap : MonoBehaviour, IMetrics
     [SerializeField]
     float[] m_outlineThicknesses;
 
-    public int TrapNumber => m_trapNumber;
-
     protected Animator m_anim;
     Outline m_outline;
     [Inject]

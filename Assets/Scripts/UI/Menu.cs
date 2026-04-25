@@ -2,6 +2,7 @@
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
@@ -30,6 +31,7 @@ public class Menu : MonoBehaviour
     //Selected UI component
     GameObject m_selected;
     float m_SFXVolume;
+    bool m_pause;
 
     void Awake()
     {
@@ -49,6 +51,7 @@ public class Menu : MonoBehaviour
     public void Pause(bool show)
     {
         m_backgroundTint.enabled = show;
+        m_pause = show;
         if (show)
         {
             m_mixer.GetFloat("SFXVolume", out m_SFXVolume);
@@ -58,7 +61,11 @@ public class Menu : MonoBehaviour
         }
         else
         {
-            m_mixer.SetFloat("SFXVolume", m_SFXVolume);
+            m_mixer.GetFloat("SFXVolume", out float volume);
+            if (volume == -80)
+            {
+                m_mixer.SetFloat("SFXVolume", m_SFXVolume);
+            }
             m_pauseLayoutAnim.SetBool("Close", true);
         }
     }
@@ -72,6 +79,11 @@ public class Menu : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
+        m_mixer.GetFloat("SFXVolume", out float volume);
+        if (m_pause && volume == -80)
+        {
+            m_mixer.SetFloat("SFXVolume", m_SFXVolume);
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

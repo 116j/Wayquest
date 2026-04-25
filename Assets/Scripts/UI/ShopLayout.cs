@@ -220,9 +220,7 @@ public class ShopLayout : MonoBehaviour
     /// <param name="price"></param>
     public void AddLightDamage(TextMeshProUGUI price)
     {
-        Action func = m_player.transform.GetChild(0).GetComponent<AttackListener>().IncreaseDamage;
-        func += m_lvlBuilder.IncreaseBossHealth;
-        Buy(2, price, func);
+        Buy(3, price, m_player.transform.GetChild(0).GetComponent<AttackListener>().IncreaseDamage);
     }
     /// <summary>
     /// Increases heavy attack damage by 1

@@ -9,7 +9,7 @@ public class TouchingCheck : MonoBehaviour
     [SerializeField]
     ContactFilter2D m_slopeCastFilter;
     [SerializeField]
-    ContactFilter2D m_stuckCastFilter;
+    LayerMask m_wallLayer;
 
     Collider2D m_col;
 
@@ -19,6 +19,7 @@ public class TouchingCheck : MonoBehaviour
     readonly float m_groundHitDist = 0.05f;
     //Distance to determine the slope
     readonly float m_slopeHitDist = 0.2f;
+    readonly float m_stuckDist = 0.7f;
     //Width of the border extension to determine the jam
     readonly float m_skinWidth = 0.02f;
 
@@ -41,7 +42,7 @@ public class TouchingCheck : MonoBehaviour
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
             Vector3.right * Mathf.Sign(dist),
             Mathf.Abs(dist) + m_skinWidth,
-            m_stuckCastFilter.layerMask
+            m_wallLayer
         );
         return hit.collider != null ? hit.distance : 0f;
     }
@@ -58,7 +59,7 @@ public class TouchingCheck : MonoBehaviour
             m_col.bounds.size + Vector3.one * m_skinWidth, 0f,
             Vector3.up * Mathf.Sign(dist),
             Mathf.Abs(dist) + m_skinWidth,
-            m_stuckCastFilter.layerMask
+            m_wallLayer
         );
         return hit.collider != null ? hit.distance : 0f;
     }
@@ -68,10 +69,15 @@ public class TouchingCheck : MonoBehaviour
     /// <returns></returns>
     public bool IsGroundStuck()
     {
-        return m_col.Cast(-transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
-            m_col.Cast(transform.right, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
-            m_col.Cast(-transform.right, m_stuckCastFilter, m_rayHits, m_slopeHitDist) > 0 &&
-            m_col.Cast(transform.up, m_stuckCastFilter, m_rayHits, m_slopeHitDist) == 0;
+        Vector2 boxSize = new Vector2(m_col.bounds.extents.x * m_stuckDist, m_col.bounds.extents.y * m_stuckDist);
+        float castDistance = 0.12f;
+
+        bool up = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.up, castDistance, m_wallLayer);
+        bool down = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, castDistance, m_wallLayer);
+        bool left = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.left, castDistance, m_wallLayer);
+        bool right = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.right, castDistance, m_wallLayer);
+
+        return up && down && left && right;
     }
     /// <summary>
     /// If it touches the ground

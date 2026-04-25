@@ -32,7 +32,7 @@ public class CeilStrategy : FillStrategy
         int startWidth = Random.Range(m_minStraightSection, end.x - start.x);
         Chunk chunk = new Chunk(end, startWidth, prevChunk.GetNextTransition());
         //without slopes
-        m_slopeChance = 1f;
+        m_slopeChance = -1f;
         int height = Random.Range(m_minElevationHeight, m_maxElevationHeight) * (Random.value > 0.5f ? -1 : 1);
         SetRightOffset(height);
         CreateElevationsAndLowlands(chunk, start + startWidth * Vector3Int.right, startWidth, height, false);

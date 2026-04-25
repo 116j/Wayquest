@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     readonly float m_jumpTime = 0.4f;
     readonly float m_blockCooldownTime = 0.4f;
     readonly float m_blockDuration = 0.15f;
-    readonly float m_cameraSpeed = 5f;
+    readonly float m_cameraSpeed = 4f;
     readonly float m_dashTime = 0.35f;
 
 
@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
     bool m_dash = false;
     bool m_pet = false;
     bool m_canMove = false;
+    bool m_canTurn = true;
 
     bool m_jumping = false;
     bool m_falling = false;
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
     float m_jumpCounter = 0f;
     float m_dashCooldown = 0f;
     float m_blockCooldown = 0f;
-    float m_baseTransposer = 2.5f;
+    float m_baseTargetOffset = 2.5f;
     float m_cameraBoundsHeight;
 
     Vector2 m_gravity;
@@ -98,7 +99,7 @@ public class PlayerController : MonoBehaviour
         m_touchings = GetComponent<TouchingCheck>();
         m_sound = GetComponent<SoundController>();
         m_values = GetComponent<SpawnValues>();
-            
+
         m_gravityScale = m_rb.gravityScale;
         m_gravity = new Vector2(0f, -Physics2D.gravity.y);
         m_transposer = m_playerCam.GetCinemachineComponent<CinemachineFramingTransposer>();
@@ -125,7 +126,7 @@ public class PlayerController : MonoBehaviour
             else if (m_dash)
             {
                 m_dashTimer += Time.deltaTime;
-                if (m_dashTimer >= m_dashTime)
+                if (m_dashTimer >= m_dashTime || m_touchings.IsWalls())
                 {
                     m_dash = m_canDash = false;
                     m_canMove = true;
@@ -228,12 +229,14 @@ public class PlayerController : MonoBehaviour
             {
                 m_catZone.ApplyPet(true);
                 m_pet = true;
+                m_input.LockInput(true);
                 m_rb.velocity = Vector2.zero;
             }
 
-            if (m_pet&&(!m_catZone.TargetDetected || m_onSlope))
+            if (m_pet && (!m_catZone.TargetDetected || m_onSlope))
             {
                 m_pet = false;
+                m_input.LockInput(false);
             }
 
             m_anim.SetBool(m_HashHeavyAttack, m_input.HeavyAttack);
@@ -255,7 +258,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            targetY = Mathf.MoveTowards(m_transposer.m_TrackedObjectOffset.y, m_baseTransposer, (m_cameraSpeed - 2f) * Time.fixedDeltaTime);
+            targetY = Mathf.MoveTowards(m_transposer.m_TrackedObjectOffset.y, m_baseTargetOffset, m_cameraSpeed * Time.fixedDeltaTime);
         }
         m_transposer.m_TrackedObjectOffset = new Vector3(m_transposer.m_TrackedObjectOffset.x, targetY, m_transposer.m_TrackedObjectOffset.z);
 
@@ -267,18 +270,6 @@ public class PlayerController : MonoBehaviour
         if (m_falling && (m_fallCheckpoint.y - transform.position.y > 70))
         {
             FallReset();
-        }
-
-        if (m_damagable.Freezed)
-        {
-            m_rb.velocity = Vector3.zero;
-        }
-
-        //If the player is stuck in the ground, lift up
-        if (m_touchings.IsGroundStuck())
-        {
-            Debug.Log("Ground stuck");
-            transform.position += Vector3.up * 0.6f;
         }
 
         if (!m_dead)
@@ -294,21 +285,22 @@ public class PlayerController : MonoBehaviour
                 {
                     m_pet = false;
                     m_rb.velocity = Vector2.zero;
+                    m_input.LockInput(false);
                     m_anim.SetTrigger(m_HashPet);
                 }
                 return;
             }
 
             //turn around
-            if (m_currentDir * m_input.Move < 0 && m_canMove)
+            if (m_currentDir * m_input.Move < 0 && m_canMove && m_canTurn)
             {
                 m_currentDir *= -1;
                 float targetY = m_currentDir == 1 ? 0f : 180f;
                 transform.rotation = Quaternion.Euler(0f, targetY, 0f);
 
             }
-            //If touches the walls during the jump - stop moving horizontally
-            if (m_touchings.IsWalls() && (m_jumping || m_falling))
+            //if touches the walls during the jump or is freezed - stop moving horizontally
+            if ((m_touchings.IsWalls() && (m_jumping || m_falling)) || m_damagable.Freezed)
             {
                 m_rb.velocity = new Vector2(0f, m_rb.velocity.y);
             }
@@ -405,6 +397,13 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = Vector2.zero;
             m_col.enabled = false;
         }
+
+        //If the player is stuck in the ground, lift up
+        if (!m_onSlope && m_touchings.IsGroundStuck())
+        {
+            Debug.Log("Ground stuck");
+            FallReset();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -481,6 +480,7 @@ public class PlayerController : MonoBehaviour
     {
         m_anim.ResetTrigger(m_HashPet);
         m_catZone.ApplyPet(false);
+        m_input.LockInput(false);
     }
     /// <summary>
     /// Sets a new reborn point for the player after death
@@ -508,15 +508,26 @@ public class PlayerController : MonoBehaviour
         m_lvlBuilder.RestartBricks();
         transform.SetPositionAndRotation(m_fallCheckpoint, Quaternion.identity);
         m_rb.velocity = Vector2.zero;
+        m_rb.angularVelocity = 0;
         m_currentDir = 1;
+        StartCoroutine(DisableFallInput());
+    }
+
+    IEnumerator DisableFallInput()
+    {
+        m_canTurn = false;
+        m_input.LockInput(true);
+        yield return new WaitForSeconds(0.3f);
+        m_input.LockInput(false);
+        m_canTurn = true;
     }
     /// <summary>
     /// Will the camera offset change more up or more down
     /// </summary>
     /// <param name="down"></param>
-    public void ChangeTransposerHeight(bool down)
+    public void ChangeCameraTargetOffset(float offset)
     {
-        m_baseTransposer += 3f * (down ? -1 : 1);
+        m_baseTargetOffset += offset;
     }
 
     public void SetCameraBoundsHeight(float height)
@@ -548,6 +559,7 @@ public class PlayerController : MonoBehaviour
         {
             m_enemyBar.HideBar();
             transform.SetPositionAndRotation(m_rebornCheckpoint, Quaternion.identity);
+            StartCoroutine(DisableFallInput());
             m_currentDir = 1;
         }
         m_damagable.Reborn(true);

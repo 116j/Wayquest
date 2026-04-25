@@ -233,7 +233,7 @@ public class UIController : MonoBehaviour
     public void Pause(bool pause)
     {
         AudioListener.pause = pause || m_ad;
-        Time.timeScale = pause || m_ad || m_menu ? 0 : 1;
+        Time.timeScale = (pause || m_ad || m_menu) && !m_shopLayout.activeInHierarchy ? 0 : 1;
     }
     /// <summary>
     /// If the player died during a boss battle

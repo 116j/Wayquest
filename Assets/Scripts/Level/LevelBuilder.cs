@@ -35,8 +35,6 @@ public class LevelBuilder : MonoBehaviour
     [Inject]
     PlayerController m_player;
     [Inject]
-    LeavesPool m_leavesPool;
-    [Inject]
     CameraBounds m_cameraBounds;
 
     List<Chunk> m_chunks;
@@ -46,7 +44,6 @@ public class LevelBuilder : MonoBehaviour
     List<FillStrategy> m_usedTransitionStrategies = new List<FillStrategy>();
     FillStrategy[] m_strategies;
     Chunk m_currentChunk;
-    bool m_changeTransposer = false;
     //Should transition camera bounds be turn on
     bool m_transitionBounds = true;
     //Should chunk camera bounds be turn on
@@ -58,8 +55,16 @@ public class LevelBuilder : MonoBehaviour
     //Index of the chunk that needs to be created next
     int m_newChunkIndex = 1;
     bool m_isFinalChunkSpawned = false;
-
     bool m_newChunk = false;
+
+    bool m_downTargetOffsetSet = false;
+    bool m_upTargetOffsetSet = false;
+    float m_currentTargetOffset;
+    float m_upTargetOffset = 0.2f;
+    float m_downTargetOffset = -2.5f;
+
+    bool m_targetOffsetSet => m_downTargetOffsetSet || m_upTargetOffsetSet;
+
     AudioSource m_audio;
 
     void Start()
@@ -184,17 +189,40 @@ public class LevelBuilder : MonoBehaviour
         //if the player is on the transition and it's needed to set the transition camera bounds
         else if (m_currentChunk != null && m_player.transform.position.x < m_currentChunk.GetStartPosition().x && m_transitionBounds)
         {
-            //меняет сдвиг в камере выше, если перход нисходящий и сдвиг не был изменен
-             if (m_currentChunk.GetTransitionHeight() < 0 && !m_changeTransposer)
+            //changes camera offset for transition
+             if (m_currentChunk.GetTransitionHeight() < 0 && !m_downTargetOffsetSet)
             {
-                m_changeTransposer = !m_changeTransposer;
-                m_player.ChangeTransposerHeight(m_changeTransposer);
+                if (m_upTargetOffsetSet)
+                {
+                    m_upTargetOffsetSet = false;
+                    m_player.ChangeCameraTargetOffset(-m_upTargetOffset);
+                }
+                m_downTargetOffsetSet = true;
+                m_player.ChangeCameraTargetOffset(m_downTargetOffset);
+                m_currentTargetOffset = m_downTargetOffset;
             }
+            else if (m_currentChunk.GetTransitionHeight() > 8 && !m_upTargetOffsetSet)
+            {
+                if (m_downTargetOffsetSet)
+                {
+                    m_downTargetOffsetSet = false;
+                    m_player.ChangeCameraTargetOffset(-m_downTargetOffset);
+                }
+                m_upTargetOffsetSet = true;
+                m_player.ChangeCameraTargetOffset(m_upTargetOffset);
+                m_currentTargetOffset = m_upTargetOffset;
+            }
+            else if (m_targetOffsetSet)
+            {
+                m_upTargetOffsetSet = m_downTargetOffsetSet = false;
+                m_player.ChangeCameraTargetOffset(-m_currentTargetOffset);
+            }
+
             if (!m_newChunk)
             {
                 m_player.SetChunkCheckpoint(m_currentChunk.GetStartPosition(), true);
             }
-            else 
+            else
             {
                 m_newChunk = false;
             }
@@ -209,19 +237,48 @@ public class LevelBuilder : MonoBehaviour
         else if (m_currentChunk != null && m_player.transform.position.x >= m_currentChunk.GetStartPosition().x && m_chunkBounds)
         {
             //if there is a final chunk - puts a reborn point at the beginning of the chunk
-            if (m_chunksCount >= m_values.m_chunksCount && m_chunkIndex == m_chunks.Count - 1)
+            if (m_isFinalChunkSpawned && m_chunkIndex == m_chunks.Count - 1)
             {
                 m_player.SetRebornCheckpoint(m_currentChunk.GetStartPosition());
             }
-            //if a chunk with space for falling is descending and there was no shift,
-            //or none of this and there was already a shift - the camera shift changes
-            if (IsChunkWithFallSpace(m_chunkIndex)
-                && (m_currentChunk.GetEndPosition().y < m_currentChunk.GetStartPosition().y)
-                && !m_changeTransposer
-                || m_changeTransposer)
+            //changes camera offset for specific chunks
+            if(IsChunkWithFallSpace(m_chunkIndex))
             {
-                m_changeTransposer = !m_changeTransposer;
-                m_player.ChangeTransposerHeight(m_changeTransposer);
+                if(m_currentChunk.GetEndPosition().y < m_currentChunk.GetStartPosition().y
+                    && !m_downTargetOffsetSet)
+                {
+                    if (m_upTargetOffsetSet)
+                    {
+                        m_upTargetOffsetSet = false;
+                        m_player.ChangeCameraTargetOffset(-m_upTargetOffset);
+                    }
+
+                    m_downTargetOffsetSet = true;
+                    m_player.ChangeCameraTargetOffset(m_downTargetOffset);
+                    m_currentTargetOffset = m_downTargetOffset;
+                }
+                else if (m_currentChunk.GetEndPosition().y > m_currentChunk.GetStartPosition().y
+                    && !m_upTargetOffsetSet)
+                {
+                    if (m_downTargetOffsetSet)
+                    {
+                        m_downTargetOffsetSet = false;
+                        m_player.ChangeCameraTargetOffset(-m_downTargetOffset);
+                    }
+                    m_upTargetOffsetSet = true;
+                    m_player.ChangeCameraTargetOffset(m_upTargetOffset);
+                    m_currentTargetOffset = m_upTargetOffset;
+                }
+                else if (m_targetOffsetSet)
+                {
+                    m_upTargetOffsetSet = m_downTargetOffsetSet = false;
+                    m_player.ChangeCameraTargetOffset(-m_currentTargetOffset);
+                }
+            }
+            else if (m_targetOffsetSet)
+            {
+                m_upTargetOffsetSet = m_downTargetOffsetSet = false;
+                m_player.ChangeCameraTargetOffset(-m_currentTargetOffset);
             }
             //signal that the chunk bounds ares set 
             m_transitionBounds = true;
@@ -269,9 +326,9 @@ public class LevelBuilder : MonoBehaviour
             s.SetTripleJump();
         }
     }
-    public void IncreaseBossHealth()
+    public void IncreaseBossHealth(int increaseAmount)
     {
-        m_strategies[0].IncreaseBossHealth();
+        m_strategies[0].IncreaseBossHealth(increaseAmount);
     }
     /// <summary>
     /// Creates a chunk from a random strategy

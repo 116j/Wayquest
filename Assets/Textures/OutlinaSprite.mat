@@ -71,7 +71,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _OutlineThickness: 0.0007
+    - _OutlineThickness: 0.0005
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0.16078432, g: 0.14901961, b: 0.13207546, a: 1}

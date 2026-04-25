@@ -210,6 +210,7 @@ public class WalkEnemy : MonoBehaviour
         //stops
         m_rb.velocity = Vector2.zero;
         m_speed = 0f;
+        m_attackScript.SetAttackCooldown(0.1f);
         //if the damage is 0 - the enemy is dead
         if (damage == 0)
         {

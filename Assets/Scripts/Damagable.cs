@@ -106,6 +106,12 @@ public class Damagable : MonoBehaviour
         ApplyHealth(1);
     }
 
+    public void IncreaseHealth(int increaseAmount)
+    {
+        m_maxHealth+= increaseAmount;
+        m_health += increaseAmount;
+    }
+
     public void SetHealth(int health)
     {
         m_maxHealth = health;

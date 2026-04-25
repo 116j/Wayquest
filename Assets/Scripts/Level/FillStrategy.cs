@@ -41,6 +41,7 @@ public class FillStrategy
 
     protected readonly LevelTheme m_levelTheme;
     readonly SpawnManager m_spawnManager;
+    List<Trap> m_instantiateTraps = new List<Trap>();
 
     [Inject]
     UIController m_UI;
@@ -57,7 +58,7 @@ public class FillStrategy
     protected AnimationCurve m_trapsCount;
 
     //Probability of slope generation
-    protected float m_slopeChance = 0.7f;
+    protected float m_slopeChance = 0.3f;
     //Probability of jumper generation
     protected float m_jumperChance = 0.4f;
 
@@ -66,10 +67,10 @@ public class FillStrategy
     //Height of the player's jump at the same width
     protected int m_playerJumpHeight = 6;
     //Width od the player
-    protected readonly float m_playerWidth = 1f;
+    protected readonly float m_playerWidth = 1.5f;
 
     bool m_shopSpawned = false;
-    bool m_increaseBossHealth = false;
+    int m_increaseBossHealth;
 
     public FillStrategy(LevelTheme levelTheme)
     {
@@ -107,9 +108,9 @@ public class FillStrategy
         m_playerJumpHeight = 8;
         m_playerJumpWidth = 13;
     }
-    public void IncreaseBossHealth()
+    public void IncreaseBossHealth(int increaseAmount)
     {
-        m_increaseBossHealth = true;
+        m_increaseBossHealth += increaseAmount;
     }
     /// <summary>
     /// Creates elevations and lowlands for the chunk, adds a landscape and draws tiles
@@ -316,9 +317,9 @@ public class FillStrategy
         //lowland where the boss is walking
         chunk.CreateElevationOrLowland(m_finalChunkHeight, m_minStraightSection, start + new Vector3Int(m_minStraightSection + m_finalChunkWidth, -m_finalChunkHeight));      
         BossScript boss = m_container.InstantiatePrefab(m_levelTheme.m_boss, new Vector3(start.x + (m_minStraightSection + m_finalChunkWidth - m_levelTheme.m_boss.GetWidth()) / 2, start.y - m_finalChunkHeight), Quaternion.identity, null).GetComponent<BossScript>();
-        if (m_increaseBossHealth)
+        if (m_increaseBossHealth>0)
         {
-            boss.IncreaseHealth();
+            boss.IncreaseHealth(m_increaseBossHealth);
         }
         chunk.AddEnviromentObject(boss.gameObject);
         chunk.DrawTiles(m_editor, (HashSet<Vector3Int> groundTiles) => AddLandscape(chunk, groundTiles, int.MaxValue, true));
@@ -339,7 +340,7 @@ public class FillStrategy
         while (chunk.GetEndPosition().x - lastPoint.x > m_minStraightSection)
         {
             //if slopeChance and the remaining distance are enough to generate a slope
-            if (Random.value > m_slopeChance && m_minElevationHeight * 2 + m_minStraightSection + lastPoint.x <= chunk.GetEndPosition().x - m_minStraightSection)
+            if (Random.value <= m_slopeChance && m_minElevationHeight * 2 + m_minStraightSection + lastPoint.x <= chunk.GetEndPosition().x - m_minStraightSection)
             {
                 //resets the right offset because there is no height change
                 m_rightOffset = 0f;
@@ -607,14 +608,13 @@ public class FillStrategy
                 break;
             //spawn traps
             case 3:
-                List<Trap> traps = new List<Trap>();
-                while (traps.Count == 0)
+                while (m_instantiateTraps.Count == 0)
                 {
-                    Trap trap = m_levelTheme.m_floorTraps[Random.Range(0, m_levelTheme.m_floorTraps.Length)];
-                    m_container.Inject(trap);
-                    trap.SetTrapNum();
+                    Trap trapType = m_levelTheme.m_floorTraps[Random.Range(0, m_levelTheme.m_floorTraps.Length)];
+                    m_container.Inject(trapType);
+                    trapType.SetTrapNum();
                     //if the trap is too high or wide - tries again
-                    if (trap.GetWidth() > sectionWidth || trap.GetHeight() > height)
+                    if (trapType.GetWidth() > sectionWidth || trapType.GetHeight() > height)
                     {
                         continue;
                     }
@@ -622,17 +622,17 @@ public class FillStrategy
                     float rightBorder = startPos.x + sectionWidth + m_rightOffset;
                     float leftBorder = startPos.x + m_leftOffset;
                     //number of traps in the section
-                    m_trapsNum = Random.Range(1, (int)((rightBorder - leftBorder) / (trap.GetWidth() + m_playerWidth)) + 1);
+                    m_trapsNum = Random.Range(1, (int)((rightBorder - leftBorder) / (trapType.GetWidth() + m_playerWidth)) + 1);
 
 
-                    if (trap.GetAttackDirection() == Vector3.right || trap.GetAttackDirection() == Vector3.forward)
+                    if (trapType.GetAttackDirection() == Vector3.right || trapType.GetAttackDirection() == Vector3.forward)
                     {
-                        if (trap.GetWidth() > sectionWidth / 3)
+                        if (trapType.GetWidth() > sectionWidth / 3)
                         {
                             m_trapsNum = 1;
                         }
                         // if the trap is shooting - crop the border
-                        if (trap.GetAttackDirection() == Vector3.forward)
+                        if (trapType.GetAttackDirection() == Vector3.forward)
                         {
                             rightBorder -= sectionWidth / 2;
 
@@ -643,27 +643,31 @@ public class FillStrategy
                         }
                     }
                     //if the trap is serial, make a series of traps in a row
-                    if (trap.IsSeries())
+                    if (trapType.IsSeries())
                     {
                         //recalculates the possible number of traps
-                        m_trapsNum = Random.Range(1, (int)Mathf.Clamp(-(trap.GetHeight() - m_playerJumpHeight) * m_playerJumpWidth * 1.0f / m_playerJumpHeight, 1, (rightBorder - trap.GetRightBorder() - leftBorder + trap.GetLeftBorder()) / trap.GetWidth()));
-                        pos = new Vector3(Random.Range(leftBorder - trap.GetLeftBorder(), rightBorder - trap.GetRightBorder() - m_trapsNum * trap.GetWidth()), startPos.y);
+                        Trap trap;
+                        m_trapsNum = Random.Range(1, (int)Mathf.Clamp(-(trapType.GetHeight() - m_playerJumpHeight) * m_playerJumpWidth * 1.0f / m_playerJumpHeight, 1, (rightBorder - trapType.GetRightBorder() - leftBorder + trapType.GetLeftBorder()) / trapType.GetWidth()));
+                        pos = new Vector3(Random.Range(leftBorder - trapType.GetLeftBorder(), rightBorder - trapType.GetRightBorder() - m_trapsNum * trapType.GetWidth()), startPos.y);
                         for (int i = 0; i < m_trapsNum; i++)
                         {
-                            traps.Add(m_container.InstantiatePrefabForComponent<Trap>(trap, pos + i * trap.GetWidth() * Vector3.right, Quaternion.identity, null));
+                            trap = m_container.InstantiatePrefabForComponent<Trap>(trapType, pos + i * trapType.GetWidth() * Vector3.right, Quaternion.identity, null);
+                            trap.SetTrap(trapType.GetTrapNum());
+                            m_instantiateTraps.Add(trap);
                         }
                     }
                     else
                     {
-                        SpawnTrap(leftBorder, rightBorder, startPos.y, trap, traps);
+                        SpawnTrap(leftBorder, rightBorder, startPos.y, trapType);
                     }
 
                 }
 
-                foreach (var trap in traps)
+                foreach (var trap in m_instantiateTraps)
                 {
                     chunk.AddEnviromentObject(trap.gameObject);
                 }
+                m_instantiateTraps.Clear();
                 m_trapsPerChunk--;
                 break;
             default:
@@ -678,7 +682,7 @@ public class FillStrategy
     /// <param name="posY"></param>
     /// <param name="trapType">trap type</param>
     /// <param name="traps">all traps</param>
-    void SpawnTrap(float leftBorder, float rightBorder, float posY, Trap trapType, List<Trap> traps)
+    void SpawnTrap(float leftBorder, float rightBorder, float posY, Trap trapType)
     {
         //if all traps are instantiated or the section is too small - exit
         if (m_trapsNum == 0 || trapType.GetWidth() >= rightBorder - leftBorder)
@@ -687,11 +691,10 @@ public class FillStrategy
         float posX = Random.Range(leftBorder - trapType.GetLeftBorder(), rightBorder - trapType.GetRightBorder());
         m_trapsNum--;
         Trap trap = m_container.InstantiatePrefabForComponent<Trap>(trapType, new Vector3(posX, posY), Quaternion.identity, null);
-        trap.SetTrap(trapType.TrapNumber);
-        traps.Add(trap);
+        trap.SetTrap(trapType.GetTrapNum());
+        m_instantiateTraps.Add(trap);
         //starts creation on the right and left
-        SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trapType, traps);
-        SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trapType, traps);
+        SpawnTrap(leftBorder, posX + trap.GetLeftBorder() - m_playerWidth, posY, trapType);
+        SpawnTrap(posX + trap.GetRightBorder() + m_playerWidth, rightBorder, posY, trapType);
     }
-
 }
