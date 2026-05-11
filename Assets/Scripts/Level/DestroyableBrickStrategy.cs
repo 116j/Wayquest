@@ -150,8 +150,7 @@ public class DestroyableBrickStrategy : FillStrategy
                 currentPos += new Vector3Int(1, 0);
             }
         }
-        //updates the end and the start of the chunk
-        chunk.SetStartPosition(chunk.GetStartPosition() + Vector3Int.down * lineOffset);
+        //updates the end of the chunk
         chunk.SetEndPosition(currentPos);
     }
     /// <summary>

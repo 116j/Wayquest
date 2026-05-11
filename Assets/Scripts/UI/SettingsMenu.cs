@@ -222,8 +222,7 @@ public class SettingsMenu : MonoBehaviour
         {
             m_gameVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        float dB = Mathf.Lerp(-80f, 5f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
-        m_mixer.SetFloat("MasterVolume", dB);
+        m_mixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20);
     }
 
     public void ChangeMusicVolume(float value)
@@ -238,8 +237,7 @@ public class SettingsMenu : MonoBehaviour
         {
             m_musicVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        float dB = Mathf.Lerp(-80f, -7f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
-        m_mixer.SetFloat("MusicVolume", dB);
+        m_mixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
     public void ChangeEffectsVolume(float value)
     {
@@ -253,8 +251,7 @@ public class SettingsMenu : MonoBehaviour
         {
             m_sfxVolumeFill.GetChild(i).gameObject.SetActive(false);
         }
-        float dB = Mathf.Lerp(-80f, -4f, Mathf.Log10(value * 9f + 1f) / Mathf.Log10(10f));
-        m_mixer.SetFloat("SFXVolume", dB);
+        m_mixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
     }
 
     public void Mute(bool mute)

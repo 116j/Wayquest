@@ -6,6 +6,8 @@ using Zenject;
 public class Trap : MonoBehaviour, IMetrics
 {
     [SerializeField]
+    RuntimeAnimatorController m_animationController;
+    [SerializeField]
     AnimationClip[] m_attacks;
     [SerializeField]
     Vector3[] m_offsets;
@@ -65,12 +67,11 @@ public class Trap : MonoBehaviour, IMetrics
     /// <param name="animNum">number of the trap</param>
     protected void SetAnimations(int animNum)
     {
-        AnimatorOverrideController aoc = new(m_anim.runtimeAnimatorController);
-        var anims = new List<KeyValuePair<AnimationClip, AnimationClip>>(1)
+        AnimatorOverrideController aoc = new(m_animationController);
+        foreach (var anim in aoc.animationClips)
         {
-            new(aoc.animationClips[0], m_attacks[animNum])
-        };
-        aoc.ApplyOverrides(anims);
+            aoc[anim.name] = m_attacks[animNum];
+        }
         m_anim.runtimeAnimatorController = aoc;
     }
     /// <summary>

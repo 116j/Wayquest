@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera m_playerCam;
     [SerializeField]
+    CameraFollow m_follow;
+    [SerializeField]
     CatDetectZone m_catZone;
 
     Rigidbody2D m_rb;
@@ -297,7 +299,7 @@ public class PlayerController : MonoBehaviour
                 m_currentDir *= -1;
                 float targetY = m_currentDir == 1 ? 0f : 180f;
                 transform.rotation = Quaternion.Euler(0f, targetY, 0f);
-
+                m_follow.Turn(m_currentDir);
             }
             //if touches the walls during the jump or is freezed - stop moving horizontally
             if ((m_touchings.IsWalls() && (m_jumping || m_falling)) || m_damagable.Freezed)
